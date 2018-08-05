@@ -1,0 +1,127 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2017, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; STRUCTURE
+
+;;; Group Random
+
+#|
+GEN-GROUP will generate series of groups based on the random distribution of values from a list. In its simplest form the function makes n random generations based on a list's content and length.
+|#
+
+;; Creates 5 list with 5 elements each. All numbers have the same probability
+(gen-group '(0 1 2 3 4))
+
+;; See the difference with the following group
+(gen-group '(0 1 1 3 4) :seed 23)
+
+;; Set the number and size of groups
+(gen-group '(c4 d4 e4 g4 a4)
+	           :size 8 :group 4)
+
+;; With an :unison value of '(1), all four groups will output in :unison. 
+(gen-group '(c4 d4 e4 g4 a4) :unison '(1) :seed 1234)
+
+;; A :unison value with the same size as the number of groups will 
+;; generate a series of highly independent lines with no :unison 
+;; values at all:
+(setf pitches (gen-group '(c4 cs4 d4 ds4)
+	           :size 64 :group 4 :unison '(1 2)))
+
+(setf mat (make-omn 
+            :pitch pitches
+            :length '(1/32)
+            :span :pitch))
+
+(setf parts (set-assignment 'mats mat))
+
+(def-score group1
+           (:key-signature 'chromatic
+                           :time-signature '(4 4)
+                           :tempo 80)
+  (inst1
+   :omn mats0
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst2
+   :omn mats1
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst3
+   :omn mats2
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst4
+   :omn mats3
+   :program 'violin
+   :sound 'gm :program 0))
+
+(display-musicxml 'group1)
+(display-midi (compile-score 'group1))
+
+
+#|
+The function GEN-UNISON will generate series of groups based on the random distribution of values from a list. With an :unison value of (1), all four groups will output in unison.
+|#
+
+(setf pitches (gen-unison
+ (list
+  '(c5 cs4 d4 ds4)
+  '(e4 f4 g4 gs4)
+  '(a4 as4 b4 c5)
+  '(cs5 d5 ds5 e5))
+ :unison '(1 2 3 4)))
+
+(setf mat (make-omn 
+            :pitch pitches
+            :length '(1/4)
+            :span :pitch))
+
+(setf parts (set-assignment 'mat mat))
+
+(def-score group2
+           (:key-signature 'chromatic
+                           :time-signature '(4 4)
+                           :tempo 80)
+  (inst1
+   :omn mat0
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst2
+   :omn mat1
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst3
+   :omn mat2
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst4
+   :omn mat3
+   :program 'violin
+   :sound 'gm :program 0))
+
+(display-musicxml 'group2)
+(display-midi (compile-score 'group2))
+
+
+
+
+
+
+
+
+
+
+
+
+

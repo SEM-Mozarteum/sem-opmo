@@ -1,0 +1,48 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2017, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; IMPORT
+
+;;; SPEAR
+
+#|
+SPEAR is free a software and can be found here http://www.klingbeil.com/spear/.
+The SPEAR application exports two types of spectral data. A two point data: 
+frequency and amplitude and a three point data: time, frequency and amplitude.
+#|
+
+;;; VERY IMPORTANT: German systems export these files with commas instead of 
+;;; decimal points. You have to change your region to English (GB or US) in
+;;; order to get the right format.
+
+;; To import the SPEAR frames data: 
+;; (NOTE: analysis and converted file name without extension.)
+(import-spectral-spear :frames "tr-novib-pp-g4-frames" ;<- analysis file name
+                               "tr-novib-pp-g4-frames") ;<- converted file name
+
+;; To import the SPEAR partials data:
+(import-spectral-spear :partials "tr-novib-pp-g4-partials"
+                                 "tr-novib-pp-g4-partials")
+
+;; We can add a note (annotation) to the file by using the keyword :note:
+(import-spectral-spear :frames "tr-novib-pp-g4-frames"
+                               "tr-novib-pp-g4-frames"
+                       :note "Spectral data from a trumpet-novib-pp-g4 sample")
+
+;; Create a library file for an easy access to all the partials.
+;; Load the file with the LOAD function 
+;; (the path should point to the file in the Partials folder):
+(load "~/Opusmodus/Spectral Data/Partials/tr-novib-pp-g4-frames.opmo")
+
+(create-library 'tr-novib-pp-g4-frames 'partials 'p tr-novib-pp-g4-frames
+                :file "tr-novib-pp-g4-frames"
+                :note "Spectral data from a trumpet-novib-pp-g4 sample")
+
+;; Examples
+;; (library 'tr-novib-pp-g4-frames 'partials 'p1)
+;; (library 'tr-novib-pp-g4-frames 'partials nil :random 5)
+;; (library 'tr-novib-pp-g4-frames 'partials nil :collect '(0 3 5))

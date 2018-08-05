@@ -1,0 +1,28 @@
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM), University Mozarteum, Salzburg
+;;; (c) 2015 - 2016, Achim Bornhoeft
+
+;;; SPAN 
+
+;;;      --------------------- TODO ------------------------     ;;;
+
+span
+length-span
+get-span
+
+the length is the master (default) in make-omn
+if you do :span :pitch the the pitch is the MASTER
+
+In general:
+pitch and velocity is ignoring rests in length =>
+pitch and velocity lists have to created minus all rests.
+but in articulation the symbol '- will ignore length as well
+
+Notes and rests:
+(get-count '((1/16 1/8 1/16 1/12 -1/12 1/12))) => 6
+
+Notes
+(get-count '((1/16 1/8 1/16 1/12 -1/12 1/12)) :type 'n) => 5
+
+Rests
+(get-count '((1/16 1/8 1/16 1/12 -1/12 1/12)) :type 'r) => 1

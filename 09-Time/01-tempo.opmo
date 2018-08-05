@@ -1,0 +1,46 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2017, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; TIME-SIGNATURE
+
+;; make random durations for 5 measures
+(setf lengths 
+      (gen-eval 5 
+                '(rnd-repeat 
+                  (rnd 1 :low 3 :high 4) '(1/8 1/4)) 
+                :seed 24))
+
+;; Get the time signatures from the lengths
+;; suitable for using in def-score
+(setf time-sig (get-time-signature lengths))
+
+(setf mat1 (make-omn :length lengths :pitch '(c4 fs4)))
+
+;; Calculate the length for each time signature
+(setf time-sigs (calculate-time-signature time-sig))
+
+;;; TEMPO
+
+;; Calculates random tempos for each time signature change
+(setf temps (rnd (length time-sig) :low 40 :high 120 :seed 321))
+
+;; The function MAKE-TEMPO brings together lists of changing tempo 
+;; and number of bars of specific tempo that belong to a piece. 
+;; This provides the information required by the :tempo slot 
+;; in the DEF-SCORE template.
+(setf tempos (make-tempo temps time-sig :type :bars))
+;; or
+(setf tempos (make-tempo temps time-sigs :type :bars))
+; => ((98 :bars 1) (60 1) (79 1) (109 1) (52 1) (55 1))
+
+(def-score time-signature
+	         (:title "Score"
+	          :key-signature '(c maj)
+	          :time-signature time-sig
+	          :tempo tempos)
+(inst1
+ :omn mat1))

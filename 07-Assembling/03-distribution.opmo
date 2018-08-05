@@ -1,0 +1,66 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2017, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; DISTRIBUTION
+
+;; The function distribute-seq returns a new sequence of items
+;; distributed against lists of lengths sequentially.
+;; It takes (usually) a single pitch stream and distributes 
+;; its content amongst to a series of voices or parts. 
+;; Other parameters like dynamics could distributed in a similar way.
+
+;; single pitch stream
+(setf scale '(c4 cs4 d4 ds4 e4 f4 fs4 g4 gs4 a4 as4 b4))
+
+;; and 4 lists of durations
+(setf
+ v1 '(1/8 -1/8 2/8 -1/8 5/8)
+ v2 '(1/8 1/8 -1/8 2/8 1/8)
+ va '(-2/8 1/8 -5/8 1/8)
+ vc '(-1/8 3/8 1/8 1/8)
+ )
+
+(setf pitches (distribute-seq scale v1 v2 va vc))
+;; => ((c4 e4 gs4) (cs4 d4 fs4 a4) (f4 b4) (ds4 g4 as4))
+;; The output produces a consecutive list of pitch lists 
+;; which can be assigend to seperate variables
+
+;; Another approach with set-assignment
+;; To do this the durations should not be set to variables
+(setf durations '((1/8 -1/8 2/8 -1/8 5/8)
+                  (1/8 1/8 -1/8 2/8 1/8)
+                  (-2/8 1/8 -5/8 1/8)
+                  (-1/8 3/8 1/8 1/8)
+                  ))
+
+(setf pitches (distribute-seq scale durations))
+
+(set-assignment 'inst (make-omn
+                       :pitch pitches
+                       :length durations))
+
+(def-score distribution
+           (:key-signature '(c maj)
+                           :time-signature '(4 4)
+                           :tempo 80) 
+  (violin1
+   :omn inst0
+   :sound 'gm :program 0)
+  
+ (violin2
+   :omn inst1
+   :sound 'gm :program 0)
+  
+  (viola
+   :omn inst2
+   :sound 'gm :program 0)
+  
+  (violoncello
+   :omn inst3
+   :sound 'gm :program 0)
+  )
+

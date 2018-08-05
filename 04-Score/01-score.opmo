@@ -1,0 +1,112 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2017, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; VOICES
+
+;; First we create a list of notes:
+(setf note-mat (rnd-row :type :pitch))
+;; the :pitch keyword makes the output being pitches
+;; the :seed number freezes the random choice
+
+;;; 4 musical materials derived from 'note-mat'
+
+;; Material 1
+(setf notes-mat1 note-mat)
+(setf durs-mat1 (span notes-mat1 '(1/16))) ; 1/16 repetition
+
+(setf mat1 
+      (make-omn
+       :pitch notes-mat1
+       :length durs-mat1))
+
+;; Its possible to make the omn in one:
+(setf mat1 
+      (make-omn
+       :pitch note-mat
+       :length (span notes-mat1 '(1/16))))
+;; the disadvantage is that 'mat1' has to be disassembled
+;; before contents of it can be reused
+
+;; Material 2
+(setf notes-mat2 (pitch-transpose -6 (subseq note-mat 0 6)))
+;; subsequence from note-mat (first 6 notes)
+;; transposed 6 semitones down
+(setf durs-mat2 (span notes-mat2 '(1/8))) ; 1/8 repetition
+
+(setf mat2
+      (make-omn
+       :pitch notes-mat2
+       :length durs-mat2))
+
+;; Material 3
+(setf mat3 (rnd-order mat1 :seed 34))
+;; just a new random order of mat1
+
+;; Material 4
+(setf notes-mat4 
+      (pitch-transpose -3 (subseq (omn :pitch mat3) 0 9)))
+(setf durs-mat4 (span notes-mat4 '(1/12))) ; tuplets                                 
+
+(setf mat4
+      (make-omn
+       :pitch notes-mat4
+       :length durs-mat4))
+
+;;; Concatenating material
+
+;; append the first to the second material (merge in one measure)
+(append mat1 mat2)
+
+;; put the two materials in seperate measures
+(setf voice1 (list mat1 mat3 mat1 mat3))
+(setf voice2 (list mat2 mat4 mat3 mat2))
+
+;; voices as transpositions of other voices
+(setf voice3 (pitch-transpose -6 voice1)) 
+(setf voice4 (pitch-transpose -13 voice2))
+
+;;; PARTS
+
+;; To merge 2 voices in one part use merge-voices
+;; To avoid note collisions use respell
+(setf part1 (respell (merge-voices voice1 voice2)))
+(setf part2 (respell (merge-voices voice3 voice4)))
+
+;;; SCORE
+
+(def-score score1 ; name of the score
+           ;; general score definition:
+           (:key-signature 'chromatic
+            :time-signature '(3 4)
+            :tempo 30)
+           
+  (inst1 ; name of the system
+   :omn part1
+   :channel 1
+   :sound 'gm ; midi system
+   :program 'Vibraphone) ; instrument
+  
+  (inst2
+   :omn part2
+   :channel 2
+   :sound 'gm
+   :program 'Acoustic-Grand-Piano)
+
+  ) 
+
+;; compile and play the score in the midi player
+(display-midi (compile-score 'score1))
+
+;; display the notation
+(display-musicxml 'score1)
+ 
+
+ 
+
+
+
+

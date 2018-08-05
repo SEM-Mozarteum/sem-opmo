@@ -1,0 +1,20 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2017, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+1. 
+Import the Midi File purcel-now_winter_comes_slowly.mid from the
+folder 14-Import-Export'/Material and import it to Opusmodus.
+
+2. 
+Correct the file in OMN to 4 parts only directly in OMN.
+
+3. 
+Export the score either to Midi or via MusicXML to any notation program.
+|#

@@ -1,0 +1,13 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2017, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+;; Make 2 musical phrases which are opposite in terms of pitch, 
+;; length (durations), articulation and velocity e.g. very high fast
+;; staccato notes in pp and very low tenuto notes in f with long 
+;; durations. Assemble them in different ways.

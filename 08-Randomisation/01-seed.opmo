@@ -1,0 +1,26 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2017, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; RANDOM STATE (SEED)
+
+;;;      --------------------- TODO ------------------------     ;;;
+
+(let ((seed (rnd-seed 34)))
+    (loop for i from 10
+      for rnd-row = (rnd-order '(31 30 29 28 27 26 25 24) :seed (seed))
+      while (not (equal '(24) (last rnd-row)))
+      finally (return rnd-row)))
+
+
+(defparameter rotations
+  (let ((seed (rnd-seed 34)))
+    (loop for i from 10
+      for rnd-row = (rnd-order '(31 30 29 28 27 26 25 24) :seed (seed))
+      while (not (equal '(24) (last rnd-row)))
+      finally (return rnd-row))))
+
+(random* 1.0 :seed 45)

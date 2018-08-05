@@ -1,0 +1,67 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2017, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; ASSEMBLING
+
+;; First we create 2 sequences of different musical material:
+(setf pitches1 (midi-to-pitch
+                (loop for i from 1 to 10
+                  collect (loop repeat i collect (+ 48 (random 24))))))
+
+(setf seq-1 (make-omn
+             :pitch pitches1
+             :length '(1/16)
+             :velocity '(f)
+             :articulation '(stacc)
+             :span :pitch))
+                       
+(setf pitches2 (midi-to-pitch
+                (loop for i from 10 downto 1
+                  for n from 60
+                  collect (loop repeat i collect n))))    
+
+(setf seq-2 (make-omn
+             :pitch pitches2
+             :length '(1/8)
+             :velocity '(pp)
+             :articulation'(ten)
+             :span :pitch))
+
+;; assemble different subsets (measures) of the two materials
+(setf mat-select1 (assemble-subseq 
+               '((seq-1 :start 1 :end 4)
+                 (seq-2 :start 1 :end 1)
+                 (seq-1 :start 5 :end 7)
+                 (seq-2 :start 2 :end 3)
+                 (seq-1 :start 8 :end 9)
+                 (seq-2 :start 4 :end 6)
+                 (seq-1 :start 10 :end 10)
+                 (seq-2 :start 7 :end 10))))
+
+;; collect material alternating
+(setf mat-select2 (loop for i in seq-1
+                for j in seq-2
+                collect i
+                collect j))
+
+;; the disassemble-omn function deconstrut the omn object in its 
+;; seperate parameters
+(disassemble-omn mat-select2)
+
+;; to extract a specific parameter the omn function with the 
+;; specified parameter is used
+(omn :pitch seq-1)
+(omn :length seq-2)
+(omn :velocity mat-select2)
+
+
+
+
+
+  
+
+

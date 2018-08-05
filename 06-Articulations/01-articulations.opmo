@@ -1,0 +1,69 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2017, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; ARTICULATIONS
+
+;; make some pitches
+(setf pitches (midi-to-pitch 
+               ; the gen-eval evaluates n times its content
+               (gen-eval 8 '(rnd 3 :low 60 :high 84) :seed 34)))
+
+;; in LISP
+(setf pitches (midi-to-pitch
+               (loop repeat 8 collect
+                 ; repeat 8 times
+                 (loop repeat 3 collect (+ 60 (random 25)))
+                 ; collect 3 random notes between 60 and 84
+                 )))
+
+;; the make-omn has the keyword :span to automatically span
+;; the parameters to the length of a specified parameter key
+(setf mat (make-omn
+           :pitch pitches
+           :length '(1/16)
+           :articulation '(stacc)
+           :span :pitch))
+
+;; all articulations are repeated or extended until the note
+;; for which it is not specified
+;; (e5 leg fs5 leg gs5 a5 cs6)
+;; (p< < < < mf pp< < ff)
+
+(setf pitches '((b4 fs5 e3 a5) (e5 b5 c4) (g5 a4 ds3 d4) (c6 b5 a4) (c5 eb5 gs4) (b4 f5 f5 fs5 gs5 a5) (cs4 g4 c6) (gs5)))
+
+;; automatic legato bows
+(setf articulations 
+      (loop for i in pitches collect
+        ; loop over all measures
+        (loop for x from 1 to (length i)
+          ; loop over all notes in each measure
+          if (not (= x (length i)))
+          ; if its not the last note
+          collect 'leg
+          else
+          ; for the last note collect -
+          collect '-)))
+
+(setf mat 
+      (make-omn 
+       :pitch pitches
+       :length '(1/8)
+       :articulation articulations
+       :span :pitch))
+                         
+  
+
+
+
+
+
+
+
+
+
+
+

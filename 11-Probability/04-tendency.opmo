@@ -1,0 +1,60 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2017, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; PROBABILITY
+
+;;; Tendency
+
+#|
+The GEN-TENDENCY function generates N samples of given values 
+(floating numbers) with a tendency (direction) given by the values 
+next to each-other. The variance is an additional value for increasing 
+or decreasing the size of the fluctuations :around :above or :below 
+the tendency values.
+|#
+
+(list-plot
+ (gen-tendency 200 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1))
+ :join-points t)
+
+;; The variance is an additional value for increasing or decreasing 
+;; the size of the fluctuations :around :above or :below the tendency 
+;; values.
+
+;; With :variance 0.5:
+(list-plot
+ (gen-tendency 200 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) :variance 0.5)
+ :join-points t)
+
+;; With :variance 0.9:
+(list-plot
+ (gen-tendency 200 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) :variance 0.9)
+ :join-points t)
+
+;; With :variance 3.0 above:
+(list-plot
+ (gen-tendency 200 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
+               :variance 1.0 
+               :type :above)
+ :join-points t)
+
+
+;; Compare 10 tendencies
+(list-plot (gen-eval 10 '(gen-tendency 30 '(70 20 60 40 90) 
+                                       :variance 0.5))
+           :join-points t 
+           :zero-based t)
+
+;; Make some pitches and durations with a tendency
+(setf values '(.1 .4 .2 .6 .45 .16 .75 .8 0.5 .1))
+(setf tendency (gen-tendency 20 values :variance 0.3))
+(setf pitches (vector-to-pitch '(c3 c7) tendency))
+(setf durs (vector-to-length '1/16 1 4 tendency))
+(setf mat1 (make-omn
+            :pitch pitches
+            :length durs))
+

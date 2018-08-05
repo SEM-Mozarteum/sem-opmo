@@ -1,0 +1,138 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf400
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\froman\fcharset0 Palatino-Roman;\f2\fmodern\fcharset0 Courier;
+}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li574\fi13\pardirnatural
+
+\f0\fs48 \cf0 Introduction to Common Lisp\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13\qj
+
+\fs28 \cf0 \'a9
+\f1  2016 , Studio for Electronic Music, University Mozarteum Salzburg\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li574\fi13\pardirnatural
+
+\f0\fs36 \cf0 Basics\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li574\fi13\pardirnatural
+
+\f1\fs28 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13\qj
+
+\b \cf0 Numbers
+\fs36 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13
+
+\b0\fs24 \cf0 \
+ There are three kinds of numbers that are used most commonly, integers, \
+ floating point numbers, and ratios.\
+\
+ Integers are whole numbers, e.g.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13
+
+\f2 \cf0 1\
+12\
+18446744073709551616.
+\f1 \
+\
+ Floating point numbers are  always written with a decimal point, e.g. \
+\
+
+\f2 5.0\
+3.141592653589793
+\f1 \
+\
+ Ratios are numbers consisting of nominator and denominator, e.g., \
+
+\f2 \
+1/2\
+2/3\
+3/5
+\f1 \
+\
+ Common Lisp automatically simplifies ratios to use the smallest \
+ possible denominator, e.g., the ratios\
+\
+
+\f2 4/6 \
+6/9 \
+10/15 ; are all simplified to 2/3.
+\f1 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13
+
+\b\fs28 \cf0 Comments
+\b0\fs24  start with semicolons: \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13
+
+\f2 \cf0 ;;; Three semicolons on the highest level\
+(defun minus-1 (x) \
+  ;; two semicolons at the beginning in between code\
+  (- x 1) ; one semicolon at the end of code lines\
+  )\
+;; (minus-1 10) => 9 ; two semicolons for test evaluations
+\f1 \
+\
+
+\f2 #|\
+This is a comment for more than one line.\
+This is a comment for more than one line.\
+This is a comment for more than one line.\
+|#\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13
+
+\f1 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13
+
+\b\fs28 \cf0 Indentation\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13
+
+\b0\fs24 \cf0 For the correct indentation (placing of the parantheses) double-click on the\
+first paranthesis an pres ctrl-alt q.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13
+
+\b \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13
+
+\fs28 \cf0 Syntax
+\b0\fs24 \
+\
+ The syntax of Lisp is simple. Lisp expressions are written inside parentheses \
+ and the elements are separated by spaces.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13
+
+\f2 \cf0 (+ 1 2 3)
+\f1 \
+\
+
+\f2 (* (/ 5 6) pi)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13
+
+\f1 \cf0 \
+ The function operates on the data and returns a result. In a list the first \
+ element specifies the function. The remaining elements are the arguments.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13
+
+\b\fs28 \cf0 Evaluation
+\b0\fs24 \
+\
+Place the cursor after any of the parantheses. To evaluate an expression: 'fn + ret' oder 'cmd + e'\
+\
+
+\b\fs28 Printing\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13
+
+\b0\fs24 \cf0 \
+\pard\pardeftab720\fi558
+\cf0 To just print an output to the listener use print.
+\f2 \
+\
+(print "Hello World") ; => "Hello World"\
+\
+(+ 1 (print (+ 2 3)) 4) ; => 5 , 10
+\f1 \
+}

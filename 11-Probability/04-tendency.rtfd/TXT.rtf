@@ -1,0 +1,27 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\froman\fcharset0 Palatino-Roman;}
+{\colortbl;\red255\green255\blue255;}
+\vieww11580\viewh15200\viewkind0
+\deftab720
+\pard\tx562\pardeftab720\li557\fi1\ri-429\qj\partightenfactor0
+
+\f0\b\fs28 \cf0 Markov Chains
+\b0 \
+\
+In Opusmodus three differrent types of objects, all describing Markov transition tables are handled.  The first one represent sequences of events, the second one represent transitions as given by a user and the third one are transition tables.  Sequences and transitions are useful as 'input notation', they are converted to transition-tables, making transiiton-tables the primary values this code operates on, with one function to convert sequences to transition tables and one to transform transitions into transiiton-tables.\
+\
+Transition-tables will have fixed levels, as they are the primitives of the Markov functionality and must allow uniform and efficient handling.  Whatever we decide to do with mixed level transitions will be handled by make-transition-table-from-transitions.\
+\
+Remarks: In this file some functons are defined to generate musical themes from a given theme by a Markov process. In this version the markov transition-table is accessible and therefore reusable.  Two functions have been added, (make-markov-transition-table <input-theme> <level>) and (make-theme-from-markov-transition-table <tbl> <size> <start>).  Purpose of the first one is to turn one input-sequence into a markov transition table, so it can be stored and used again.  Purpose of the second one (make-theme-from-...) is to make sequences from one transition table.  A consequence of this change is that the representation of the markov transition table is now accessible to other code.  Feel free to store and reuse them but please do not change markov transition tables.  More detailed documentation of transition tables below.\
+\
+In order to generate new themes from a given one by a Markov chain process, a table is needed that give for each note in the original theme a probability to play its successor note.\
+\
+Even though the literature about Markov chains invariably describes the transition table as a matrix, the transition table is represented as an alist here.  The reason for that is that the themes seen so far are fairly small and a given note is followed by a relatively small subset of other notes in the input theme. But this is an assumption that needs to be checked.\
+\
+A lists represent key-value pairs.  Keys are the notes of the input theme that have a successor, values represent the probability for selecting a successor note.  Transition tables are made with the function make-markov-transition-table which takes an input sequence as argument and <level>, the number of notes to take into account for computing the probabilities that that sequence of followed by other notes.\
+\
+Given this representation the length of a Markov transition table is at most (length (remove-duplicates input-theme)).  The length of a transition table will be maximal (and one less than the length of the input theme) if there are no duplicate notes in the input theme that generated the table.\
+\
+This representation implies linear search, which is a good method for searching tables of not too many elements.  If the transition tables get too large, performance will degrade and delays will become noticable.  If or when this occurs, a better representation must be developed.\
+\
+}

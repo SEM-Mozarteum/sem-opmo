@@ -1,0 +1,70 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2017, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; DURATIONS
+
+;; Derivation of durations from a given pitch list with span
+
+(setf pitches (integer-to-pitch (rnd-row)))
+(setf durations (span pitches '(1/16)))
+
+;; Putting together pitches and durations with make-omn
+
+(make-omn 
+ :length durations
+ :pitch pitches)
+
+(setf pitches1 (integer-to-pitch (rnd-row :seed 34)))
+(setf durations1 (span pitches1 '(1/16 1/8 1/16 1/12 1/12 1/12)))
+
+(setf mat1 (make-omn 
+            :length durations1
+            :pitch pitches1))
+
+;; ------------------------
+
+;; to plot the material use omn-list-plot
+
+(omn-list-plot mat1)
+(omn-list-plot mat1 :join-points t)
+
+;; ------------------------
+
+;; Generating series of length values by multiplying a list of denominators 
+;; (base note lengths) with numerators.
+
+(gen-length '(1 2 4 8) 32) ; => (1/32 1/16 1/8 1/4)
+
+(gen-length '(1 2 4 8) '(4 8)) ; => ((1/4 1/2 1 2) (1/8 1/4 1/2 1))
+
+;; in lisp
+(loop for d in '(4 8) collect
+  (loop for n in '(1 2 4 8) collect (/ n d)))
+;; => ((1/4 1/2 1 2) (1/8 1/4 1/2 1))
+
+(gen-length '(1 -1 3 -1 2 -4) 16) ; => ((1/4 1/2 1 2) (1/8 1/4 1/2 1))
+
+(setf lengths (gen-length '(1 -1 3 -1 2 -4) '(16 8 4)))
+(setf pitches (span lengths (midi-to-pitch '(60 65 78))))
+
+(setf mat2 (make-omn
+            :length lengths
+            :pitch pitches))
+
+;; aequidistant divisions of a quarter
+(loop for d in '(1 2 3 4 5 6 7 8 9) collect 
+  (loop repeat d collect (/ 1 (* d 4))))
+
+;; fit as many notes as possible in a given range
+(setf mat1 '(s c4e4 e g4 s eb4 e cs4 s e4 e b4 s fs4 e a4 s gs4 e f4 s bb4 e d4))
+
+(list
+(length-adjust 3/4 mat1)
+(length-adjust 4/4 mat1)
+(length-adjust 5/4 mat1))
+
+

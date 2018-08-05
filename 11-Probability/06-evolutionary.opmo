@@ -1,0 +1,49 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2017, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; PROBABILITY
+
+;;; Evolutionary
+
+;; gen-mutate returns a random element from a list and mutates 
+;; randomly to a given mutation probability.
+
+(setf lis (rnd 5 :seed 45))
+
+;; Calculate 24 mutation lists
+;; The default count of mutations is 1, therefore up to
+;; one element is mutating
+(setf pitches (gen-mutate 24 lis :seed 34))
+
+(setf mutation1 (vector-to-pitch
+                 '(-20 42)
+                 (flatten pitches)))
+
+(make-omn :length '(s)
+          :pitch mutation1
+          :span :pitch)
+
+;; gen-population returns a random population with N members randomly
+;; between 0 and 1. Each list will contain a number of elements 
+;; between low and high.
+(setf population (gen-population 5 3 7 :seed 56))
+
+;; The GEN-MUTATE-POPULATION function will randomly select some of the 
+;; population to be mutated. This function takes a population in the 
+;; form of a list of lists.
+(setf mutation (gen-mutate-population
+                population :prob 0.9 :seed 34))
+
+(setf mutation
+      (gen-mutate-population population :prob 0.9 :count '(3 4)))
+
+;; flatten is used to make it visible in list-plot
+(list-plot (list (flatten population) (flatten mutation)) :join-points t)
+
+
+
+

@@ -1,0 +1,65 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2017, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; PITCHES
+
+;; gen-reapet returns any number of repeats of a list or atom:
+
+(gen-repeat 3 'c4) ; => (c4 c4 c4)
+;; is the same as
+(loop repeat 3 collect 'c4)
+
+(gen-repeat 3 '(c4 d4)) ; => (c4 d4 c4 d4 c4 d4)
+;; or
+(loop repeat 3 append '(c4 d4))
+
+;; set the variable "12-tone" to a crhomatic scale
+(setf 12-tone '(60 61 62 63 64 65 66 67 68 69 70 71))
+;; is the same as:
+(setf 12-tone (loop for i from 60 to 72 collect i))
+;; and convert to note names:
+(midi-to-pitch 12-tone) ; => (c4 cs4 d4 eb4 e4 f4 fs4 g4 gs4 a4 bb4 b4)
+
+;; random pitches between 60 and 72
+;; (repetitions are possible.)
+(midi-to-pitch (loop repeat 8 collect (rnd-range 60 72))) 
+;; => (d4 g4 gs4 bb4 f4 bb4 d4 c4)
+;; is the same as:
+(midi-to-pitch (loop repeat 8 collect (+ 60 (random 13)))) 
+;; => (e4 fs4 e4 b4 cs4 g4 fs4 g4)
+
+;; here a function definition for rnd-range:
+(defun my-rnd-range (low high)
+  (+ low (random (+ 1 (- high low)))))
+;; (my-rnd-range 60 72)
+
+;; in integer notation 0 = 60 = c4
+(integer-to-pitch '(0 1 2 3 4 5 6 7 8 9 10 11)) 
+;; => (c4 cs4 d4 eb4 e4 f4 fs4 g4 gs4 a4 bb4 b4)
+(integer-to-pitch '(-5 -4 -3 -2 -1 0 1 2 3 4 5 6)) 
+;; => (g3 gs3 a3 bb3 b3 c4 cs4 d4 eb4 e4 f4 fs4)
+
+;; twelve-tone row
+(setf row (rnd-row :seed 34)) ; => (0 7 3 1 4 11 6 9 8 5 10 2)
+(integer-to-pitch row) ; => (c4 g4 eb4 cs4 e4 b4 fs4 a4 gs4 f4 bb4 d4)
+;; the seed argument sets and fixes ONE random choice.
+
+;; reversed row
+(integer-to-pitch (reverse row)) 
+
+;; inverted row
+(integer-to-pitch (row-invert row))
+
+;; reversed invertion
+(integer-to-pitch (reverse (row-invert row)))
+
+
+
+
+
+
+

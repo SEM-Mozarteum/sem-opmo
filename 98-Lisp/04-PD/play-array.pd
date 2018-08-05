@@ -1,0 +1,56 @@
+#N canvas 506 235 665 563 12;
+#N canvas 0 22 454 304 (subpatch) 0;
+#X array sample 44100 float 0;
+#X coords 0 1 44099 -1 200 140 1 0 0;
+#X restore 260 212 graph;
+#X obj 66 322 line~;
+#X text 218 108 length of the sample);
+#X text 219 81 go to 0 \, then ramp to sample 114029;
+#X text 217 94 (the last sample) in 2586 ms (the;
+#X obj 66 519 dac~;
+#X obj 525 53 loadbang;
+#X obj 66 489 *~;
+#X floatatom 85 409 5 0 0 1 volume - -, f 5;
+#X obj 86 460 line~;
+#X obj 86 432 pack 0 10;
+#X obj 127 150 hsl 128 15 0 3000 0 0 empty dur-set empty -2 -8 0 10
+-262144 -1 -1 4233 1;
+#X floatatom 126 228 5 0 0 0 - - -, f 5;
+#X obj 124 176 int;
+#X obj 66 65 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 66 279 pack f f;
+#X obj 67 89 t b b b;
+#X msg 190 277 0;
+#X obj 526 228 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 65 255 5 0 0 0 - - -, f 5;
+#X obj 87 383 hsl 128 15 0 1 0 0 empty volume-set empty -2 -8 0 10
+-262144 -1 -1 6350 1;
+#X obj 66 351 tabread4~ sample;
+#X obj 526 254 openpanel;
+#X obj 66 227 f 44100;
+#X msg 526 288 \; sample read \$1;
+#X msg 525 79 \; pd dsp 1 \; volume-set 0.5 \; dur-set 1000;
+#X connect 1 0 21 0;
+#X connect 6 0 25 0;
+#X connect 7 0 5 0;
+#X connect 7 0 5 1;
+#X connect 8 0 10 0;
+#X connect 9 0 7 1;
+#X connect 10 0 9 0;
+#X connect 11 0 13 0;
+#X connect 12 0 15 1;
+#X connect 13 0 12 0;
+#X connect 14 0 16 0;
+#X connect 15 0 1 0;
+#X connect 16 0 23 0;
+#X connect 16 1 12 0;
+#X connect 16 2 17 0;
+#X connect 17 0 1 0;
+#X connect 18 0 22 0;
+#X connect 19 0 15 0;
+#X connect 20 0 8 0;
+#X connect 21 0 7 0;
+#X connect 22 0 24 0;
+#X connect 23 0 19 0;
