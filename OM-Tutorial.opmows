@@ -284,29 +284,30 @@
 
 ;;; layout plist
 
-(:NAVIGATOR-RECT #(0.0D0 0.0D0 201.0D0 1032.0D0)
+(:NAVIGATOR-RECT #(0.0D0 0.0D0 223.0D0 1391.0D0)
  :SELECTED-NAVIGATOR-TAB-TAG 0 :NAVIGATOR-COLLAPSED-P NIL
- :MIDDLE-RECT #(202.0D0 0.0D0 1311.0D0 1032.0D0) :EDITOR-RECT
- #(0.0D0 0.0D0 1311.0D0 868.0D0) :COMPOSER-VISIBLE-P T
- :ASSISTANT-VISIBLE-P NIL :LISTENER-RECT
- #(0.0D0 869.0D0 1311.0D0 163.0D0) :LISTENER-COLLAPSED-P NIL
- :UTILITIES-RECT #(1514.0D0 0.0D0 255.0D0 1032.0D0)
+ :MIDDLE-RECT #(224.0D0 0.0D0 2080.0D0 1391.0D0) :EDITOR-RECT
+ #(0.0D0 0.0D0 2080.0D0 1170.0D0) :COMPOSER-VISIBLE-P T
+ :ASSISTANT-VISIBLE-P T :LISTENER-RECT
+ #(0.0D0 1171.0D0 2080.0D0 220.0D0) :LISTENER-COLLAPSED-P NIL
+ :UTILITIES-RECT #(2305.0D0 0.0D0 255.0D0 1391.0D0)
  :SELECTED-UTILITIES-TAB-TAG 1 :QUICK-VIEW-COLLAPSED-P T
  :UTILITIES-COLLAPSED-P NIL)
 
 ;;; composer
 
-"01-Introduction/05-Composer.opmo" 
+"13-Import-Export/02-import-spear.opmo" 
 
 ;;; list of assistants
 
-("01-Introduction/04-Utilities.rtfd/")
+("98-Lisp/99-Resources/08-Loop/Common Lisp's Loop Macro Examples for Beginners.html")
 
 ;;; grid menu state 
 
 (:GRID-MENU-STATE
  (:COMPOSER
-  ("11-Probability/04-tendency.opmo"
+  ("13-Import-Export/02-import-spear.opmo"
+   "11-Probability/04-tendency.opmo"
    "98-Lisp/99-Resources/07-commonlisp.lisp"
    "02-Pitches/02-chords.opmo" "98-Lisp/01-Language/exercise-02.lisp"
    "98-Lisp/02-Functions/09-Samples.lisp"
@@ -351,9 +352,24 @@
    "98-Lisp/02-Functions/exercise-10.lisp"
    "98-Lisp/02-Functions/10-Spectral.lisp"
    "98-Lisp/02-Functions/exercise-11.lisp"
-   "13-Import-Export/02-export.opmo")
+   "13-Import-Export/02-export.opmo" "03-Durations/01-durations.opmo"
+   "03-Durations/02-span.opmo" "03-Durations/exercise.opmo"
+   "04-Score/exercise.opmo" "05-Dynamics/exercise.opmo"
+   "08-Randomisation/01-seed.opmo" "08-Randomisation/02-random.opmo"
+   "08-Randomisation/exercise.opmo" "09-Time/01-tempo.opmo"
+   "07-Assembling/01-assembling.opmo"
+   "07-Assembling/02-assignment.opmo"
+   "07-Assembling/03-distribution.opmo"
+   "06-Articulations/01-articulations.opmo"
+   "08-Randomisation/03-random.opmo"
+   "08-Randomisation/04-random.opmo"
+   "11-Probability/01-white-noise.opmo"
+   "11-Probability/02-brownian-motion.opmo"
+   "11-Probability/03-markov-chains.opmo"
+   "11-Probability/05-random-walk.opmo")
   :ASSISTANTS
-  ("98-Lisp/99-Resources/08-Loop/Tutorial for the Common Lisp Loop Macro.html"
+  ("99-Media/purcel-winter.mid" "99-Media/trumpet-g4.wav"
+   "98-Lisp/99-Resources/08-Loop/Tutorial for the Common Lisp Loop Macro.html"
    "98-Lisp/99-Resources/05-Steele-CL-The_Language.pdf"
    "98-Lisp/99-Resources/06-cheatsheet-usletter-color.pdf"
    "98-Lisp/01-Language/03-Lists.rtf" "01-Introduction/08-OMN.rtfd/"
