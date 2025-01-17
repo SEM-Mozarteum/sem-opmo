@@ -1,0 +1,22 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2023, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; FINAL EXERCISE
+
+#|
+Create a short musical sketch in Opusmodus with:
+
+- at least 4 voices (instrumentation is free)
+- with at least two different musical developments
+- algorithmic control of the 4 parameters (pitch, length, 
+velocity, articulation)
+- use of either probability and/or vector methods
+- as little as possible musical source material (optional)
+
+You can take one of your previous homework assignments as 
+a basis and expand it accordingly.
+|#

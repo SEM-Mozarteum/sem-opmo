@@ -1,0 +1,156 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;; ---------------------------------------------------------
+;; AB88 - Waldstein
+;; Copyright © 2018 Achim Bornhoeft
+;;
+;; 09-harm-field-1
+;;
+;; Field of pitches generated from natural string harmonics
+;; developing from points to legato
+;; ---------------------------------------------------------
+
+;; ---------------------------------------------------------
+;; Parameters
+;; ---------------------------------------------------------
+
+;; String flageolets
+(defparameter vl-flag
+  '((67 74 79 83 89) (74 81 90 96 100) (81 97 100 105) (95 100 104)))
+(defparameter vla-flag 
+  '((67 72 76 79 82) (67 74 79 83 89) (74 81 90 96 100) (81 97 100 105)))
+(defparameter vc-flag 
+  '((48 55 64 67 70 72 74) (55 62 67 74 79 81) (62 69 74 78 81) (69 76 81 85 95)))
+(defparameter kb-flag  
+  '((36 43 48 52 55 62) (52 59 62 64 66) (52 57 61 64 67 69) (50 57 62 66 69 72 74 76)))
+
+;; sort the notes and make groups of 7
+(defparameter pitch-ranges
+(gen-divide 7
+(reverse
+(sort (flatten (list vl-flag vla-flag vc-flag kb-flag)) '<))))
+
+(defparameter all-pitches
+  (loop for i in pitch-ranges collect
+     (midi-to-pitch (rnd-sample 12 i :norep t :seed 123))))
+
+(defparameter no-measures 14)
+
+(defparameter rotated-square
+  (gen-rotate :right 
+            (gen-trim-sum 
+             (* no-measures 16) 
+             (rnd-order '(1 2 3 4 5 6 7 8 9 10 11 12) 
+                        :seed 12)) 
+            :type :seq))
+
+;; 1/16 durations with rests
+(defparameter all-durations1
+  (loop for i in rotated-square
+          collect
+    (loop for j in i
+      for res = (- 1/16 (/ j 16))
+      collect 1/16
+      if (not (zerop res))
+      collect res)))
+
+;; durations without rests
+(defparameter all-durations2
+  (loop for i in rotated-square
+          collect
+    (loop for j in i
+      collect (/ j 16))))
+
+;; durations between 1/16 and full duration
+(defparameter all-durations 
+  (loop for i in rotated-square
+          collect
+    (loop for j in i
+      for trans in (gen-transition 0 1 (length i) 0.7)
+      for pit = (max 1/16 (* (round (* j trans)) 1/16))
+      for res = (- pit (/ j 16))
+      collect pit
+      if (not (zerop res))
+      collect res)))
+
+;;;---------------------------------------------------------
+;;; Parts 
+;;;---------------------------------------------------------
+
+(defparameter all-voices
+  (set-assignment 'voice
+        (make-omn
+         :pitch all-pitches
+         :length all-durations
+         :velocity '(pp))))
+
+(setf piano1-1-rh voice0 piano1-2-rh voice4 piano1-3-rh voice8
+      piano2-1-rh voice2 piano2-2-rh voice6 piano2-3-rh voice10)
+
+(setf piano1-1-lh voice1 piano1-2-lh voice5 piano1-3-lh voice9
+      piano2-1-lh voice3 piano2-2-lh voice7 piano2-3-lh voice11)
+
+;;;---------------------------------------------------------
+;;; Score and Layout
+;;;---------------------------------------------------------
+
+(def-score 09-harm-field-1
+           (:title "AB88"
+                   :composer "Achim Bornhoeft"
+                   :copyright "Copyright © 2018"
+                   :key-signature 'chromatic
+                   :time-signature '((1 1 1 1) 4)
+                   :tempo 80
+                   :octave-shift '(c2 g6)
+                   :layout 
+                   (list
+                    (bracket-group
+                     (brace-group 
+                      (treble-layout 'piano1-1-rh) 
+                      (treble-layout 'piano1-1-lh) :name "Piano 1.1" :abbr "Pno 1.1")
+                     (brace-group
+                      (treble-layout 'piano1-2-rh) 
+                      (treble-layout 'piano1-2-lh) :name "Piano 1.2" :abbr "Pno 1.2")
+                     (brace-group
+                      (bass-layout 'piano1-3-rh) 
+                      (bass-layout 'piano1-3-lh) :name "Piano 1.3" :abbr "Pno 1.3"))
+                    (bracket-group
+                     (brace-group
+                      (treble-layout 'piano2-1-rh)
+                      (treble-layout 'piano2-1-lh) :name "Piano 2.1" :abbr "Pno 2.1")
+                     (brace-group
+                      (treble-layout 'piano2-2-rh) 
+                      (bass-layout 'piano2-2-lh) :name "Piano 2.2" :abbr "Pno 2.2")
+                     (brace-group
+                      (bass-layout 'piano2-3-rh)
+                      (bass-layout'piano2-3-lh) :name "Piano 2.3" :abbr "Pno 2.3"))))	
+  
+  ;;; Piano I 
+  
+  (piano1-1-rh :omn piano1-1-rh :channel 1 :program 0 :pan 32)  
+  (piano1-1-lh :omn piano1-1-lh :channel 2 :program 0 :pan 32)
+  
+  (piano1-2-rh :omn piano1-2-rh :channel 3 :program 0 :pan 32)
+  (piano1-2-lh :omn piano1-2-lh :channel 4 :program 0 :pan 32)
+  
+  (piano1-3-rh :omn piano1-3-rh :channel 5 :program 0 :pan 32)
+  (piano1-3-lh :omn piano1-3-lh :channel 6 :program 0 :pan 32)
+  
+  ;;; Piano II
+  
+  (piano2-1-rh :omn piano2-1-rh :channel 7 :program 0 :pan 96)
+  (piano2-1-lh :omn piano2-1-lh :channel 8 :program 0 :pan 96)
+  
+  (piano2-2-rh :omn piano2-2-rh :channel 9 :program 0 :pan 96)
+  (piano2-2-lh :omn piano2-2-lh :channel 11 :program 0 :pan 96)
+  
+  (piano2-3-rh :omn piano2-3-rh :channel 12 :program 0 :pan 96)
+  (piano2-3-lh :omn piano2-3-lh :channel 13 :program 0 :pan 96))
+
+(display-musicxml '09-harm-field-1)
+(display-midi '09-harm-field-1)

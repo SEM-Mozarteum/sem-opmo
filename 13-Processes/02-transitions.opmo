@@ -1,0 +1,85 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; PROCESSES
+
+;;; ---------------------------------------------------------
+
+;;; GEN-TRANSITION
+
+;; GEN-TRANSITION provides different types of trannsitions between
+;; elements and list  of elements
+
+;; Linear transition with integers:
+(gen-transition 1 10 10 1)
+;; => (1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0)
+
+;;  Linear transition with floats:
+(gen-transition 0.5 11.2 10 1)
+;; => (0.5 1.6888889 2.8777778 4.0666666 5.2555556 6.4444447 7.633333 8.822223 10.011111 11.2)
+
+;; Concave and convex transition:
+(list-plot
+ (list
+  (gen-transition 0 10 50 0.7)
+  (gen-transition 0 10 50 1.5))
+ :zero-based t :point-radius 1.5 :join-points t)
+
+;; A chord interpolation:
+(chordize
+ (midi-to-pitch
+  (matrix-transpose            
+   (list-plot
+    (gen-transition '(60 63 66) '(80 91 102) 50 1)
+    :zero-based t :point-radius 1.5 :join-points t))))
+
+;; Transition of durations and rests
+(progn
+  ;; Transition of durations from 1/32 to 3/4
+  (setf dur-transition 
+        (quantize (gen-transition 0.125 3 24 1) (gen-integer 1 8) :type :ratio))
+  ;; Reverse the durations as rests
+  (setf reverse-dur-rests
+        (length-invert (reverse dur-transition)))
+  ;; Merge durations and rests
+  (setf crossfade-durs-rests
+        (flatten
+         (matrix-transpose (list dur-transition reverse-dur-rests))))
+  ;; Add notes to it
+  (setf pitch-transition
+        (make-omn
+         :pitch (midi-to-pitch (rnd-number (length dur-transition) 60 80))
+         :length crossfade-durs-rests))
+  )
+
+;;; ---------------------------------------------------------
+
+;;; ENVELOPES (no documentation)
+
+;; Creates an envelope with n values according to thegiven x-y-values
+(setf env (envelope-exp 
+           '(0 1  1 2  2 3  3 5  4 10  5 20  6 30  7 50  8 80  9 30  10 0) 
+           1 10))
+
+;; See the envelope
+(xy-plot (pair-up env) 
+         :point-radius 1.5 :join-points t :style :fill)
+
+;; Make a new envelope with 20 pairs
+(setf twenty
+      (xy-plot 
+       (pair-up (envelope-sample env 20)) 
+       :point-radius 1.5 :join-points t :style :fill))
+
+;; Map the envelope to pitches between c4 and gs5 
+(setf twenty-pitches
+      (pitch-list-plot (vector-map 
+                        (midi-to-pitch
+                         (gen-integer 60 80))
+                        ;; extract the y-values from the envelope
+                        (second (matrix-transpose twenty)))
+                       :point-radius 1.5 :join-points t :style :fill))

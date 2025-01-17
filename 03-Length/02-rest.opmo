@@ -1,0 +1,133 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; RESTS
+
+#|
+rests in OM are represented as negativ lengths
+|#
+
+;;; ---------------------------------------------------------
+
+(gen-length '(1 -1 3 -1 2 -4) 16) 
+;; => (1/16 -1/16 3/16 -1/16 1/8 -1/4)
+
+(setf lengths (gen-length '(1 -1 3 -1 2 -4) '(16 8 4)))
+(setf pitches (span lengths (midi-to-pitch '(60 65 78))))
+
+(setf mat2 (make-omn
+            :length lengths
+            :pitch pitches))
+
+;;; ------------------------------------------------------
+
+;;; get-count / get-span
+
+;; "get-count" counts notes and rests:
+(get-count '(1/16 1/8 1/16 1/12 -1/12 1/12)) => 6
+;; same as in LISP
+(length '(1/16 1/8 1/16 1/12 -1/12 1/12))
+
+;; Notes
+(get-count '(1/16 1/8 1/16 1/12 -1/12 1/12) :length :note) 
+;; => 5
+
+;; Rests
+(get-count '(1/16 1/8 1/16 1/12 -1/12 1/12) :length :rest) 
+;; => 1
+
+;;  Calculate the overall duration with "get-span"
+(setf span-rhy '(1/4 1/8 1/8 1/12 1/12 1/12))
+(get-span span-rhy) ;  => 3/4
+
+;; see 2 voices with cmd-2
+(list span-rhy (get-span (list span-rhy)))
+
+;;; ------------------------------------------------------
+
+;;; length-weigth
+
+;; Create rest lengths in a list of note lengths
+(setf len1 '(1/4 1/16 1/8 1/16 1/2 1/8 1/8 1/8 1/8))
+
+
+(length-weight len1)
+;; e.g.  (1/4 1/16 1/8 -1/16 1/2 -1/8 1/8 1/8 1/8)
+
+;; 5 voices three times more notes than rests
+(gen-loop 5
+(length-weight len1 :weight '(1 3)))
+
+;;; ------------------------------------------------------
+
+;;; length-invert
+
+;; invert notes and lengths
+(setf rhy '(1/4 1/4 -1/8  1/4 -1/8 1/4)) 
+
+;; see result with cmd-2 (option-2 on Win)
+(list rhy (length-invert rhy))
+
+;;; ------------------------------------------------------
+
+;;; length-legato
+
+;; inverts rests to a length and adds the sum of the rests 
+;; to the previous length
+(setf rhy2 '(1/4 -1/16 1/16 -1/12 2/12 2/20 -3/20 -1/8))
+
+(list rhy2 (length-legato rhy2))
+
+;;; ------------------------------------------------------
+
+;;; length-align
+
+;; LENGTH-ALIGN is used to align a series of length lists 
+;; with one another.
+
+(setf v1 '(q h e. s q h e. s))
+(setf v2 '(q h e. q h))
+(setf va '(-e -s e s = = -e -s e s = = -e -s e s = =))
+(setf vc '(h q e. s q. e s))
+
+;; Align all these lists by adding rests ('r) to the end ('e)
+;; View with cmd-2 (opt-2 on Windows)
+(length-align (list v1 v2 va vc) :type 'r :position 'e)
+
+;; Align all these lists by adding rests ('r) to the start ('s)
+(length-align (list v1 v2 va vc) :type 'r :position 's)
+
+;; Align all these lists by adding rests ('r) symmetrically
+;; at the start and at the end
+(length-align (list v1 v2 va vc) :type 'r :position 'o)
+
+;; Align all these lists by adding rests ('r) randomly ('r)
+(length-align (list v1 v2 va vc) :type 'r :position '?)
+
+;; Add new note lengths at the end
+(length-align (list v1 v2 va vc) :type 'n :position 'e)
+
+;;; ------------------------------------------------------
+
+;;; length-augmentation / length-diminution
+
+(setf durlst '(1/8 1/4 1/8 1/8 -1/8 1/16 1/16 1/8 -1/8 1/8))
+
+;; (See voices with cmd-2)
+(setf dur-canon1 
+      (list 
+       (length-augmentation 1/2 durlst)
+       durlst 
+       (length-augmentation 2 durlst)))
+      
+(setf dur-canon2
+      (quantize
+       (list  
+        (length-diminution 3 durlst)
+        (length-diminution 2 durlst)
+        durlst)
+       '(1 2 3 4 5 6 7 8)))

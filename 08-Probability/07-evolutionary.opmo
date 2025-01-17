@@ -1,0 +1,108 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EVOLUTIONARY
+
+;;; ---------------------------------------------------------
+
+;;; GEN-MUTATE
+
+;; GEN-MUTATE returns a random element from a list and 
+;; mutates randomly to a given mutation probability.
+
+(setf lst (rnd 6 :seed 45))
+
+;; Calculate 24 mutation lists
+;; The default count of mutations is 1, therefore up to
+;; one element is mutating
+(setf mut-lists (gen-mutate 24 lst :seed 34))
+
+(setf mutation1 (vector-to-pitch '(-15 15) mut-lists))
+
+(setf omn-mutation1
+(make-omn :length '(s)
+          :pitch mutation1
+          :span :pitch))
+
+(setf omn-mutation2
+(make-omn :length '(q)
+          :pitch (chordize mutation1)
+          :span :pitch))
+
+;;; ---------------------------------------------------------
+
+;;; GEN-POPULATION / GEN-MUTATE-POPULATION
+
+#|
+GEN-POPULATION returns a random population with N members 
+randomly between 0 and 1. Each list will contain a number 
+of elements between low and high.
+|#
+
+;; 5 generations of lengths between 3 and 7
+(setf population (gen-population 5 3 7 :seed 56))
+
+;; The GEN-MUTATE-POPULATION function will randomly select 
+;; some of the population to be mutated. This function takes 
+;; a population in the form of a list of lists.
+;; The probability is the likelyness of the list to mutate
+(setf mutation2 (gen-mutate-population
+                population :prob 0.2 :seed 34))
+
+;; The count is the number of elements which can mutate 
+;; (rnd low/high)
+(setf mutation3
+      (gen-mutate-population population :prob 0.6 :count '(2 3)))
+
+;; flatten is used to make it visible in list-plot
+(list-plot (list (flatten population) 
+                 (flatten mutation3)) 
+           :join-points t
+           :point-radius 1.5)
+
+(chordize (sort-asc (vector-to-pitch '(-7 19) mutation3)))
+
+;;; ---------------------------------------------------------
+
+;;; GEN-MORPH
+
+;; GEN-MORPH is used to gradually replace items in one list 
+;; with items from another.
+
+;; A chord transition in 6 steps
+(chordize-list 
+ (gen-morph 6 '(c4 d4 e4 f4 g4)
+            '(cs5 ds5 fs5 gs5 as5)))  
+
+;; A transition from one wholetone scale to the other 
+;; in 12 steps
+(setf wholetone-1 '(0 2 4 6 8 10) 
+      wholetone-2 '(1 3 5 7 9 11))
+
+(setf wt-series (chordize-list
+                 (integer-to-pitch 
+                 (gen-morph 12 wholetone-1 wholetone-2))))
+
+;;; ---------------------------------------------------------
+
+;;; GEN-CROSSOVER
+
+;; This function returns two child lists from the parent lists, at random.
+;; Every 2 chords have the sum of all pitches
+(loop repeat 10 append
+        (chordize
+         (gen-crossover
+          '(c4 d4 e4 f4 g4 a4) '(cs4 ds4 fs4 gs5 as4))))
+
+;; Lengths and dynamics can also be processed this way:
+(gen-crossover
+ '(f f f mf ff) '(p p p mp pp p) :seed 21)
+;; => ((f p p mp pp p) (p f f mf ff))
+
+(gen-crossover
+ '(e = = = q =) '(s = = = e s = h) :seed 34)
+;; => ((e = = h) (s = = = e s = e q =))

@@ -1,0 +1,96 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; INTERVAL
+
+#|
+In contrast to defined pitches, intervals describe their 
+relative distance.
+|#
+
+;;; ---------------------------------------------------------
+
+;;; interval-map / interval-to-pitch
+
+;; a list of ascending and descending intervals
+(setf intervals '(2 2 1 2 2 2 1 -2 -2 -1 -2 -2 -1 -2))
+
+;; mapping the intervals starting from 'c4
+(interval-map 'c4 intervals)
+
+;; converting to pitches does the same in this case
+(interval-to-pitch intervals)
+
+;;; ---------------------------------------------------------
+
+;;; interval-ambitus / interval-scale
+
+;; This functions restricts the intervals of the input list
+;; to a maximum ambitus keeping octave equivalent note names
+(interval-map 'c4
+(interval-ambitus 7 '(-12 3 -17 23))) ; (0 3 -5 -1)
+
+;; when the interval reaches the ambitus border
+;; the direction changes until the next 
+(interval-map 'c4 '(4 4 4 4 4 4 4) :ambitus '(c4 c5))
+;; => (c4 e4 gs4 c5 gs4 e4 c4 e4)
+
+;; Scaling of intervals
+(interval-map 'c4
+(interval-scale 2 intervals))
+
+;; Scaled intervals ranged to ambitus (integers)
+(interval-map 'c4
+(interval-scale 2 intervals :ambitus '(-5 7)))
+
+;; Scaled intervals ranged to ambitus (instrument)
+(interval-map 'c4
+(interval-scale 2 intervals :ambitus 'flute))
+
+;;; ---------------------------------------------------------
+
+;;; interval-randomize
+
+;; Create a number of variations from a list of intervals
+;; By default only the direction is randomized
+;; 3 random variations
+(interval-map 'c3
+(interval-randomize 3 '(2 4 -2) :seed 123))
+;; ((-2 4 2) (2 4 -2) (-2 -4 2))
+
+;; with the keyword :rnd-order set to t (=true)
+;; the intervals are shuffled randomly
+(interval-map 'c5
+(interval-randomize 3 '(2 4 -2) :rnd-order t :seed 12))
+
+;;; ---------------------------------------------------------
+
+;;; interval-repeat
+
+#|
+This function generates repetitions of a single interval 
+above or below a base (0). It responds to low-change and 
+high-change, and low-repeat and high-repeat arguments.
+|#
+
+(interval-to-pitch
+(interval-repeat 8 4 10 1 4 6))
+
+(interval-to-pitch
+(interval-repeat 8 2 3 2 3 '(6 7) :seed 123))
+
+(gen-loop 4 ; create 4 lists
+(cons 't 
+      ;; add "t" (1/32 duration) at the beginning 
+      ;; of each pitch list
+(interval-to-pitch ; converting intervals to pitch
+ (flatten ; remove all the inner lists of each 
+  (interval-repeat
+   (rnd-sample 5 (gen-integer 8 14)) 2 3 2 3 '(12 8 6 7 3) 
+   :seed 123))
+  ; each of the intervals is repeated 
+  :start 'g3)) :seed 123)

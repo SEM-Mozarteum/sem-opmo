@@ -1,0 +1,177 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; FILTER
+
+;;; ---------------------------------------------------------
+
+;;; AMBITUS-FILTER
+
+(defparameter pitches
+'((3q g5 pp g3 g1 g2 c2 c4 eb1 d4 b3 e3 g4 b2) 
+(3q eb4 pp e2 b3 g2 bb4 bb5 d4 b1 g3 d3 d5 b2) 
+(e g3 pp cs2 gs5 a4 gs6 c7 c4 g2) 
+(e bb6 pp d4 d2 g4 bb1 d3 fs5 g2) 
+(e e4 pp a3 f2 a4 b5 g2 a2 b4) 
+(3q a3 pp bb6 bb5 a5 g3 eb2 d7 d4 b4 g4 g2 c3) 
+(e cs5 pp e3 d5 gs5 b2 b3 b4 gs6) 
+(e g6 pp fs2 g2 c7 c6 g5 c5 cs5) 
+(e fs6 pp eb7 b5 b4 b6 g2 c5 fs5) 
+(3q bb6 pp g3 eb2 d4 bb5 a3 a5 b4 c3 g4 d7 g2) 
+(e c2 pp d5 a2 e4 e3 e2 d6 g4)))
+
+;; Verwenden Sie diese Funktion, um den Bereich von Instrumenten 
+;; herauszufinden.
+(integer-to-pitch (ambitus-instrument 'vibraphone))
+
+#|
+Diese Funktion filtert Tonhöhen, Velocities und Artikulationen 
+aus der Sequenz heraus, die außerhalb des vorgegebenen Ambitus liegen. 
+Die Länge der entfernten Tonhöhe wird in die Restlänge invertiert. 
+Die Spanne der Sequenz bleibt unverändert.
+|#
+(ambitus-filter 'vibraphone pitches)
+
+#|
+LENGTH-LEGATO inverts length-rests to a length-note and 
+adds the sum of the rests in sequence to the previous length-note.
+|#
+(length-legato (ambitus-filter 'violoncello pitches))
+
+;; Filter pitches for piano notation
+(setf rh (ambitus-filter '(c4 c6) pitches))
+(setf lh (ambitus-filter '(c1 b3) pitches))
+
+(def-score pno-filter
+           (:key-signature 'chromatic
+                           :time-signature '(4 4)
+                           :tempo 80
+                           :layout (piano-layout 'pno-rh 'pno-lh))
+  (pno-rh
+   :omn rh
+   :sound 'gm :program 0)
+  
+  (pno-lh
+   :omn lh
+   :sound 'gm :program 0)
+  ) 
+
+;;; ---------------------------------------------------------
+
+;;; FILTER-FIRST / FILTER-LAST
+
+(filter-first 3 '(c4 d4 e4 f4 g4 a4))
+;; => (c4 d4 e4)
+
+;; Multiple lists can be used, for example - to get the first three values of each list:
+
+(filter-first 3 '((c4 d4 e4 f4 g4 a4) (c3 d3 e3 f3 g3 a3)))
+;; => ((c4 d4 e4) (c3 d3 e3))
+
+;; Or to get the first three values of the first list, and only the first two from the second list:
+
+(filter-first '(3 2) '((c4 d4 e4 f4 g4 a4) (c3 d3 e3 f3 g3 a3)))
+;; => ((c4 d4 e4) (c3 d3))
+
+;; filter-last works the same way
+(filter-last 3 '(c4 d4 e4 f4 g4 a4))
+;; => (f4 g4 a4)
+
+;;; ---------------------------------------------------------
+
+;;; FILTER-EVENTS
+
+#|
+The function FILTER-EVENTS checks whether an event contains the given element. When an element is found the event is returned. All other events are transformed into rests. The option remain will invert the process.
+|#
+
+(filter-events 'd4 '(e c4 mp -e fermata e. d4 -h e. c4 e e4))
+;; => (-q e. d4 mp -h.s)
+
+(filter-events 'd4 '(e c4 mp -e fermata e. d4 -h e. c4 e e4) :remain t)
+;; => (e c4 mp -e fermata -he. e. c4 e e4)
+
+(filter-events 'fermata+stacc '(e c4 mp -e fermata+stacc e. d4 -h e. c4 e e4) :remain t)
+;; => (-wq.)
+
+;;; ---------------------------------------------------------
+
+;;; GET-EVENTS
+
+(defparameter  
+    seq1 '((e c4e4g4 he c5)
+           (q c4 c4 c4 - - c4)
+           (q cs4 cs4 - - cs4 cs4)
+           (e c4 cs4d4eb4 d4 cs4 c4 cs5)
+           (e c4 e4 g4 he c5)
+           (q c4 c4 c4 - - c4)
+           (q cs4cs4 - - cs4 cs4)
+           (e c4 cs4d6 d4 cs4 c4 cs5)))
+
+;; input ist sequence, bar number,
+(get-events '((seq1 1)))
+
+;; input ist sequence, bar number, event number
+(get-events '((seq1 1 1)
+              (seq1 3 5)
+              (seq1 8 2)))
+
+;; select events randomly
+(loop repeat 5
+   initially (init-seed 13)
+   collect
+   (get-events (list 
+                (list seq1
+                      (rnd1 :low 1 :high 8)
+                      (rnd-number 2 1 3 :norep t)))))
+
+;;; ---------------------------------------------------------
+
+;;; POSITION-FILTER
+
+;; Filter elements from a list
+
+;; Get element 0, 2 and 5 from a list of notes
+(position-filter '(0 2 5) '(c4 d4 e4 f4 g4 a4 b4 c5))
+;; => (c4 e4 a4)
+
+;; Get sublist 0 and 1 from a list of dynamic lists
+(position-filter '(0 1)
+                 '((ppp pp p) (pp p mp) (p mp mf) (mp mf f)))
+;; => ((ppp pp p) (pp p mp))
+
+;; Get elements 0 and 1 from EACH sublist of notes
+(position-filter '((0 1)) ; listed list!
+                 '((c4 d4 e4) (f4 g4 a4) (b4 c5 d5) (e5 f5 g5)))
+;; => ((c4 d4) (f4 g4) (b4 c5) (e5 f5))
+
+;; Get elements at specific positions in sublists
+(position-filter '((1 0) (0 2) (0 2) (0 2) (0 1) (0 2))
+                 '((c4 d4 e4) (f4 g4 a4) (b4 c5 d5) (e5 f5 g5)))
+;; => ((d4 c4) (f4 a4) (b4 d5) (e5 g5) (c4 d4) (f4 a4))
+
+
+;; A list of random pitches
+(setf violin (rnd-sample 24 '(c4 cs4 d4 fs4 g4 gs4 c5) :seed 356))
+;; => (g4 c4 gs4 c5 c5 d4 c5 gs4 c4 gs4 cs4 d4 c4 d4 c5 c4 g4 c4 d4 gs4 fs4 gs4 g4 g4)
+
+;; A random selection of 10 pitches from this list
+(setf vn-var (position-filter
+              (rnd-number 10 1 24 :seed 231) violin))
+;; => (c5 d4 c5 c4 g4 gs4 c5 c5 c4 c5)
+
+;; 5 different filter of the same note list
+(setf vn-vars
+      (loop repeat 5 
+        initially (init-seed 34)
+        collect
+        (position-filter
+         (rnd-number 10 1 24) violin)))
+
+
+
+

@@ -1,0 +1,285 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; Piano 1
+
+(defparameter pitches 
+  (rnd-order 
+   (sort-asc (cartesian 
+              '((d1 d2 d3 d4 d5 d6 d7) 
+                (c1 c2 c3 c4 c5 c6 c7) 
+                (eb1 eb2 eb3 eb4 eb5 eb6 eb7))))
+   :list t :seed 123)
+  "All possible combiations of the 3 pitches, 
+  sorted and then randomly ordered.")
+
+(defparameter intervals (loop for i in pitches
+  collect (pitch-to-interval i))
+  "Calculate the intervals between the notes.")
+
+(defparameter selected-chords
+  (loop for i in intervals
+    for x from 0
+    when (not (and (>  (first i) 14)
+                   (> (second i) 14)))
+    ; if both intervals are not larger than
+    ; 14 semitones collect the notes
+    collect (nth x pitches)))
+
+(defparameter selected-intervals 
+  (loop for i in selected-chords
+  collect (pitch-to-interval i))
+  "Calculate the intervals of the selected chords.")
+
+(defparameter 2voices
+  (matrix-transpose
+   ; all notes for the left and the right hands
+   (loop for i in selected-intervals
+     for x from 0
+     for n = (nth x selected-chords)
+     if (> (first i) 14)
+     ; if the first interval is too large
+     collect (list (first n) 
+                   (chordize (rest n)))
+     ; then collect the first note alone and
+     ; the both remaining as chord
+     else
+     ; if not then do it the other way round
+     collect (list (chordize (butlast n)) 
+                   (third n)))))
+
+(defparameter len-sel-chords
+  (length selected-chords))
+
+(defparameter lengths
+    (gen-length  
+     (rnd-sum-to-size
+  (* len-sel-chords 4) 
+  len-sel-chords
+  '(1 2 3 4 5 6 7) :seed 123) 4)
+  "List of random durations.")
+
+(defparameter time-sigs 
+  (get-time-signature (mclist lengths))
+  "Every duration is one measure.")
+
+(defparameter dynamics
+  (matrix-transpose
+  (gen-weight (length lengths)
+              '(((pp mp) 20)
+                ((mp pp) 20)
+                ((pp pp) 60))
+              :seed 123))
+  "Weighted dynamic combinations between left and right hand.")
+
+(defparameter rh1
+  (make-omn
+   :pitch (flatten (second 2voices))
+   :length lengths
+   :velocity (first dynamics)))
+
+(defparameter lh1
+  (make-omn
+   :pitch (flatten (first 2voices))
+   :length lengths
+   :velocity (second dynamics)
+   :articulation '(ped))) 
+
+;;; ------------------------------------
+
+;;; Piano 2
+
+(defparameter pitches2 
+  (rnd-order 
+   (sort-asc (cartesian 
+              '((bb1 bb2 bb3 bb4 bb5 bb5 bb7) 
+                (c1 c2 c3 c4 c5 c6 c7) 
+                (ab1 ab2 ab3 ab4 ab5 ab6 ab7))))
+   :list t :seed 1234)
+  "All possible combiations of the 3 pitches, 
+  sorted and then randomly ordered.")
+
+(defparameter intervals2 
+  (loop for i in pitches2
+  collect (pitch-to-interval i))
+  "Calculate the intervals between the notes.")
+
+(defparameter selected-chords2
+  (loop for i in intervals2
+    for x from 0
+    when (not (and (>  (first i) 14)
+                   (> (second i) 14)))
+    ; if both intervals are not larger than
+    ; 14 semitones collect the notes
+    collect (nth x pitches2)))
+
+(defparameter selected-intervals2 
+  (loop for i in selected-chords2
+  collect (pitch-to-interval i))
+  "Calculate the intervals of the selected chords.")
+
+(defparameter 2voices2
+  (matrix-transpose
+   ; all notes for the left and the right hands
+   (loop for i in selected-intervals2
+     for x from 0
+     for n = (nth x selected-chords2)
+     if (> (first i) 14)
+     ; if the first interval is too large
+     collect (list (first n) 
+                   (chordize (rest n)))
+     ; then collect the first note alone and
+     ; the both remaining as chord
+     else
+     ; if not then do it the other way round
+     collect (list (chordize (butlast n)) 
+                   (third n)))))
+
+(defparameter lengths2
+    (gen-length  
+     (rnd-sum-to-size
+  (* (length selected-chords) 4) 
+  (length selected-chords2)
+  '(1 2 3 5 6 8) :seed 1234) 4)
+  "List of random durations.")
+
+(defparameter dynamics2
+  (matrix-transpose
+  (gen-weight (length lengths)
+              '(((pp mp) 20)
+                ((mf pp) 20)
+                ((pp pp) 60))
+              :seed 1234))
+  "Weighted dynamic combinations between left and right hand.")
+
+(defparameter rh2
+  (make-omn
+   :pitch (flatten (second 2voices2))
+   :length lengths2
+   :velocity (first dynamics2)))
+
+(defparameter lh2
+  (make-omn
+   :pitch (flatten (first 2voices2))
+   :length lengths2
+   :velocity (second dynamics2)
+   :articulation '(ped)))
+
+;;; ------------------------------------
+
+;;; Violin
+
+(defparameter vl
+  (dechord 
+  (ambitus-filter 'violin rh2)
+  :pitch '? :seed  123))
+
+(setf violin
+      (dictum '((:remove :velocity)
+                (:apply 'p)
+                (:range (g3 g4) :apply (pp tasto))
+                (:range (gs4 a7) :apply ord))
+                vl))
+
+;;; ------------------------------------
+
+;;; Vibraphone
+
+(defparameter vi
+  (length-staccato
+   (dechord 
+    (ambitus-filter 'glockenspiel rh1)
+    :pitch '? :seed 123)
+   :value 1/8))
+
+(setf vibr
+      (dictum '((:remove :velocity)
+                (:apply 'p)
+                (:apply ped))
+                vi))
+      
+;;; ------------------------------------
+
+;;; Score
+
+#|
+(ps 'gm
+    :p (list rh1 lh1 rh2 lh2)
+    :key-signature 'chromatic
+    :time-signature time-sigs
+    :flexible-clef t
+    :tempo 80
+    :title "Untitled 20220510")
+|#
+
+(def-score Untitled-20220518
+           (:title "Untitled 20220518"
+                   :composer "Achim  Bornhoeft"
+                   :copyright "Copyright © 2022"
+                   :key-signature 'chromatic
+                   :time-signature time-sigs
+                   :flexible-clef t
+                   :tempo 80
+                   :layout (list
+                            (violin-layout 'violin)
+                            (vibraphone-single-layout 'vibra)
+                            (piano-layout 'piano-rh1 'piano-lh1)
+                            (piano-layout 'piano-rh2 'piano-lh2)))
+  
+  (violin
+   :omn violin
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 100
+   :pan 64
+   :controllers (91 '(48))
+   )
+  
+  (vibra
+   :omn vibr
+   :channel 2
+   :sound 'gm
+   :program 'vibraphone
+   :volume 100
+   :pan 64
+   :controllers (91 '(48))
+   )
+  
+  (piano-rh1
+   :omn rh1
+   :channel 3
+   :sound 'gm
+   :program 'acoustic-grand-piano
+   :volume 100
+   :pan 64
+   :controllers (91 '(48))
+   )
+  
+  (piano-lh1
+   :omn lh1
+   :channel 4
+   :controllers (91 '(48))
+   )
+  
+  (piano-rh2
+   :omn rh2
+   :channel 5
+   :sound 'gm 
+   :program 'acoustic-grand-piano
+   :volume 100
+   :pan 64
+   :controllers (91 '(48))
+   )
+  
+  (piano-lh2
+   :omn lh2
+   :channel 6
+   :controllers (91 '(48))
+   )
+  )
+

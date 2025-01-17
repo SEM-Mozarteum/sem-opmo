@@ -1,0 +1,140 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; IMPORT
+
+;;; ---------------------------------------------------------
+
+#|
+There are two methods used to Import Midi to Score. One does
+everything in code (script), the other uses menu commands to
+do it all for you. Let's start with the first method.
+|#
+
+;;; MIDI-TO-SCORE / COMPILE-SCORE
+
+;; The  midi-to-score function does the conversion with
+;; the given quantisation
+;; compile-score writes this file with a given name and
+;; optionally only a specific part between start and end to disk.
+;; The output can directly be found in the utilities panel
+;; under "S" (Scores).
+(compile-score
+ (midi-to-score
+  "~/Documents/Opusmodus/Media/MIDI/Bach/bach-gv-aria.mid"
+  :quantize '(1 2 4 8) 
+  :velocity 'nil)
+ :output :score :file "gv-aria-bar1-4"
+ :score-name 'gv-aria-bar-1-4
+ :start 1 :end 4)
+
+;; Output of midi-to-score
+
+(def-score gv-aria-bar-1-4 (:title "+IMPORTED" :composer nil :copyright nil :key-signature '((c maj 4)) :rewrite-lengths 't :time-signature '((3 4 4)) :tempo '((50 4))) (goldberg.mid :omn '((q g5 g5 t a5 g5 e a5 s b5) (e a5 s g5 fs5 e e5 q. d5) (t g4 fs4 e. g4 t a4 g4 fs4 g4 a4 g4 a4 g4 a4 g4 a4 g4 s fs4 g4) (t a4 g4 s fs4 t g4 fs4 s e4 e q. d4)) :channel 1 :sound 'gm :program '((acoustic-grand-piano 3)) :volume '((110 179/60)) :pan '((64 3))) (goldberg.mid-2 :omn '((-h q d4) (-h q d4) (-h q cs4) (-h q a3)) :channel 2 :sound 'gm :program '((acoustic-grand-piano 3)) :volume '((112 59/20)) :pan '((64 3))) (goldberg.mid-3 :omn '((-q h b3) (-q h a3) (-q h g3) (-q h fs3)) :channel 3 :sound 'gm :program '((acoustic-grand-piano 3)) :volume '((115 179/60)) :pan '((64 3))) (goldberg.mid-4 :omn '((h. g3) (h. fs3) (h. e3) (h d3 -e c3)) :channel 4 :sound 'gm :program '((acoustic-grand-piano 3)) :volume '((115 89/30)) :pan '((64 3))))
+
+;;; Import via OM menu (see Midi-to-score.rtfd)
+
+#|
+In the second method here's the sequence to follow:
+
+1. Go to the Midifile collection in Utilities
+1. Open the Midifile bach-gv-aria.mid in the Assistant
+2. Focus on the MidiPlay pane
+2. Go to File->Export-> Midi To Score
+4. Locate and open your folder in Scores
+5. Type a new name (Bach Aria) and press Save
+6. Immediately your file will appear on the menu list.
+
+Now you'll find you have the whole Bach aria in OMN script.
+|#
+
+;;; PPRINT-LAST-SCORE
+
+;; Any Score can be formatted with pprint-last-score 
+;; containinng bar numbers
+;; Menu-shortcut: PPrint Last Score: alt-cmd-tab (opt-cmd-tab)
+
+(pprint-last-score)
+
+;; Formatted output of pprint-last-score with bar numbers
+(def-score gv-aria-bar-1-4
+        (:title "+IMPORTED"
+         :composer nil
+         :copyright nil
+         :key-signature '((c maj 4))
+         :rewrite-lengths 't
+         :time-signature '((3 4 4))
+         :tempo '((50 4)))
+      (goldberg.mid
+       :omn '(#|1|# (q g5 g5 t a5 g5 e a5 s b5)
+              #|2|# (e a5 s g5 fs5 e e5 q. d5)
+              #|3|# (t g4 fs4 e. g4 t a4 g4 fs4 g4 a4 g4 a4 g4 a4 g4 a4 g4 s
+                     fs4 g4)
+              #|4|# (t a4 g4 s fs4 t g4 fs4 s e4 e q. d4))
+       :channel 1
+       :sound 'gm
+       :program '((acoustic-grand-piano 3))
+       :volume '((110 179/60))
+       :pan '((64 3)))
+      (goldberg.mid-2
+       :omn '(#|1|# (-h q d4)
+              #|2|# (-h q d4)
+              #|3|# (-h q cs4)
+              #|4|# (-h q a3))
+       :channel 2
+       :sound 'gm
+       :program '((acoustic-grand-piano 3))
+       :volume '((112 59/20))
+       :pan '((64 3)))
+      (goldberg.mid-3
+       :omn '(#|1|# (-q h b3)
+              #|2|# (-q h a3)
+              #|3|# (-q h g3)
+              #|4|# (-q h fs3))
+       :channel 3
+       :sound 'gm
+       :program '((acoustic-grand-piano 3))
+       :volume '((115 179/60))
+       :pan '((64 3)))
+      (goldberg.mid-4
+       :omn '(#|1|# (h. g3)
+              #|2|# (h. fs3)
+              #|3|# (h. e3)
+              #|4|# (h d3 -e c3))
+       :channel 4
+       :sound 'gm
+       :program '((acoustic-grand-piano 3))
+       :volume '((115 89/30))
+       :pan '((64 3))))
+
+;;; MIDI-TO-OMN
+
+(setf gv-aria-bar-1-4
+  "~/Documents/Opusmodus/Media/MIDI/Bach/bach-gv-aria.mid")
+
+;; Import the 1. instrument
+
+(midi-to-omn gv-aria-bar-1-4 
+             :instrument 1 
+             :quantize '(1 2 4 8))
+
+;; The function returns only the pitches of the 2nd 
+;; midi instrument
+
+(midi-to-omn gv-aria-bar-1-4 :type :pitch :instrument 2)
+
+;; The function returns only the lengths of the 3nd 
+;; midi instrument
+
+(midi-to-omn gv-aria-bar-1-4 :type :length :instrument 3)
+
+;; Only bars 2  and 3 from the midi file        
+(midi-to-omn gv-aria-bar-1-4
+             :instrument 1
+             :bars '(2..3)
+             :quantize '(1 2 4 8))
+

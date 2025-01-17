@@ -1,0 +1,281 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; SCORE
+
+;;; ---------------------------------------------------------
+
+#|
+
+Hierarchy of a score in Opusmodus:
+
+(score 
+ (part 
+  (voice 
+   (measure 
+    (beat 
+     (note/chord)
+     )
+    )
+   )
+  )
+ )
+|#
+
+;;; PITCH
+
+;; First we create a twelve-tone row
+(setf twelve-tone-row (rnd-row :seed 127))
+
+;; and assign it to a variable:
+(setf note-mat (integer-to-pitch
+                twelve-tone-row))
+
+;;; PITCH => DURATION
+
+;; Then we create a list of durations spanned to the pitches:
+(setf dur-mat 
+      (rnd-order
+       (span note-mat '(1/16 1/8 -1/4 1/4))
+       :seed 234))
+
+;; Compare (length note-mat) /= (length dur-mat)!
+
+;;; VOICE
+;;; 2 musical voices derived from "note-mat"
+
+;; VOICE 1
+
+;; (identical to "note-mat" and "dur-mat"
+(setf mat1 
+      (make-omn
+       :pitch note-mat
+       :length dur-mat))
+
+#!
+;; Its possible to make the omn in one:
+(setf mat1a
+      (make-omn
+       :pitch (rnd-row :type :pitch)
+       ; the :pitch keyword forces the output to pitches
+       :length 
+       (rnd-order
+        '(1/16 1/8 -1/4 1/4))
+       :span :pitch))
+;; the disadvantage is that 'mat2' has to be disassembled
+;; before specific contents of it can be reused
+!#
+
+;; VOICE 2
+
+;; inversion of the twelve-tone row 
+;; transposed 11 semitones down
+(setf note-mat2 
+      (pitch-transpose -11 
+                       (integer-to-pitch 
+                        (interval-invert twelve-tone-row))))
+
+;; new durations by random ordering
+(setf dur-mat2 (rnd-order dur-mat :seed 123))
+
+(setf mat2
+      (make-omn
+       :pitch note-mat2
+       :length dur-mat2))
+
+;;; PREVIEW SCORE
+
+#|
+The PS function can be used for a quick preview of the score 
+or when a snippet (especially for education) needs a full 
+representation of the intended notation. The PS function 
+name stands for ‘Preview Score’ or ‘Preview Snippet’.
+In the following examples we use the default instrument-set 
+library, defined in the ‘GM Instrument Set.lisp’ file, which 
+you will find in the Library panel. How to create your own 
+instrument-set library, you will find in the 
+DEF-INSTRUMENT-SET document.
+|#
+
+(ps 'gm
+    :p (list mat1 mat2)
+    :time-signature '(4 4))
+ 
+;;; SCORE
+
+#|
+This function defines a SCORE comparable to a notation 
+program with Title, Subtitle, Composer, Copyright, etc. 
+This SCORE is in MUSIC-XML format and can be used in every 
+compatible notation program like MuseScore, Sibelius and 
+Finale.
+The DEF-SCORE instance DEFAULT options must have at least 
+the :key-signature, :time-signature and :tempo values.
+|#
+
+(def-score piano-score ; name of the score
+    ;; general score definition:
+    (:key-signature 'chromatic
+     :time-signature '(4 4)
+     :tempo 60
+     :layout 
+     (piano-layout 'piano-rh 'piano-lh))
+  
+  (piano-rh ; name of the system
+   :omn mat1)
+  
+  (piano-lh
+   :omn mat2))
+
+;; display the score
+(display-musicxml 'piano-score)
+
+;; display the score in midi-editor and play
+(display-midi 'piano-score)
+
+;;; ---------------------------------------------------------
+
+;;; 2 new VOICES derived from the first 2 voices
+
+;; VOICE 3
+
+;; just a new random order of mat1
+(setf mat3 (rnd-order mat1 :seed 34))
+
+;; VOICE 4
+
+;; transposed and reversed version of mat2
+(setf mat4 (pitch-transpose 6
+            (gen-retrograde mat2)))
+
+;; Concatenating voices
+
+;; append two materials in one voice
+(setf voice1 (list mat1 mat3 mat1))
+(setf voice2 (pitch-transpose 15 (list mat2 mat4 mat4)))
+
+;; voices as transpositions of other voices
+(setf voice3 (pitch-transpose -6 voice1)) 
+(setf voice4 (pitch-transpose 6 voice2))
+
+;;; PARTS
+
+;; To merge 2 voices in one part use merge-voices
+(setf part1 (merge-voices voice1 voice3))
+(setf part2 (merge-voices voice2 voice4))
+
+;;; SCORE
+
+(def-score duo ; name of the score
+           (:title "Duo"
+            :composer "Achim Bornhoeft"
+            :key-signature 'chromatic
+            :time-signature '(3 4)
+            :tempo 80
+            :layout (list
+		   (vibraphone-single-layout 'vibra)
+                    (piano-single-layout 'piano))) 
+
+;; Look for "Layout" and "Instrument-Layout-Presets" 
+;; in documentation.
+          
+  (vibra ; name of the system
+   :omn part1
+   :channel 1
+   :sound 'gm ; midi system
+   :program 'vibraphone) ; instrument
+  
+  (piano
+   :omn part2
+   :channel 2
+   :sound 'gm
+   :program 'acoustic-grand-piano)
+  ) 
+
+
+
+;; display the notation
+(display-musicxml 'duo)
+
+;; play the score in the midi player
+(display-midi 'duo)
+
+;; display the notation in midi-player 
+;; not starting automatically
+(display-midi 'duo :auto-play nil)
+
+(defparameter *default-notation-editor* "Sibelius.app")
+;; (defparameter *default-notation-editor* "MuseScore 4.app")
+
+(musicxml-to-editor)
+
+;;; ---------------------------------------------------------
+
+;;; TIME-SIGNATURE
+
+;; lengths for 5 measures
+(setf lengths 
+      '((1/4 1/8 1/4) 
+        (1/4 1/4 1/4) 
+        (1/4 1/4 1/8 1/4) 
+        (1/8 1/8 1/8 1/8) 
+        (1/8 1/4 1/8)))
+
+;; Get the time signatures from the lengths
+;; suitable for using in def-score
+(setf time-sig (get-time-signature lengths))
+
+;; Calculate the length for each time signature
+(time-signature-length time-sig)
+
+;;; ---------------------------------------------------------
+
+;;; OMN-TO-TIME-SIGNATURE
+
+#|
+The OMN-TO-TIME-SIGNATURE function is used to span an 
+omn-form list to create sublists that match up with a 
+list of time-signature measures.
+|#
+
+(setf omn1 '(-q q c5 p eb4 h gb4 q gb5 p a4 f
+                c5 q c6 p eb5 gb5 q gb6 p a5 c6))
+
+;; set omn to one time-signature
+(omn-to-time-signature omn1 '(3 4))
+
+;; set omn to several time-signatures
+(omn-to-time-signature omn1 '((1 4 1) (4 4 1) (2 4 1) (4 4)))
+
+;;; ---------------------------------------------------------
+
+;;; TEMPO
+
+;; Calculates random tempos for each time signature change
+(setf temps (rnd (length time-sig) 
+                 :low 40 :high 120 :seed 321))
+
+#|
+The function MAKE-TEMPO brings together lists of changing 
+tempo and number of bars of specific tempo that belong to 
+a piece. This provides the information required by the 
+:tempo slot in the DEF-SCORE template.
+|#
+
+(setf tempos (make-tempo temps time-sig :type :bars))
+; => ((98 :bars 1) (60 1) (79 1) (109 1))
+
+(def-score time-signature
+	         (:title "Score"
+	          :key-signature '(c maj)
+	          :time-signature time-sig
+	          :tempo tempos)
+(inst1
+ :omn mat1))
+
+(setf seq-1 '((c4cs4fs4g4) (c5 g4 fs4 cs4)
+

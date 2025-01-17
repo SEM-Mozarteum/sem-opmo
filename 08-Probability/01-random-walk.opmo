@@ -1,0 +1,45 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; PROBABILITY
+
+;;; ---------------------------------------------------------
+
+;;; GEN-WALK
+
+#|
+This function returns a series of intervals of given step and 
+probability values (backward and forward). The backward and 
+forward are floating-points in range between 0.1 and 1.0
+
+With default values:
+-1 with probability backward
+ 1 with probability forward
+ 0 with probability 1 - (forward + backward) = rest probability, same as being stationary.
+|#
+
+;; Default Walk with 50% forward and 50% backward 0% stationary.
+(gen-walk 16)
+;; => e.g. (1 1 -1 1 -1 1 1 1 1 -1 1 1 1 -1 1)
+
+(list-plot (gen-walk 150 :start 0) :style :axis :join-points t)
+
+;; also with pitches from a specific start point
+(pitch-list-plot
+(setf pitch (gen-walk 64 :start 'c4)))
+
+;; The probability to move forward is bigger then going backward.
+(setf pitch (gen-walk 64 
+                      :step '(1 2) 
+                      :backward 0.3 
+                      :forward 0.7
+                      :start 'c4 
+                      :seed 234))
+
+(make-omn :pitch pitch
+          :length '(1/16)
+          :span :pitch)

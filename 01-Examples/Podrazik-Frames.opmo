@@ -1,0 +1,159 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;; MIDI Import | Opusmodus Version 1.2.22152M | 2017-05-20 14:06:59
+
+(def-score frames+imported
+    (:title "Frames"
+     :composer "Janusz Podrazik"
+     :copyright "© 2016 Opusmodus"
+     :key-signature '((c maj))
+     :rewrite-lengths 't
+     :time-signature '((4 4))
+     :tempo '((85)))
+  (rh1
+   :omn '(#|1|# (-h -e q. e4)
+          #|2|# (q g4 -h.)
+          #|3|# (-e q d4 -h -e)
+          #|4|# (-h.. e c4d4)
+          #|5|# (e f4 gs4 -q e c4 d4f4 gs4 -)
+          #|6|# (-q q. c4 d4f4)
+          #|7|# (q gs4 -h.)
+          #|8|# (-w)
+          #|9|# (-w)
+          #|10|# (-w)
+          #|11|# (-w)
+          #|12|# (-w)
+          #|13|# (-h q e4 e g4 -)
+          #|14|# (-w)
+          #|15|# (-q e e4 g4 -h)
+          #|16|# (e d4 -h..)
+          #|17|# (-q e c4 d4 f4gs4 -q.)
+          #|18|# (e c4 d4 f4 gs4 -q. e c4)
+          #|19|# (e d4f4 gs4 -h.)
+          #|20|# (-w)
+          #|21|# (-w)
+          #|22|# (-h.. e gs4)
+          #|23|# (s cs4 -q -s gs4 d4c4 - gs4 d4c4 -q -s)
+          #|24|# (-w)
+          #|25|# (-w)
+          #|26|# (-w)
+          #|27|# (-q -s gs4 cs4 -q -s gs4 d4c4 - gs4))
+   :channel 1
+   :sound 'gm
+   :program '((nil 5/8) (acoustic-grand-piano))
+   :volume '((nil 5/8) (90))
+   :pan '((nil 5/8) (64)))
+  (lh1
+   :omn '(#|1|# (q fs1as1 q. f3 -)
+          #|2|# (-q e fs1 q b2f3 f1c2 e e3a3 tie)
+          #|3|# (e e3a3 q e1 e g2c3 q c1 g2as1 tie)
+          #|4|# (e g2as1 q g2c3 e e3 a3 g2cs3 e3a3 -)
+          #|5|# (-e g2 cs3e3 a3 -q e fs2 cs3)
+          #|6|# (q e3a3 -h.)
+          #|7|# (q fs2 cs3e3 as3 g2)
+          #|8|# (q cs3e3 as3 e fs2cs3 q e3 e as3 tie)
+          #|9|# (q as3 c1g1 e cs3fs3 as3 ds1g1 cs3fs3)
+          #|10|# (e as3fs3 as1 e2cs3 f3b2 fs2cs3 f3 as3ds3 g2cs3)
+          #|11|# (e f3 as3 q. f2 q g2 e cs3 tie)
+          #|12|# (e cs3 q fs2cs3 f3 as3fs3 e cs3e3 tie)
+          #|13|# (e cs3e3 q fs1as1 e f3 -q. e fs1 tie)
+          #|14|# (e fs1 q. b2f3 q f1c2 e3a3)
+          #|15|# (e fs1as1 f3 -q e fs1 b2 f3f2 c3e3)
+          #|16|# (e a3 e1 g2c3 c1g1 as0 g2 c3 e3)
+          #|17|# (e a3g2 cs3e3 a3 -q e g2cs3 e3 a3)
+          #|18|# (-q. e fs2 cs3 e3 a3 -)
+          #|19|# (-e fs2 cs3e3 as3g3 cs3 e3 as3 fs2cs3)
+          #|20|# (e e3as3 c1 g2cs3 fs3as3 ds1g1 cs3fs3 as3 fs1)
+          #|21|# (e as1e2 cs3 f3 b1 fs2cs3 f3 as3 ds2g2)
+          #|22|# (s cs3 e e2a1 fs3 s cs3 as2e2 e a1 s fs3cs3 a1 c1 c2 b0c2 -e)
+          #|23|# (s f3 c3 b1f2 cs3as2 f3 cs3 as1 - f3cs3 as1 - fs3cs3 as1 fs3
+                  cs3 as1fs2 tie)
+          #|24|# (s as1fs2 e cs3as2 s fs3 cs3 e as1fs2 cs3as2 s fs3 cs3 as1 as3
+                  e fs3 s cs3b1)
+          #|25|# (s as3 fs3 cs3 c2as2 fs3 cs3d2 f1cs2 d2f1 as3fs3 cs3d2 f1cs2
+                  d2fs1 cs3d2 fs1 e a3)
+          #|26|# (e fs3cs3 s d2a2 fs3cs3 d2 e a3fs3 cs3a3 s cs3 e2a1 fs3 cs3
+                  as2e2 e a1)
+          #|27|# (s fs3cs3 a1 c1 c2 b0c2 - f3 c3 b1f2 cs3as2 f3 cs3 as1 - f3cs3
+                  as1))
+   :channel 1
+   :sound 'gm
+   :program 'acoustic-grand-piano
+   :volume 90
+   :pan 64)
+  (rh2
+   :omn '(#|1|# (-w)
+          #|2|# (-w)
+          #|3|# (-w)
+          #|4|# (h gs4 cs4)
+          #|5|# (-w)
+          #|6|# (-h gs4)
+          #|7|# (h. d4c4 q gs4d4c4)
+          #|8|# (-w)
+          #|9|# (-w)
+          #|10|# (-w)
+          #|11|# (-w)
+          #|12|# (-w)
+          #|13|# (-w)
+          #|14|# (-w)
+          #|15|# (-w)
+          #|16|# (-h e4)
+          #|17|# (h g4 -)
+          #|18|# (-w)
+          #|19|# (-h d4)
+          #|20|# (-w)
+          #|21|# (-e. e e4 s g4 -q -s d4 -q)
+          #|22|# (-q s c4 d4 f4 gs4 -e s c4 d4f4 gs4 -e.)
+          #|23|# (-s e c4d4 s f4gs4 -h.)
+          #|24|# (-w)
+          #|25|# (-h -e. s e4 g4 -e.)
+          #|26|# (-e s d4 -q.. s c4 d4 f4 gs4))
+   :channel 2
+   :sound 'gm
+   :program '((nil 3) (acoustic-grand-piano))
+   :volume '((nil 3) (90))
+   :pan '((nil 3) (64)))
+  (lh2
+   :omn '(#|1|# (h. cs3e2 q a1fs2cs2as2e2 tie)
+          #|2|# (w a1fs2cs2as2e2)
+          #|3|# (w a1fs2cs2c1)
+          #|4|# (h c1c2b0 f3)
+          #|5|# (h. c3b1f2cs3 q as2f3cs3 tie)
+          #|6|# (h as2f3cs3 as1)
+          #|7|# (h. f3 q cs3as2)
+          #|8|# (h. fs3cs3as2 q as2fs3cs3 tie)
+          #|9|# (w as2fs3cs3)
+          #|10|# (h as1fs2 q cs3as2 fs3cs3as2)
+          #|11|# (q cs3as2as3fs3 cs3b2as3fs3 cs3c2as2 fs3cs3)
+          #|12|# (q d2f1 cs3d2f2 as3fs3 cs3d2f2)
+          #|13|# (q fs1cs2d2a1 fs3cs3d3 a3fs3cs3d3 a3fs3cs3f3 tie)
+          #|14|# (q a3fs3cs3f3 h. cs3gs3f3 tie)
+          #|15|# (h cs3gs3f3 f3cs3gs3)
+          #|16|# (h fs1as1 f3)
+          #|17|# (h fs1 b2f3)
+          #|18|# (h f1 c3)
+          #|19|# (h e3 a3)
+          #|20|# (h e1 g2c3)
+          #|21|# (s fs1as1 e f3 -e. s fs1 e b2f3 s f1c2 e3a3 e1 g2 c3c2 e g2as1)
+          #|22|# (s g2c3 e3a3 g2cs3 e3 a3 -e. s g2cs3 e3 a3 - fs2 cs3 e3 a3 tie)
+          #|23|# (s a3 -e. s fs2 e cs3 e3as3 s g2cs3 e3as3 fs2cs3 e3as3 e c1 s
+                  g2)
+          #|24|# (s cs3 fs3as3 ds1g1 cs3fs3 as3fs3 as1e2 cs3 f3 b1 fs2 cs3f3
+                  as3 ds2g2 cs3 e f3)
+          #|25|# (e as3 s f2g2 cs3fs2 cs3 e f3 as3fs3 s fs1as1 f3 -e s fs1 e
+                  b2f3)
+          #|26|# (s f1c2 e3a3 e1 g2 c3c2 g2as1 g2c3 e3a3 g2cs3 e3 a3 -e. s
+                  g2cs3 e3))
+   :channel 2
+   :sound 'gm
+   :program 'acoustic-grand-piano
+   :volume 90
+   :pan 64))
+
+(display-musicxml 'frames+imported)
+(display-midi 'frames+imported)

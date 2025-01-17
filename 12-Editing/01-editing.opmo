@@ -1,0 +1,124 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EDITING
+
+;;; ---------------------------------------------------------
+
+
+;;; POSITION-ITEM 
+
+;;POSITION-ITEM will return the position (0-based), 
+;; or positions of an item in a sequence.
+
+(position-item 'cs4 '(c4 cs4 fs4 g4 b4 c5 fs4 b4))
+;; => (1)
+
+(position-item 'fs4 '(c4 cs4 fs4 g4 b4 c5 fs4 b4))
+;;=> (2 6)
+
+(position-item 1 '(1 0 0 1 1 0 1 1 1 0)))
+;; => (0 3 4 6 7 8)
+
+;; The position function in plain LISP only returns the first found value
+
+(position 1 '(1 0 0 1 1 0 1 1 1 0))
+;; => 0
+
+;;; ---------------------------------------------------------
+
+;;; POSITION-REPLACE
+
+;; POSITION-REPLACE can be used to replace certain 
+;; items in a list, or lists, with another item.
+
+;; replace the third c4 (position 2) with gs4
+(position-replace 2 'gs4 '(c4 c4 c4 c4 c4))
+;; => (c4 c4 gs4 c4 c4)
+
+;; The positions to replace can also be a list:
+
+;; replace c4 with gs4 on serveral (list of) positions
+(position-replace '(0 2 4) 'gs4 '(c4 c4 c4 c4 c4))
+;; => (gs4 c4 gs4 c4 gs4)
+
+;; Can be  used in conjunction with POSITION-ITEM
+
+;; Binary construction of indexes
+(setf one (position-item 1 '(1 0 0 1 1 0)))
+;; => (0 3 4)
+
+;; Replace the chosen IDs
+(position-replace one 'gs4 '(c4 c4 c4 c4 c4 c4))
+;; => (gs4 c4 c4 gs4 gs4 c4)
+
+;;; ---------------------------------------------------------
+
+;;; REPLACE-MAP
+
+
+;; REPLACE-MAP returns a copy of sequence in which each element 
+;;that has been mapped is replaced with a new item.
+
+;; all 1 are replaced with a, 2 with b and 3 with c
+(replace-map '((1 a) (2 b) (3 c)) '(1 2 3 4 5 4 5 3 2 3))
+;; => (a b c 4 5 4 5 c b c)
+
+;; the same but all other items are replaced with d
+(replace-map '((1 a) (2 b) (3 c)) '(1 2 3 4 5 4 5 3 2 3)
+             :otherwise 'd)
+;; => (a b c d d d d c b c)
+
+;; all 1 and 2 are replaced with a, 3,4,5 with b
+(replace-map '(((1 2) a) ((3 4 5) b)) '(1 2 3 4 5 4 5 3 2 3))
+;;=> (a a b b b b b b a b)
+
+;;; ---------------------------------------------------------
+
+;;; POSITION-INSERT
+
+;; POSITION-INSERT can be used to insert certain items 
+;; into a list, or series of lists.
+
+;; insert a gs4 at the third position
+(position-insert 2 'gs4 '(c4 c4 c4 c4 c4))
+;; => (c4 c4 gs4 c4 c4 c4)
+
+;; insert gs4 at the first and the third position
+(position-insert '(0 2) 'gs4 '(c4 c4 c4 c4 c4))
+;; => (gs4 c4 gs4 c4 g4 c4 c4 c4)
+
+
+;;; ---------------------------------------------------------
+
+;;; REPLACE-BAR
+
+;; REPLACE-BAR can be used to replace n bar or bars 
+;; in a sequence, with another bar or bars.
+
+(setf mat
+     '((s c4 db4 ab4 f4 g4 bb4) (s a4 eb4 b4 e4 d4 gb4)
+       (s db4 ab4 f4 g4 bb4 a4) (s eb4 b4 e4 d4 gb4 c4)))
+
+;; The third bar is replaced with a different bar
+(replace-bar 3 '((e a4 eb4 b4)) mat)
+
+;; The third bar is replaced with an empty bar
+(replace-bar 3 '(-q.) mat)
+
+;;; ---------------------------------------------------------
+
+;;; INSERT-BAR
+
+;; insert a chord in a sequence of measures
+(insert-bar 3 '((c4cs4ds4)) mat)
+
+;; insert an empty bar in a sequence of measures
+(insert-bar 3 '((-s)) mat)
+
+
+

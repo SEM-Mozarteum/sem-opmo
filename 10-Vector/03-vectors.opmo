@@ -1,0 +1,218 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2023, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; VECTOR
+
+#|
+In linear algebra, vectors are elements that indicate the way 
+in which a point is moved by parallel displacement. 
+Vectors are defined by their length and direction, 
+i.e. they indicate the distance and direction by which a 
+point is moved.
+|#
+
+;;; ---------------------------------------------------------
+
+;; Make pitches from white noise. vector-to-pitch is 
+;; converting the output of gen-white-noise to a given 
+;; pitch range.
+(setf pitches 
+      (gen-loop 5 (vector-to-pitch '(g4 c5) 
+                               (gen-white-noise 12))))
+
+;; Here are the mechanics of this mapping that demonstrate 
+;; how the conversion from vectors to pitches is made:
+(setf mel-data1
+      (vector-round -12 12 (gen-white-noise 12 :seed 89)))
+=> #(-4 7 3 -3 -1 3 7 -5 6 4)
+
+(integer-to-pitch mel-data1)
+=> (d3 c5 e4 e3 gs3 e4 c5 c3 a4 g4 bb3 g4)
+
+;; There are other vector functions available to convert a 
+;; vector to musical parameter
+
+(setf lengths 
+      (gen-loop 5
+      (vector-to-length '1/24 -1 3 (gen-white-noise 12)))) 
+
+(setf velocities 
+      (gen-loop 5
+      (vector-to-velocity 0.2 0.45 
+                          (gen-white-noise 12 :seed 69))))
+
+;; Combine the parameter
+(make-omn
+ :length lengths
+ :pitch pitches
+ :velocity velocities)
+
+;;; ---------------------------------------------------------
+
+;;; VECTOR-ROUND
+
+#|
+The function VECTOR-ROUND will scale a vector array or list 
+or values between two upper and lower limits. The output is 
+itself a vector array or list comprising of integer values.
+|#
+
+(progn
+(setf num (rnd-number 12 -5 12))
+(setf round (vector-round -0.5 3.5 num))
+
+(list-plot (list num round)
+           :zero-based t :point-radius 2 :join-points t))
+
+(make-omn
+ :pitch
+(gen-loop 10
+(vector-to-pitch '(c3 c5)
+ (vector-round 0 12
+  (gen-accumulate (rnd 12 :low -1.0 :high 1.0)))))
+:length '(1/16)
+:span :pitch)
+
+(progn
+(setf wnoise (gen-noise 100 :seed 6562))
+
+(pitch-list-plot
+ (integer-to-pitch
+ (list wnoise (vector-round -5 10 wnoise)))
+ :point-radius 1.5 :zero-based t :point-radius 2 :join-points t))
+
+;;; ---------------------------------------------------------
+
+;;; VECTOR-SMOOTH
+
+#|
+Sometimes preparing and processing material in a vector-state can 
+be more effective than in an integer state. Smoothing operations 
+are one such instance. 
+Notice the improved definition of a white-noise vector 
+stream through using VECTOR-SMOOTH.
+|#
+
+(setf vector (gen-white-noise 200 :seed 345))
+
+;; compare the output with the smoothen ones:
+(list-plot 
+ (list vector
+       (vector-smooth 0.3 vector)
+       (vector-smooth 0.05 vector))
+ :point-radius 1
+ :join-points t)
+
+;;; ---------------------------------------------------------
+
+;;; VECTOR-MAP
+
+#|
+VECTOR-MAP enables a stream of floating-point numbers to be 
+related to a series of items. A random :seed on the vector 
+generator will give consistent outputs:
+|#
+
+;; 10 random numbers are mapped to different lengths
+(vector-map '(1/16 1/8 1/4) 
+            (gen-white-noise 12 :seed 123))
+;; => (1/16 1/4 1/8 1/16 1/4 1/8 1/16 1/8 1/16 1/4 1/16 1/16)
+
+;; The same with lengths and dynamics
+(vector-map '(q e s - -e -q) (gen-white-noise 12 :seed 98))
+;; => (e s - -q q -e -e s -e e - -e)
+
+(vector-map '(mp mf ppp mf) (gen-white-noise 10 :seed 79))
+;; => (mf mf mp mp mf ppp mf mf mp mf)
+
+;; Another source is mapped to pitches
+(vector-map '(c4 d4 e4 f4 g4 a4 b4)
+            (rnd-number 14 1 10 :norep t))
+;; (e4 b4 e4 c4 b4 f4 d4 f4 e4 a4)
+
+;; Pitches in form of a sine wave
+(vector-map (integer-to-pitch (gen-integer 0 11))
+            (gen-sine 12 1 0.5))
+;; (fs4 gs4 bb4 b4 bb4 gs4 f4 eb4 cs4 c4 cs4 eb4)
+
+;; If the vector is smaller than the sequence length 
+;;  the result is a selection:
+(setf harm (harmonics 'c2 24))
+
+(list harm (vector-map harm (gen-transition 1 10 10 1)))
+
+;; If the vector is greater than the sequence length
+;; the result is a extension
+(vector-map
+ (harmonics 'c2 24)
+ (gen-transition 1 10 40 1))          
+
+;; Map brownian motion between a lower and an upper limit
+;; and convert to pitch
+
+(setf pitches
+      (gen-loop 16 
+          (vector-to-pitch '(c2 c3) 
+                         (gen-brownian-motion 50))
+          :seed 123))
+
+;; Evaluate with cmd-2 to hear 16 voices
+(make-omn
+ :pitch pitches
+ :length '(1/16)
+ :span :pitch)
+
+;; Mapping brownian result to velocity symbols
+(velocity-list-plot
+ (vector-to-velocity 'ppp 'mf (gen-brownian-motion 50 ))
+ :point-radius 1.5 
+ :join-points t)
+
+#|
+;; another approach
+(progn
+ (setf bw (gen-brownian-motion 128 :seed 425))
+ (setf env1 '(-5.1 -2.3 1.5 -0.8 4.6 10.6))
+ (setf env2 '(1.0 1.2 -1.1 2.1 -0.3 -2.5))
+ (list-plot 
+   (vector-to-envelope2 env1 env2 bw) :join-points t))
+|#
+
+;;; ---------------------------------------------------------
+;;; A vector mapping example by Stephane Boussuge
+;;; ---------------------------------------------------------
+
+;; Number of values
+(setf nbval 32)
+
+;; Six half sines (envelope) modulated with sine
+(progn
+(setf dvect1 (half-sine nbval 1 :modulation (gen-sine nbval 3 0.25)))
+(setf dvect2 (half-sine nbval 1 :modulation (gen-sine nbval 2 0.25)))
+(setf dvect3 (half-sine nbval 1 :modulation (gen-sine nbval 3 0.35)))
+(setf dvect4 (half-sine nbval 1 :modulation (gen-sine nbval 4 0.25)))
+(setf dvect5 (half-sine nbval 1 :modulation (gen-sine nbval 2 0.45)))
+(setf dvect6 (half-sine nbval 1 :modulation (gen-sine nbval 1 0.25)))
+(list-plot 
+ (list dvect1 dvect2 dvect3 dvect4 dvect5 dvect6) :join-points t))
+
+;; a set of durations
+(setf lenmap '(w h. h q (q e e q)(e e)(s s s s q e e)(3q = = = = =)
+              (s s s s)(s s s s s s s s)(h)(q)(3q = = = = =)
+              (s s s s)(s s s s s s s s)))
+
+;; The 6 vectors are mapped to the duration material of lenmap
+;; Evaluate with cmd-2 to see/hear all six voices
+(progn
+(setf len1 (flatten (vector-map lenmap dvect1)))
+(setf len2 (flatten (vector-map lenmap dvect2)))
+(setf len3 (flatten (vector-map lenmap dvect3)))
+(setf len4 (flatten (vector-map lenmap dvect4)))
+(setf len5 (flatten (vector-map lenmap dvect5)))
+(setf len6 (flatten (vector-map lenmap dvect6)))
+(list len1 len2 len3 len4 len5 len6))
+

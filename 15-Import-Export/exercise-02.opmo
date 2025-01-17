@@ -1,0 +1,18 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+Write a short sketch for flute, violoncello and piano by
+extending one or more of your last homeworks. Try to uses
+some techniques from the chapter 13-Processes..
+Each part should be assembled from different material (s. 04-Score).
+You may control the pitch range with "ambitus-instrument".
+See under "Score-Layout" how to layout the score,
+(:layout is a key variable for "def-score").
+|#

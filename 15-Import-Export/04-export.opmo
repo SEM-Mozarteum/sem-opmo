@@ -1,0 +1,36 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXPORT
+
+;;; Midi and MusicXML
+
+#| 
+To export a score from Opusmodus there are several
+different possibilities.
+
+1. simply use "Last Score to Midi" or 
+"Last Score to MusicXML" from the "File - Export" menu.
+|#
+
+(defparameter *default-notation-editor* "MuseScore3.app")
+
+To open the last compiled score (DEF-SCORE, PS or snippet) in the notation editor:
+
+(musicxml-to-editor)
+
+To open the 2nd instrument from the last compiled score (DEF-SCORE, PS or snippet) in the notation editor:
+
+(musicxml-to-editor :instrument 1)
+
+To open a MusicXML file in the notation editor:
+
+(musicxml-to-editor "path-name")
+
+To open a MIDI file in Sibelius:
+
+(midi-to-editor "path-name" :application "Sibelius.app")

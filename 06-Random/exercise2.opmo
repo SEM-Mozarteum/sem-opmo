@@ -1,0 +1,17 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+Create a structure where the 4 parameters are controlled 
+with weighted-random.
+Use gen-weight and length-weight.
+Filter the output in a score for flute and bass-clarinet.
+Use ambitus-filter and filter-length.
+Integrate other functions if necessary.
+|#

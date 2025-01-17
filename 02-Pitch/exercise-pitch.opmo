@@ -1,0 +1,15 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+Create a chord with 4 pitches or frequencies and transpose 
+it a fifth lower, a quartertone and a tritone higher
+|#
+
+;;; ---------------------------------------------------------

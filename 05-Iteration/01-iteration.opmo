@@ -1,0 +1,175 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - , Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; Iteration
+
+;;; ---------------------------------------------------------
+
+;;; GEN-REPEAT
+
+;; GEN-REPEAT returns any number of repeats of a list or atom.
+
+(gen-repeat 3 'c4)
+
+(gen-repeat 3 '((c4 g4) (d4 a4)))
+
+;; If the second argument is a list then each list is 
+;; repeated  individually.
+(gen-repeat '(3) '((c4 g4) (d4 a4)))
+
+;; If the list has more than one number, then the first list
+;; is repeated with the first number, the second with the
+;; second number, etc.
+(gen-repeat '(2 3) '((c4 g4) (d4 a4)))
+
+;;; ---------------------------------------------------------
+
+;;; GEN-REPEAT-SEQ
+
+;; GEN-REPEAT-SEQ generates lists by repeating elements from
+;; a given list with randomized repetitions between 
+;; low and high.
+
+(setf pitches (gen-repeat-seq 48 1 3 '(c4 cs4 d4 eb4 g4 c5)))
+
+;;; ---------------------------------------------------------
+
+;;; GEN-LOOP
+
+#|
+GEN-LOOP can be  used to execute a form multiple times. 
+It's a very useful function when creating variations from 
+a single single process that has a randomising element. 
+|#
+
+;; 5 voices with gen-repeat, evaluate cmd-2
+(gen-loop 10
+(make-omn
+ :pitch (gen-repeat-seq 48 1 5 '(c4 cs4 d4 eb4 g4 c5))
+ :length '(1/16)
+ :span :pitch) :seed 123)
+
+;;; ---------------------------------------------------------
+
+;;; ASSIGN VARIABLE
+
+(setf ord-random
+      (rnd-order
+      (gen-loop 4
+      (rnd-order 
+       ; 2 identical measures
+       '((-h.. e c4 mf fs4 f e4 mf e4 p ds4 d4 q cs4)
+         (-h.. e c4 mf fs4 f e4 mf e4 p ds4 d4 q cs4))
+       ;; 4 voices of 2 measure are randomly ordered
+       ;; by its lengths        ;
+       :type :length))
+      ;; and then the pitches of each voice
+      ;; are randomly Ordered as well
+      :type :pitch))
+
+;; The function assign-variable set several sucessive
+;; items in a list to numbered variables. The starting
+;; number is 1
+
+(assign-variable 'inst ord-random)
+
+(def-score random-measures
+    (:key-signature '(c maj)
+     :time-signature '(4 4)
+     :tempo 80) 
+  (violin1
+   :omn inst1
+   :sound 'gm :program 0)
+  
+  (violin2
+   :omn inst2
+   :sound 'gm :program 0)
+  
+  (viola
+   :omn inst3
+   :sound 'gm :program 0)
+  
+  (violoncello
+   :omn inst4
+   :sound 'gm :program 0)
+  )
+
+(display-midi (compile-score 'random-measures))
+(display-musicxml 'random-measures)
+
+;;; ---------------------------------------------------------
+
+;;; FILTER-REPEAT
+
+(setf pattern (gen-repeat-seq 24 3 5 '(c4 cs4 d4 eb4 g4 c5)))
+
+;; all repetitions over 2 are truncated to 2
+(filter-repeat 2 pattern)
+
+;; All sucessive sequences of 2 equal notes are reduced to 1
+(filter-repeat 1 '(gs4 fs3 a4 fs3 a4 bb5 a4 gs4) :seq 2)
+;; One of the occurences fs3 a4 is deleted
+
+;; All sucessive sequences of 3 equal notes are reduced to 1
+(filter-repeat 1 '(gs4 fs3 a4 fs3 fs3 a4 fs3 a4 bb5 a4 gs4) 
+               :seq 3)
+;; One of the occurences fs3 a4 fs3 is deleted
+
+;;; ---------------------------------------------------------
+;;; ---------------------------------------------------------
+
+;;; DOLIST
+
+#|
+There are two older and therefore less commonly used 
+loop macros in LISP:
+
+DOLIST binds a variable to the elements of a list in order
+and stops in the end of the list.
+|#
+
+(dolist (x '(60 61 62 63)) (print x))
+
+#|
+DOLIST always returns NIL. Note that the value of x in the
+above example was never NIL: 
+the NIL below the 63 was the value that dolist returns.
+|#
+
+;;; ---------------------------------------------------------
+
+;;; DOTIMES
+
+;; DOTIMES iterates over integers
+
+(dotimes (i 4) (print (* i i)))
+
+;;; ---------------------------------------------------------
+
+;;; MAPCAR
+
+#|
+Common Lisp also has several forms (functions and macros) for
+operating on the contents of lists. mapcar can be used to 
+process each element of a list one at a time to build up a 
+new list.
+The #' is a special way to pass a function as an argument 
+into a function. 
+The function must then take the same number of arguments as 
+there are lists:
+|#
+
+(mapcar #'+ '(1 2 3) '(4 5 6)) ; ⇒ (5 7 9)
+
+;; Definingj an own function to process over a list
+(defun add2 (n)
+    "add 2." ; description
+    (+ 2 n))
+
+(mapcar #'add2 '(1 2 3)) ;  ⇒ (3 4 5)
+;; or with a loop
+(loop for i in '(1 2 3) collect (+ i 2)) ; => (3 4 5)

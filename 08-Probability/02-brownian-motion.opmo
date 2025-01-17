@@ -1,0 +1,95 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; PROBABILITY
+
+;;; ---------------------------------------------------------
+
+;;; GEN-BROWNIAN-MOTION
+
+#|
+This function generates N samples of brownian motion. 
+Brownian motion, also called Brownian movement, any of 
+various physical phenomena in which some quantity is 
+constantly undergoing small, random fluctuations. 
+If a number of particles subject to Brownian motion are 
+present in a given medium and there is no preferred 
+direction for the random oscillations, then over a period 
+of time the particles will tend to be spread evenly 
+throughout the medium. Brownian motion is also referred 
+to as 1/f 2 noise.
+|#
+
+(list-plot (gen-brownian-motion 128)
+           :zero-based t :point-radius 2 :join-points t)
+
+;; specify the starting point between 0 and 1
+(list-plot (gen-brownian-motion 40 :start 0.5)
+           :zero-based t :point-radius 2 :join-points t)
+
+;; 40 times brownian motion
+(list-plot (gen-loop 40 (gen-brownian-motion 128) :seed 1234)
+            :zero-based t :point-radius 0.1 :join-points t)
+
+;; The amp keyword is the maximal step size n-1 in 
+;; both directions
+(list-plot (gen-brownian-motion 128 :amp 0.0 :start 0.5)
+           :zero-based t :point-radius 1.5 :join-points t)
+
+(list-plot (gen-brownian-motion 128 :amp 0.3 :volatility .6)
+            :zero-based t :point-radius 1 :join-points t)
+
+#|
+The tendency of the direction is given by the probability 
+between 0.1 and 0.9. 
+The default is 0.5. This is aequivalent to 50% up and 50% 
+down.
+The probability of downward direction increases with 
+prob < 0.5
+|#
+
+(list-plot 
+ (gen-brownian-motion 128 :prob 0.4 :seed 345)
+ :zero-based t 
+ :point-radius 1 
+ :join-points t 
+ :style :fill)
+
+;; ;; The probability of upward direction increases with 
+;; prob floating-point > 0.5 .
+
+(list-plot 
+ (gen-brownian-motion 128 :prob 0.6 :seed 123)
+ :zero-based t 
+ :point-radius 1 
+ :join-points t 
+ :style :fill)
+
+;; Map the values between a lower and an upper limit
+(list-plot 
+ (vector-round -5.0 5.0 
+               (gen-brownian-motion 128 :start 0 :seed 123))
+ :zero-based t 
+ :point-radius 1 
+ :join-points t 
+ :style :fill)
+
+;; Mapping brownian result to velocity symbols
+(velocity-list-plot
+(vector-to-velocity 'ppp 'mf 
+                    (gen-brownian-motion 50 :seed 1234))
+ :point-radius 1 
+ :join-points t
+ :style :fill)
+
+;; Mapping brownian result to pitches
+(pitch-list-plot
+(vector-to-pitch '(c3 c5) 
+                 (gen-brownian-motion 50 :prob 0.7 :seed 123))
+ :point-radius 1 
+ :join-points t
+ :style :fill)                                            

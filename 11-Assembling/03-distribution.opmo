@@ -1,0 +1,80 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; DISTRIBUTION
+
+;;; ---------------------------------------------------------
+
+;;; DISTRIBUTE-STREAM
+
+#|
+The function DISTRIBUTE-STREAM returns a new sequence of items
+distributed against lists of lengths sequentially.
+It takes (usually) a single pitch stream and distributes 
+its content amongst to a series of voices or parts. 
+Other parameters like dynamics could distributed in a similar way.
+|#
+
+;; single pitch stream
+(setf scale '(c4 cs4 d4 ds4 e4 f4 fs4 g4 gs4 a4 as4 b4))
+
+;; and 4 lists of durations
+(setf
+ v1 '( 1/8 -1/8  2/8 -1/8 5/8)
+ v2 '( 1/8  1/8 -1/8  2/8 1/8)
+ va '(-2/8  1/8 -5/8  1/8)
+ vc '(-1/8  3/8  1/8  1/8)
+ )
+
+(setf inst (distribute-stream scale (list v1 v2 va vc)))
+;; => ((c4 e4 gs4) (cs4 d4 fs4 a4) (f4 b4) (ds4 g4 as4))
+;; The output produces a consecutive list of pitch lists 
+;; which can be assigend to seperate variables
+
+(setf 
+ in1 (make-omn :length v1 :pitch (1~ inst)) ; n~ like nth
+ in2 (make-omn :length v2 :pitch (2~ inst))
+ in3 (make-omn :length va :pitch (3~ inst))
+ in4 (make-omn :length vc :pitch (4~ inst)))
+
+(list in1 in2 in3 in4)
+
+;; Another approach with SET-ASSIGNMET
+;; To do this the durations should not be set to variables
+(setf durations '((1/8 -1/8 2/8 -1/8 5/8)
+                  (1/8 1/8 -1/8 2/8 1/8)
+                  (-2/8 1/8 -5/8 1/8)
+                  (-1/8 3/8 1/8 1/8)
+                  ))
+
+(setf pitches (distribute-stream scale durations))
+
+(set-assignment 'inst (make-omn
+                       :pitch pitches
+                       :length durations))
+
+(def-score distribution
+           (:key-signature '(c maj)
+                           :time-signature '(4 4)
+                           :tempo 80) 
+  (violin1
+   :omn inst0
+   :sound 'gm :program 0)
+  
+ (violin2
+   :omn inst1
+   :sound 'gm :program 0)
+  
+  (viola
+   :omn inst2
+   :sound 'gm :program 0)
+  
+  (violoncello
+   :omn inst3
+   :sound 'gm :program 0)
+  )
+

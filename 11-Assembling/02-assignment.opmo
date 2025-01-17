@@ -1,0 +1,89 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; ASSIGNMENT
+
+;;; ---------------------------------------------------------
+
+;; a list with a composed transient
+;; Use cmd-2 for display in voices
+(setf trans '((5/4) (-1/4 1) (-3/8 7/8) (-1/2 3/4) (-7/12 2/3) (-2/3 7/12) (-3/4 1/2) (-13/16 7/16) (-7/8 3/8) (-15/16 5/16) (-1 1/4)))
+
+(setf material (make-omn
+           :pitch (reverse ; reverse the pitches 
+                   (integer-to-pitch '(0 1 2 3 4 5 6 7 8 9 10 11)))
+           :length trans))
+
+#|
+SET-ASSIGNMENT will create automatically as many setf lists with the name e.g. 'mat1' - 'matn' from mat
+|#
+
+(setf sets (set-assignment 'mat material))
+
+;; Now test the output within an expression, for example:
+(rnd-sample 8 (list mat0 mat3 mat5 mat8 mat10))
+;; press 'cmd-2'
+
+;; Alternatively assign all the setfs to a score
+(def-score transient
+           (:key-signature '(c maj)
+                           :time-signature '(5 4)
+                           :tempo 80)
+  (inst1
+   :omn mat0
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst2
+   :omn mat1
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst3
+   :omn mat2
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst4
+   :omn mat3
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst5
+   :omn mat4
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst6
+   :omn mat5
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst7
+   :omn mat6
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst8
+   :omn mat7
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst9
+   :omn mat8
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst10
+   :omn mat9
+   :program 'violin
+   :sound 'gm :program 0)
+  
+  (inst11
+   :omn mat10
+   :program 'violin
+   :sound 'gm :program 0))

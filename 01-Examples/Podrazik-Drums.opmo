@@ -1,0 +1,74 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;; MIDI Import | Opusmodus Version 1.2.22152M | 2017-05-20 13:41:04
+
+(def-score drums
+    (:title "+IMPORTED"
+     :composer nil
+     :copyright nil
+     :key-signature '((c maj))
+     :rewrite-lengths 't
+     :time-signature '((4 4))
+     :tempo '((120)))
+  (|DRUM'N BAS|
+   :omn '(#|1|# (t gs2g2g4c2 -s. t gs2g2g4as2 -s. t gs2e2g2g4 -s. t c2gs2g2g4
+                 -s. t gs2g2g4 -s. t gs2e2g2g4 gs2g2g4 gs2g2g4 - gs2g2g4 -s. t
+                 gs2g2g4 -s.)
+          #|2|# (t c2gs2g2g4 -s. t gs2g2g4as2 -s. t gs2e2g2g4 -s. t c2gs2g2g4
+                 -s. t gs2g2g4 -s. t gs2e2g2g4 gs2g2g4 gs2g2g4 - gs2g2g4 -s. t
+                 gs2g2g4 -s.)
+          #|3|# (t c2gs2g2g4 -s. t gs2g2g4as2 -s. t gs2e2g2g4 -s. t c2gs2g2g4
+                 -s. t gs2g2e2g4 -s. t gs2g2g4 gs2g2g4 gs2g2g4 - gs2g2ds2g4 -s.
+                 t gs2g2e2g4 -s.)
+          #|4|# (t c2gs2g2g4as2 -s. t gs2g2g4as2 -s. t gs2g2g4e2as2 - e2as2 -
+                 c2gs2g2e2g4as2 -s. t gs2g2e2g4as2 -s. t gs2g2e2g4as2 gs2g2g4
+                 gs2g2g4 - gs2g2g4 -s. t gs2g2e2g4 -s.)
+          #|5|# (t gs2g2c2 -s. t gs2g2as2e2 -s. t gs2e2g2 -s. t c2gs2g2cs3 -s.
+                 t gs2g2c2cs3 -s. t gs2e2g2 gs2g2 gs2g2 - gs2g2ds2 -s. t gs2g2
+                 -s.)
+          #|6|# (t gs2g2c2 -s. t gs2g2as2 -s. t gs2e2g2 - e2 - c2gs2g2e2 -s. t
+                 gs2g2e2 -s. t gs2e2g2 gs2g2 gs2g2 - gs2g2ds2 - e2 e2 e2gs2g2
+                 e2 e2 e2)
+          #|7|# (t c2e2gs2g2cs3 -s. t gs2g2as2c2cs3 -s. t gs2e2g2 -s. t c2gs2g2
+                 -s. t gs2g2e2 -s. t gs2g2 gs2g2 gs2g2 - gs2g2ds2 -s. t gs2g2e2
+                 -s.)
+          #|8|# (t c2gs2g2as2 -s. t gs2g2as2 -s. t gs2g2e2as2 - e2as2 -
+                 c2gs2g2e2as2 -s. t gs2g2e2as2 -s. t gs2g2e2as2c2cs3 gs2g2
+                 gs2g2c2cs3 - gs2g2ds2c2cs3 -s. t gs2g2e2 -s.)
+          #|9|# (t gs2g2c2 -s. t gs2g2as2e2 - e2 - gs2e2g2 - e2 - c2gs2g2e2 -s.
+                 t gs2g2e2 -s. t gs2e2g2 gs2g2 gs2g2 - gs2g2ds2 - e2cs3 e2cs3
+                 e2gs2g2cs3 e2cs3 e2cs3 e2cs3)
+          #|10|# (t c2e2gs2g2cs3 -s. t gs2g2as2c2cs3 -s. t gs2e2g2 -s. t
+                  c2gs2g2 -s. t gs2g2e2 -s. t gs2g2 gs2g2 gs2g2 - gs2g2ds2 -s.
+                  t gs2g2e2 -s.)
+          #|11|# (t c2gs2g2as2cs3 -e.. t cs3c2 -e.. t cs3c2 -s. t c2cs3 -s. t
+                  c2cs3 - cs3c2 - c2cs3e2 e2cs3c2 e2cs3c2 e2cs3c2)
+          #|12|# (t e2cs3c2gs2g2 -s. t gs2g2as2e2c2 - e2 - gs2e2g2 - e2 -
+                  c2gs2g2e2 -s. t gs2g2e2 -s. t gs2e2g2c2 gs2g2 gs2g2 -
+                  gs2g2ds2 - e2cs3 e2cs3 e2gs2g2cs3 e2cs3 e2cs3 e2cs3)
+          #|13|# (t c2e2gs2g2cs3 -s. t gs2g2as2c2cs3 -s. t gs2e2g2 -s. t
+                  c2gs2g2 -s. t gs2g2e2 -s. t gs2g2 gs2g2 gs2g2 - gs2g2ds2 -s.
+                  t gs2g2e2 -s.)
+          #|14|# (t c2gs2g2as2cs3))
+   :channel 10
+   :sound 'gm
+   :program 'acoustic-grand-piano
+   :volume 90
+   :pan 64)
+  (bpm174
+   :omn '(#|1|# (t fs6 -h....)
+          #|2|# (-e t fs6 -h -q -s.)
+          #|3|# (-e t fs6))
+   :channel 2
+   :sound 'gm
+   :program '((nil 4) (acoustic-grand-piano))
+   :volume '((nil 4) (90))
+   :pan '((nil 4) (64))))
+
+(display-musicxml 'drums)
+(display-midi 'drums)

@@ -1,0 +1,93 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; PROBABILITY
+
+;;; ---------------------------------------------------------
+
+;;; GEN-MARKOV
+
+#|
+The function GEN-MARKOV will use Markov analysis on a list of 
+items in order to work out relationships between each item in 
+the list. It will then use these relationships to generate a 
+new, but related series of values.  In a Markov process events 
+happening in the past create a state, or context, for working 
+out the probabilities of events to come.
+|#
+
+(gen-markov '(a b c a d c b))
+=> (b c a d c a d)
+
+#|
+In the above example, a may be followed by b or d; b is always 
+followed by c; c may be followed by a or b; and d is always 
+followed by c. Following this analysis, GEN-MARKOV has 
+generated a sequence following a similar set of rules. 
+The number of values generated is, by default, equal to the 
+length of the list passed to the function. 
+|#
+
+(gen-markov '(a b c a d c b) :size 15)
+=> (b c b c b c a d c a d c a d c)
+
+(gen-markov '(a b c a d c b) :size 15 :start 'a)
+=> (a d c a b c b c b c a b c b c)
+
+#|
+The number of past events used by a Markov process is known 
+as its order or level. In a first order process the 
+probabilities for choosing the next event depends preceding 
+event. In a second order Markov process the probabilities 
+for the next selection depend on the last two events.
+
+When multiple lists are provided, each one will be processed 
+individually:
+|#
+
+(integer-to-pitch (gen-markov
+ '(0 2 -2 2 24 19 -13 -21 18 2 -9 -13 2 0 11 -25 0
+     13 0 6 -16 7 -7 7 12 0 -1 5 -7 1 -1 1 1 5 -9
+     1 9 5 -15 1 -18 5 -4 5 -3 5 -8 5 0 5 -6 23 1
+     -24 5 9 -11 5 -6 5 -7 5 4 5 -14 7 -7 14 5 -12
+     5 2 5 25 -25 5)
+ :size 12
+ :start '(0 2 11)
+ :level '(1 2 3)))
+
+#|
+The function GEN-MARKOV-TRANSITIONS generates Markov 
+transition tables based on a given sequence. 
+The transitions can be stored and use to generate Markov chain.
+|#
+(setf transition
+      (gen-markov-transitions
+       '(c4 d4 c4 c4 d4 e4 f4 f4 d4 g4 c4 f4 c4 g4)))
+
+;; The function GEN-MARKOV-FROM-TRANSITIONS is able to generate 
+;; Markov chain sequences from Markov transitions tables.
+(gen-markov-from-transitions transition :size 20)
+
+;; There is even the possibility to extract higher level
+;; transition tables
+(setf transition2
+      (gen-markov-transitions
+       '(c4 d4 c4 c4 d4 e4 f4 f4 d4 g4 c4 f4 c4 g4) :level 2))
+#|
+=>
+(((c4 d4) (e4 1) (c4 1)) 
+ ((d4 c4) (c4 1)) 
+ ((c4 c4) (d4 1)) 
+ ((d4 e4) (f4 1)) 
+ ((e4 f4) (f4 1)) 
+ ((f4 f4) (d4 1)) 
+ ((f4 d4) (g4 1)) 
+ ((d4 g4) (c4 1)) 
+ ((g4 c4) (f4 1)) 
+ ((c4 f4) (c4 1)) 
+ ((f4 c4) (g4 1)))
+|#

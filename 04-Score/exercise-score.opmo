@@ -1,0 +1,12 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+;; Play around with the parameters in 01-score.opmo:
+;; Change pitches, duration, names of variables, etc.
+;; Make a new score with 2-4 parts.

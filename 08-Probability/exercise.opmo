@@ -1,0 +1,21 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+1. 
+Create a short row of pitches with some repeated note 
+combinations.
+2. 
+Make a transition table for a markov chain with it.
+3. 
+Calculate 24 pitches with this markov chain.
+4. 
+Make durations with a evolutionary method and combine 
+them with the pitches.
+|#

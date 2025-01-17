@@ -1,0 +1,141 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; RANDOM
+
+;;; ---------------------------------------------------------
+
+#|
+A random seed (or seed state, or just seed) is a number 
+(or vector) used to initialize a pseudorandom number 
+generator. Therefore all following random evaluations with 
+the random generator can be repeated.
+|#
+
+;; seed is implemented in all function using random in OM
+(rnd-sample 4 '(1 2 3 4) :seed 567)
+;; the result is always (3 3 4 1)
+
+;; it can be used in repetitive functions as well
+(gen-loop 4 (rnd-sample 4 '(c4 d4 e4 f4)) :seed 123)
+;; result is always:
+;; ((c4 e4 c4 e4) (f4 d4 c4 f4) (e4 e4 e4 f4) (c4 e4 e4 c4))
+
+;;; INIT-SEED
+
+#|
+With init-seed the seed of all functions using random is
+initialised.
+The function initialise sequential seed numbers which give 
+a greater control if a seed needs to be changed or a new 
+one added. All other init-seeds stay unchanged and in the 
+same sequential position. It is important to reset the 
+INIT-SEED to NIL again (init-seed NIL) otherwise the 
+INIT-SEED will continue to initialise random seeds to 
+all the other functions with seed NIL.
+Therefore its is feasible to start a document with setting
+an init-seed and ending with setting it nil again. 
+|#
+
+;; simulation of this process with PROGN.
+;; PROGN evaluates forms, in the order in which they are 
+;; given. The values of each form but the last are discarded.
+
+(progn
+  (init-seed 1)
+  (rnd-sample 4 '(1 2 3 4))
+  (gen-loop 4 (rnd-sample 4 '(1 2 3 4)))
+  (rnd-sample 4 '(1 2 3 4))
+  (rnd-sample 4 '(1 2 3 4) :seed 67538)
+  (rnd-sample 4 '(1 2 3 4) :seed 345)
+  (rnd-sample 4 '(1 2 3 4))
+  (rnd-sample 4 '(1 2 3 4))
+  (rnd-pick '(1 2 3 4) :seed 9756)
+  (rnd-pick '(1 2 3 4))
+  (rnd-pick '(1 2 3 4))
+  (rnd-pick '(1 2 3 4))
+  (init-seed nil)
+  )
+
+;; See the result
+#!
+init-seed :seed 1
+rnd-sample :seed 1
+gen-loop :seed 2
+rnd-sample :seed 3
+rnd-sample :seed 67538 ; instead of 4
+rnd-sample :seed 345 ; instead of 5
+rnd-sample :seed 6
+rnd-sample :seed 7
+rnd-pick :seed 9756 ; instead of 8
+rnd-pick :seed 9
+rnd-pick :seed 10
+rnd-pick :seed 11
+init-seed :seed nil
+nil
+!#
+
+;; fixed seed
+(loop repeat 5 collect (rnd1 :seed 34))
+
+#!
+rnd1 :seed 34
+rnd1 :seed 34
+rnd1 :seed 34
+rnd1 :seed 34
+rnd1 :seed 34
+(0.74985707 0.74985707 0.74985707 0.74985707 0.74985707)
+!#
+
+;; count-up seed value.
+
+(loop with seed = (init-seed 34)
+       repeat 5
+       collect (rnd1))
+
+#!
+init-seed :seed 34
+rnd1 :seed 34
+rnd1 :seed 35
+rnd1 :seed 36
+rnd1 :seed 37
+rnd1 :seed 38
+(0.74985707 0.27639356 0.58018506 0.46898025 0.49766842)
+!#
+
+;; Returning all lists until the list has 60 = c4 
+;; as the last element excluding the last list.
+;; With seed always the same lists are returned.
+(setf conditional-seed1
+      (midi-to-pitch
+       (loop 
+          with seed = (init-seed 34)
+          for rnd-row = (rnd-order 
+                         '(60 62 63 65 66 68 69 70 72))
+          while (not (equal '(60) (last rnd-row)))
+          collect rnd-row)))
+
+;; Including the list with last element 60.
+(setf conditional-seed2
+      (midi-to-pitch
+       (loop 
+          with seed = (init-seed 34)
+          for rnd-row = (rnd-order 
+                         '(60 62 63 65 66 68 69 70 72))
+                         collect rnd-row into reslis
+                         when (equal '(60) (last rnd-row))
+                         return reslis)))
+
+;; With pitches, returning only the last list
+(setf conditional-seed3
+      (loop  
+         with seed = (init-seed 34)
+         for rnd-row = (rnd-order 
+                        '(f4 bb4 c4 d4 fs4 a4 c5 eb4 gs4))
+         collect rnd-row into reslis
+         when (equal '(c4) (last rnd-row))
+           return (last reslis)))

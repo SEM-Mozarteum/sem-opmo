@@ -1,0 +1,153 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; ARTICULATION
+
+#|
+Articulation is a text attribute attached to a note:
+- staccato, legato, tenuto, marcato, pedal etc.
+- articulations can be merged with +: stacc+ten
+- like all other parameters articulations can be extended
+|#
+
+;;; ---------------------------------------------------------
+
+;; make some pitches
+(setf pitches (midi-to-pitch 
+               (rnd-number 15 60 84 :seed 89)))
+
+#|
+the make-omn has the keyword :span to automatically span
+the parameters to the length of a specified parameter key
+Here the number of lengths and articulations ("stacc") is 
+spanned to the number of pitches.
+|#
+
+(setf mat (make-omn
+           :pitch pitches
+           :length '(1/16)
+           :articulation '(stacc)
+           :span :pitch))
+
+;; repeated articulations are extended:
+'((q e5 leg fs5 leg) (gs5 leg a5 cs6))
+;; same as the dynamics
+'(p< < < < mf pp< < ff)
+
+;; An example with articulations
+
+(setf pitches 
+      '((e4 b5 e5) 
+        (fs4 bb4 e5 b5) 
+        (eb4 a5 g5 b4 g5)  
+        (gs4 e5 f5)))
+
+(setf pitch-numb-sum
+      (sum ; calculte the sum of a list     
+       (mapcar 'length pitches)
+      ; loops over pitches with the function 'length
+       ))
+      
+(setf velocities
+      (velocity-to-dynamic
+       (get-velocity
+        (rnd-number pitch-numb-sum 0.27 0.85 
+                    :seed 123)
+        :type :symbol)))
+
+(setf mat (make-omn
+           :pitch pitches
+           :length '(1/16)
+           :velocity velocities
+           :articulation '(stacc+ten) ; combined articulations
+           :span :pitch))
+
+;; To merge attributes use merge-attributes
+(merge-attributes
+ '(stacc - stacc - - marc - - -)
+ '(- - marc - - marc - - -)
+ '(- - - - - ped ped - -))
+;; Double attributes (marc) are reduced to one:
+;; (stacc - stacc+marc - - marc+ped ped - -)
+
+;; Seperate attributes
+(disjoin-attributes 'leg+ponte) ; => (leg ponte)
+
+;; pedals are articulations as well
+(setf sequence 
+      '((s eb6 p< leg f5 < leg c5 < leg f5 <)
+        (s bb3 stacc a3 mp ped g3 ped a3 f ped c4 ped h f4)))
+
+;; Example with automated legato slurs
+
+(setf pitches2 
+      '((b4 fs5 e3 a5) (e5 b5 c4) (g5 a4 ds3 d4) (c6 b5 a4) 
+        (c5 eb5 gs4) (b4 f5 f5 fs5 gs5 a5) (cs4 g4 c6) (gs5)))
+
+(setf pitch-numb2
+      (mapcar 'length pitches2))
+
+(setf pitch-sum (length (flatten pitches2)))
+
+(setf lengths2 
+      (loop for i in pitch-numb2
+        ; loop over all numbers
+        collect (gen-repeat i '(1/8))))
+
+;; automatic legato bows
+(setf articulations2 
+      (loop for i in pitches2 collect
+        ; loop over all measures
+        (loop for x from 1 to (length i)
+          ; loop over all notes in each measure
+          if (not (= x (length i)))
+          ; if its not the last note
+          collect 'leg
+          else
+          collect '-
+          ; for the last note collect -
+          )))
+           
+(setf mat2 
+      (make-omn 
+       :pitch pitches2
+       :length lengths2
+       :articulation articulations2))
+
+(flatten mat2) ; to ignore the predefined measures
+
+;;; ---------------------------------------------------------
+
+;;; TEXT ATTRIBUTES
+
+;; _Add text attributes to a score
+
+(add-text-attributes
+ '(ord-tasto "ord⟶tasto") 
+ '(tasto-ponte "sul tasto⟶pont."))
+
+'(h c4 ppp> ord-tasto+leg cs5 pppp tasto-ponte)
+
+#|
+For making a custom set of attributes permanently available, 
+you can create a file 'User Attributes.lisp' in the Opusmodus 
+'Extensions' folder:
+~/Documents/Opusmodus/User Source/Extensions/
+ - if it hasn't been created already. For attributes that are 
+specific for a certain composition, you might want to add your 
+custom attribute definitions, say, at the top of the file 
+generating that composition. To be able to add your own 
+attributes (playing techniques) to the system you need to add a 
+new list with two or three arguments to the existing list. 
+The first argument is a symbol (name) which you will use in the 
+omn-script, the second argument is a string (text) that will be 
+displayed in the score above the note. The third argument is an 
+optional attribute type.
+|#
+
+
+

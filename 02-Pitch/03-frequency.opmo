@@ -1,0 +1,88 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; FREQUENCY
+
+#|
+Frequency is the number of occurrences of a repeating event 
+per unit of time. Frequency is measured in hertz (Hz) which 
+is equal to one event per second. The harmonic organisation 
+of spectral music is calculated in frequencies.
+|#
+
+;;; ---------------------------------------------------------
+
+;; Conversion from a list of pitches to frequencies in hertz
+(pitch-to-hertz '(c4 cs4 d4 ds4 e4 f4 fs4 g4 gs4 a4 as4))
+;; => (261.62555 277.18265 293.66476 311.12698 329.62756 349.22824 369.99442 391.99542 415.3047 440.0 466.1638)
+
+;; harmonics function
+(harmonics 'a2 8) ;=> (a4 a5 e6 a6 cs7 e7 g7 a7)
+;; by default pitches are chromatic
+
+;; hertz-to-pitch default quantisation is in eigthtones
+(hertz-to-pitch
+(harmonics 'a2 8 :type :hertz))
+
+;; a LISP code version to calculate a harmonic series
+;; A fundamental frequency
+(setf fund (pitch-to-hertz 'c2))
+
+;; Calculating the harmonics from the fundamental (LISP)
+(setf harm-series
+      (loop for i from 1 to 9 collect (* fund i)))
+
+;; Converting back to pitches
+(hertz-to-pitch harm-series)
+
+;;; ---------------------------------------------------------
+
+;;; MICROTONES
+
+#|
+Microtones are implemented in OM as quarter- and eigthtones
+because of the commonly used signs in computer notation.
+All additional deviations can be displayed in cents as text
+attributes.
+|#
+
+;; a list of 16 random frequencies
+(setf frequencies (rnd 16 :low 100 :high 2000 :seed 123))
+
+;; A set of random pitches automatically quantised 
+;; to eigth tones (default)
+(hertz-to-pitch frequencies)
+
+;; A list of remaining cents from frequency list
+(hertz-to-pitch frequencies :remain t)
+
+;; A set of random pitches quantised to quarter tones
+(setf pitches (hertz-to-pitch frequencies :quantize 1/4))
+
+;; A list of remaining cents from the quantised list
+(setf cents (hertz-to-pitch frequencies 
+                              :quantize 1/4 :remain t))
+;;; ---------------------------------------------------------
+
+;;; cents-to-attribute
+
+#|
+This function converts a list of cent values into cent 
+attributes. Use this function to display the remaining 
+cent values from a list of floating point numbers after 
+a quantisation. 
+|#
+
+(cent-to-attribute cents) 
+;; => (23c -19c -24c 14c 1c 4c 11c 14c -16c 22c 19c -15c -23c -11c -4c)
+
+;; Display the remaining cents in a score
+(make-omn
+ :length (gen-repeat (length pitches) 'q)
+ :pitch pitches
+ :articulation (cent-to-attribute cents))
+

@@ -1,0 +1,249 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; CHORD
+
+#|
+chords are written as directly consecutive notes:
+'(c4 eb4 g4) => melody
+'(c4eb4g4) => chord
+|#
+
+;;; ---------------------------------------------------------
+
+;;; chordize / melodize / chordize-list / 
+
+;; midi-to-pitch interpret sublists as chords
+(setf chords 
+(midi-to-pitch '(58 (59 65 71) (60 67) (61) (62 64 68 70)))) 
+;; => (bb3 b3f4b4 c4g4 cs4 d4e4gs4bb4)
+
+;; show the number of pitches in chords
+(get-chord-size chords) ; => (1 3 2 1 4)
+
+;; CHORDIZE-LIST allows you to chordize melodic lists.
+(chordize-list '((c4 e4) (g4 c5)))
+(chordize '(c4 e4 g5 d3))
+;; and vice versa
+(melodize '(c4d4f4)) ; => (c4 d4 f4)
+
+;; several chords converted from midi melodies
+(chordize-list 
+ (midi-to-pitch '((60 56) (67 62) (62 65 66) (63 60 61))))
+
+;; if the first element in the list is a single midi note
+;; midi-to-pitch interpret sublists automatically as chords
+(midi-to-pitch '(58 (59 65) (60 67) 61 62)) 
+;; => (bb3 b3f4 c4g4 cs4 d4) 
+
+;; Divide up a melody into intervals
+(chordize-list (gen-divide 2 '(c4 f4 g4 a4 d4 f3)))
+
+;; If there is a rest this rest is given as the last chord
+(chordize-list (gen-divide 4 '(c4 f4 g4 a4 d4 f3)))
+
+;; Divide up a melody in different chords
+(chordize-list (gen-divide '(2 1 3) '(c4 f4 g4 a4 d4 f3)))
+
+;; construction of random chords
+(chordize
+ (midi-to-pitch
+  (gen-loop 10 (rnd-number 
+                (rnd1 :low 2 :high 5) 60 69
+                :norep t))))
+
+;;; ---------------------------------------------------------
+
+;;; respell 
+
+#|
+The 'respell' function can be used to change the pitch name 
+of chord clusters to avoid the identical note names that 
+produce conflicts in notation display. The function will 
+also respell ascending pitch sequences to sharps and flats 
+when pitches descend.
+NOTE:
+This function works momentarily with chromatic pitches only.
+|#
+
+(respell '(c4cs4)) ; => (c4db4)
+(respell '(c4 db4 d4 eb4 e4 f4 gb4 g4 ab4 a4 bb4 b4)) 
+;; => (c4 cs4 d4 ds4 e4 f4 fs4 g4 gs4 a4 as4 b4)
+
+;;; ---------------------------------------------------------
+
+;;; gen-chord
+
+#|
+The function GEN-CHORD generate chords with the unique
+pitches from a list. 
+The ambitus-chord arguments: 
+(1) is the max ambitus possible, randomly depending 
+on the intervals available in the pitches.
+The size of the chord generated will lie between chord-low 
+(2) and chord-high (3). The transposition of pitch values 
+can also be set to lie between transpose-low (4) and 
+transpose-high (5) parameters. 
+|#
+
+;; the maximum ambitus is 7, the chord contain between 
+;; 2 and 3 pitches with no transposition:
+(gen-chord 7 1 3 0 0 '(c4 db4 fs4 g4 c5 f5 gb5 b5)
+           :seed 12)
+;; the resulting chords have 3+3+2 pitches = 8 pitches in 
+;; the input list.
+
+;; the same calculation repeated 5 times.
+;; NOTE: the :seed keyword is now conected to gen-loop.
+(gen-loop 5
+(gen-chord 7 1 3 0 0 '(c4 db4 fs4 g4 c5 f5 gb5 b5))
+           :seed 12)
+
+;; the chords are in random order
+;; NOTE: 2 individual seeds
+(gen-loop 5 (rnd-order
+             (gen-chord 7 1 3 0 0 
+                        '(c4 db4 fs4 g4 c5 f5 gb5 b5))
+             :seed 123)
+          :seed 12)
+
+;; When the ambitus is quite high the possibilities 
+;; of chord increase. Transpositions between a 
+;; major second up and down are possible.
+(loop repeat 10 collect 
+        (gen-chord 11 3 4 -2 2 
+                   '(c4 db4 fs4 g4 c5 f5 gb5 b5)))  
+
+;; This should produce 2 chords
+(gen-chord 11 4 4 0 0 '(c4 db4 fs4 g4 c5 f5 gb5 b5)) 
+
+;; intervals but randomly transposed -1 down and 1 
+;; semitone up
+(gen-chord 11 2 2 -1 1 '(c4 db4 fs4 g4 c5 f5 gb5 b5))
+
+;;; ---------------------------------------------------------
+
+;;; chord-inversion
+
+;; The function CHORD-INVERSION will generate all the 
+;; inversions (rotations) of a chord up to and including N. 
+;; For example, the first inversion of C major will give us:
+(chord-inversion 1 'c4e4g4)
+
+;; the 4th inversion and the root chord
+(chord-inversion 4 'c4e4g4 :root t)
+
+;; all inversions and the root chord
+(chord-inversion 4 'c4e4g4 :series t :root t)
+
+;; two chord inversions in parralel
+(chord-inversion '(2 4) '(c4e4g4 g4b4d4) :series t)
+
+;;; ---------------------------------------------------------
+
+;;; dechord
+
+#|
+This function returns a single note from every chord found 
+in a sequence. There are 3 pitch position options 'root 
+(same as 'low) and 'top (same as'high) and '? (at random) 
+to choose from.
+|#
+
+(setf mat '(c4d4e4f4g4a4))
+
+;; default is root (low)
+(dechord mat)
+
+;; The highest note is chosen
+(dechord mat :pitch 'high)
+
+;; One pitch is chosen at random
+(dechord mat :pitch '?)
+
+(setf mat2 '((q c4 f4a4d5 e fs5) (s cs4 d4 fs4 q c4e4gs4)))
+
+;; The highest notes from chords are chosen. 
+;; Single pitches are left unchanged
+(dechord mat2 :pitch 'high)
+
+;;; ---------------------------------------------------------
+
+;;; chord-pitch-unique
+
+;; When working with large amounts of generated or 
+;; processed data, there may be some situations in which 
+;; repeated pitches occur in chords.
+
+;; Remove duplicate chord pitches in a single list:
+(chord-pitch-unique '(c4g4c4 d4d4 f4a4b3a4 g4e3e3g4))
+=> (c4g4 d4 f4a4b3 g4e3)
+
+;;; ---------------------------------------------------------
+
+;;; chord-interval-replace
+
+(setf chord '(c4d4g4b4))
+
+;; replaces the interval 11 in the chord with 10
+(chord-interval-replace 11 10 chord)
+
+;; replaces the interval 11 in the chord with 10,
+;; and 7 with 6
+(chord-interval-replace '(11 7) '(10 6) '(c4d4g4b4))
+
+;;; ---------------------------------------------------------
+
+;;; chord-dissolve
+
+#|
+This function creates a chord from a list of pitches and 
+dissolves the chord by one pitch at the time. The process 
+can be controlled by a variant option. 
+|#
+
+;; When he count and the level values are equal to the 
+;; chord size, the chord is dissolved completely
+
+(setf diss-chord '(c4e4gs4b4d5f5a5))
+(chord-dissolve 7 7 diss-chord)
+
+;; The chord is dissolved in descending direction
+(chord-dissolve 7 7 diss-chord :variant 'd)
+
+;; The same but in random order
+(chord-dissolve 7 7 diss-chord :variant 'ro)
+
+;; If the count value is larger then the chord size or 
+;; pitch count in the list, a reverse process will start
+(chord-dissolve 13 7 diss-chord :variant 'd)
+
+;;; ---------------------------------------------------------
+
+;;; chord-interval-remove
+
+;; the interval 11 is removed from a chord
+(chord-interval-remove 11 '(c4d4g4b4))
+
+(setf chord '(cs4e4fs4a4bb4c5eb5))
+
+;; the intervals 2 and 11 are reomved from the chord.
+(chord-interval-remove '(2 11) chord)
+;; => (cs4e4a4)
+
+(setf intervals (gen-integer 0 12))
+(setf chord2 (chordize (integer-to-pitch intervals)))
+
+;; A little more complex example:
+;; 10 chords with between 2 and 8 randomly removed
+;; intervals between 3 and 7 (minor third and fifth)
+(gen-loop 10 (chord-interval-remove 
+              (rnd-sample ; random pick from interval list
+               (rnd1 :low 2 :high 8) ; how many 
+               (gen-integer 3 7) ; list of intervals
+               :norep t) ; possibly no repeated values
+              chord2)) ; chord

@@ -1,0 +1,115 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - , Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; LOOP (macro in LISP)
+
+#|
+The Loop Macro is one of the most valuable, and least 
+documented  of the operations in Common Lisp. 
+It is valuable because it is more powerful, more compact, 
+and more readable than comparable Common Lisp constructs 
+such as mapping operations and recursion. 
+It also uses a programming style that will be familiar to 
+programmers who have worked with other more traditional 
+languages. This short guide provides examples of how to use 
+the Loop Macro.
+
+Think of Loop expressions as having four parts: 
+expressions that set up variables that will be iterated, 
+expressions that conditionally terminate the iteration, 
+expressions that do something on each iteration, 
+expressions that do something right before the Loop exits. 
+
+More information on LOOP:
+https://www.unixuser.org/~euske/doc/cl/loop.html
+https://cl-cookbook.sourceforge.net/loop.html 
+https://gigamonkeys.com/book/loop-for-black-belts.html
+|#
+
+;;; ---------------------------------------------------------
+
+;; The loop variable can be anything: integers, bread, x, etc.
+(loop for integers from 0 to 12 collect integers) 
+(loop for bread from 0 to 12 collect bread)
+(loop for x from 0 to 12 collect x)
+
+;; => (0 1 2 3 4 5 6 7 8 9 10 11 12)
+
+(loop for midinote from 60 to 72 collect midinote)
+(midi-to-pitch (loop for m from 60 to 72 collect m))
+
+;; an octave transposition
+(loop for i in '(60 61 62 63 64 65) collect (+ i 12))
+
+(defparameter midis '(60 61 62 63 64 65 66 67 68 69 70))
+(loop for i in midis collect (midi-to-pitch (+ i 12)))
+
+;; There a many keywords available for LOOP
+;; here each second number is taken
+(loop for pc from 60 to 84 by 2 collect (midi-to-pitch pc))
+
+;; harmonic spectrum (hertz)
+(loop for i from 2 to 14 collect (hertz-to-pitch (* 23 i)))
+
+(loop for pc from 84 downto 60 by 4 
+      collect (midi-to-pitch pc))
+
+(loop repeat 8 ; repeat 8 times
+      for freq = 40 ; starting the variable freq with 40
+        then (* freq 1.1) ; then multiplying each other
+        ; number with 1.1 and collect its value in a list
+      collect (hertz-to-pitch freq)) 
+
+;; Nested loops are created like this:
+(loop for i from 1 to 5 collect
+  (loop for j from 0 to 4 collect (+ i j)))
+
+
+
+;; Rearrange a nested list by taking each position in a 
+;; seperate list (matrix transformation)
+
+(defparameter lists '((c4 d4 e4 f4) 
+                      (d4 e4 f4 g4) 
+                      (f4 g4 a4 b4)
+                      (g4 a4 b4 c5)))
+
+(loop for i from 0 to 3 ; index in list
+      collect 
+        ; collect each nth position of every list
+        ; into a separate list
+        (chordize
+        (loop for j in lists collect (nth i j))))
+
+
+
+;; Remove all repetitions in a list
+
+;; a list with repetitions
+(setf replst '(1 1 2 3 4 5 5 6 7 7 7 8))
+
+;; the variable 'last' is overwritten after each 
+;; conditional test
+(loop with last = NIL
+      for i in replst
+      when (not (equal last i))
+        ; test if the current value is equal to 
+        ; the last (variable 'last, default NIL
+        collect i into reslis
+        ; if not, the value is collected into 'reslis'
+        ; which is a named list of results (could 
+        ; have any name).
+      and do (setf last i)
+        ; and the 'last' variable is set to the 
+        ; current value. (The 'and' is optional).
+        ; At the end the result list 'reslis' is returned:
+      finally (return (reverse reslis)))
+
+
+
+
+
