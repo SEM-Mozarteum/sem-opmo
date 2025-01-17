@@ -5,7 +5,7 @@ used as a step-by-step tutorial for the classes in Computer Assisted Composition
 
 ## Installation / Usage (Mac & Windows)
 
-1. Download the ZIP archive of this tutorial (Copy → Download ZIP or https://github.com/bornhoeft/sem-pd/zipball/master) and unpack it.
+1. Download the ZIP archive of this tutorial (Copy → Download ZIP or https://github.com/bornhoeft/sem-opmo/zipball/master) and unpack it.
 
 2. Copy the content in the Folder /Opusmodus/Documents in your home directory
 
