@@ -187,10 +187,11 @@ generator will give consistent outputs:
 ;;; ---------------------------------------------------------
 
 ;; Number of values
+(progn
 (setf nbval 32)
 
 ;; Six half sines (envelope) modulated with sine
-(progn
+
 (setf dvect1 (half-sine nbval 1 :modulation (gen-sine nbval 3 0.25)))
 (setf dvect2 (half-sine nbval 1 :modulation (gen-sine nbval 2 0.25)))
 (setf dvect3 (half-sine nbval 1 :modulation (gen-sine nbval 3 0.35)))
