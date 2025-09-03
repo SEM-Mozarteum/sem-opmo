@@ -1,0 +1,71 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;---------------------------------------------------------
+;; Mikrotonalität 1
+;;---------------------------------------------------------
+;; Luigi Nono, Fragmente-Stille, An Diotima
+;; (fragement 26/27)
+;;---------------------------------------------------------
+
+(setf vn1
+      '(#|1|# (-h reh+rehn-26 e b4-e4+ ppp ten+norm+arco - -q)
+        #|2|# (-q -e cs6+e6+ ten e6+b6- leg fs4+e5+ cs4 stacc+ten -)
+        #|3|# (-q z^q c5+e5+ s c4 ten -e. q fs5e6 ten+leg e e6+d7+ ten -)
+        #|4|# (-h e fs5+e6+ ten+stacc cs5+e5+cs6 ten+stacc cs5+ ten+stacc -)
+        #|5|# (-q -e c5c6-e6- ten fs6+e7+ leg e6bb6 leg cs5+ > leg c6e6 >
+                  e4+b4- > ten+stacc -)
+        #|6|# (e d5-e5+ pppp marc d5-e5+ marc -q bl-ll)
+        #|7|# (-e reh cs5+d5 sff mart+arco mf mart cs5+d5 mart -q)
+        #|8|# (-q -5q 5w cs6+e6+ mf<fff ponte+comma q ppp norm+fermata-vl
+                  5q mf> mart > dbow p mart -5h fermata-vl)))
+
+(setf vn2
+      '(#|1|# (-q - e fs4+gs4+ ppp ten+norm+arco - -q)
+        #|2|# (-q -e c6+ ten fs6+gs6+ leg b3-gs4+ c4e4 stacc+ten -)
+        #|3|# (-q z^q e4cs5+ ten s cs4 -e. q bb4gs5 ten+leg e bb4gs5+
+                  stacc+ten -)
+        #|4|# (-h e b3-gs4+ stacc+ten c5+c6e6 stacc+ten c5+e5+ stacc+ten -)
+        #|5|# (-q -e cs5e5c6+ ten b5-gs6+ leg fs6gs6 leg c5+e5+ > leg cs6 >
+                  fs4+gs4+ > ten -)
+        #|6|# (e c5e5 pppp marc c5e5 marc -q)
+        #|7|# (-e c5+e5+ sff mart+arco c5+e5+ mart c5+e5+ mart -q)
+        #|8|# (-q -5q 5w a4c6+ mf<fff ponte+comma q ppp norm+fermata-vl
+                  5q mf> mart > dbow p mart -5h fermata-vl)))
+
+(setf vla
+      '(#|1|# (-h e fs4bb4 ppp ten+norm+arco - -q)
+        #|2|# (-q -e cs3 ten fs3bb3 leg gb5e6 e3+ stacc+ten -)
+        #|3|# (-q c3+ ten g4-e5+ ten+leg e gb4e5 ten -)
+        #|4|# (-h e gb5e6 ten+stacc c3+ ten+stacc c5 ten+stacc -)
+        #|5|# (-q -e cs3+ ten gb3e4 leg fs3+b3- leg cs4 > leg c4+ > fs4b4- >
+                  ten+stacc -)
+        #|6|# (e cs5 pppp marc cs5 marc -q)
+        #|7|# (-e c5e5 sff mart+dsfz+arco c5e5 mart c5e5 mart -q)
+        #|8|# (-3q -e 3e cs4g4 p< ponte 3h ff trem+ponte -3q comma -q
+                   fermata-vl -3e cs4g4 mp> ponte+mart > dbow > mart 3q pp>0
+                   dbow+fermata-vl)))
+
+(setf vlc
+      '(#|1|# (-h e e4gs4 ppp ten+norm+arco - -q)
+        #|2|# (-q -e c3e3 stacc+ten e3gs3 leg gb4gs5 cs4+c5+ stacc+ten -)
+        #|3|# (-q z^q c3-e3- s c4 ten -e. q b3-gs4+ ten+leg e bb2gs3 ten -)
+        #|4|# (-h e bb3gs4 ten+stacc c3-e3- ten+stacc e3cs4 ten+stacc -)
+        #|5|# (-q -e c3+e3+ ten bb2gs3 leg e3+gs3+ leg c4e4 > leg e2+cs3+ >
+                  e4g4+ > ten+stacc -)
+        #|6|# (e c5+ pppp marc c5+ marc -q)
+        #|7|# (-e d4cs5 sff mart+dsfz+arco d4cs5 mart d4cs5 mart -q)
+        #|8|# (-3q -e 3e d3f3 p< ponte 3h ff trem+ponte -3q comma
+                   -q fermata-vl -3e d3f3 mp> ponte+mart > dbow > mart
+                   3q pp>0 dbow+fermata-vl)))
+
+(ps 'gm :sq (list vn1 vn2 vla vlc)
+    :tempo '((60 4) (:rit 60 46 1/64 1) (46 1) (92 1) (72 1))
+    :title "Luigi Nono, Fragmente-Stille, An Diotima (fragement 26/27)")
+
+(defparameter *default-notation-editor* "MuseScore 4.app")
+(musicxml-to-editor)
