@@ -45,6 +45,8 @@ Thumbs.db
 # temporary Opusmodus files
 *.opmo~
 *.lisp~
+
+# One of this should work for intermediate opmo files
 [#]*[#]
 \#*\#
 *[#]*[#]
