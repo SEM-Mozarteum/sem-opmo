@@ -1,6 +1,6 @@
 # Opusmodus Tutorial
 
-is a collection of patches for Opusmodus 3.x
+is a collection of patches for Opusmodus 3.x / 4.x
 used as a step-by-step tutorial for the classes in Computer Assisted Composition at the Studio for Electronic Music at the Mozarteum, Salzburg, Austria. 
 
 ## Installation / Usage (Mac & Windows)
