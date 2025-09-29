@@ -8,21 +8,14 @@
 ;;; COMMON LISP
 
 #|
-Opusmodus is built on Common Lisp (LispWorks.
-Common Lisp is a general-purpose, multi-paradigm
-programming language. 
-It supports a combination of procedural, functional,   
-and object-oriented programming paradigms. 
-As a dynamic programming language, it facilitates 
-evolutionary and incremental software development, 
-with iterative compilation into efficient run-time 
-programs. 
-Common Lisp is a dialect of Lisp. It uses S-expressions 
-to denote both code and data structure. Function calls, 
-macro forms and special forms are written as lists, 
-with the name of the operator first.
-
-https://en.wikipedia.org/wiki/Common_Lisp
+Common Lisp is a programming language that is built around lists.
+In Lisp, programs and data are both written as lists.
+For example: (+ 1 2 3) means “add 1, 2, and 3.”
+Because code looks like data, you can easily change and create 
+new code while the program runs. This makes Lisp very flexible 
+and powerful. It’s often used for artificial intelligence, 
+symbolic computation, and rapid prototyping, but it can also be 
+used for general software development.
 
 (See 'Common Lisp' documentation in Navigator.)
 |#
@@ -40,8 +33,8 @@ Comments are not evaluated!
 
 #!
 ;;; (RED) MAIN COMMENTs, HEADERS, CREDITS, etc.
-;; (ORANGE) Comments in the code
-; (BROWN) Comments in line
+;; (ORANGE) Descriptive comments in the code
+; (BROWN) Inline comments
 !#
 
 ;;; PARANTHESES
@@ -55,32 +48,29 @@ evaluate the containing expression.
 To evaluate an expression press 'cmd + e' and 
 see the result in Listener below.
 
-Press 'cmd-shift e' to evaluate the whole composer window 
-and show the output of the last expression.
+(Press 'cmd-shift e' to evaluate the whole composer window 
+and show the output of the last expression.)
 |#
 
 ;; the first statement is generally a function in LISP
-(+ 1 2) ; + = function: 1 + 2 = 3
+;; followed by 0 to N arguments
 
-(random 10) ; random function: a number between 0 and 9
+;; random function without arguments
+(rndn) ; default result: one floating point number between 0 and 1
 
-;; numbers from 0 to 7 in a list (= container)
-(list 0 1 2 3 4 5 6 7) ; list function
-;; same as
-'(0 1 2 3 4 5 6 7) 
-;; so called quoted list, means "as it is" 
-;; otherwise 0 would be the function
+;; + function with two arguments
+(+ 1 2) ; result: 1 + 2 = 3
 
-;; lists can be infinitely nested
-;; they are evaluated from inside to outside
-(- (+ 1 2) 3) ; 1 + 2 - 3 = 0
+;; random function with one argument (= highest random number - 1)
+(random 10) ; random number between 0 and 9
 
 ;; OPUSMODUS has (+/- 800) inbuilt functions , 
 ;; many of them directly related to music
 (ambitus-instrument 'flute) 
 ;; => (0 41) result in integers where 0 is c4
 
-;; nested function is evaluated from inside to outside
+;; all pitches of a flute
+;; expressions are evaluated from inside to outside
 (integer-to-pitch
  (gen-integer 
   (second 
@@ -90,13 +80,72 @@ and show the output of the last expression.
 ;; 3. (gen-integer 41): make integers from 0 to 41
 ;; 4. convert all integers to pitches
 
+;;; VARIABLES
+
+;; If any material is used multiple times, it is helpful 
+;; to assign it to a variable with any name, which can 
+;; then be used to call it up.
+
+(setf pitches (midi-to-pitch '(71 70 74 63 67 66)))
+;; now pitches hold the values from midi-to-pitch
+
+;; here the values stored in the variable "pitches" 
+;; are converted back to midi notes
+(pitch-to-midi pitches)
+
+;;; LISTS
+
+;; numbers from 0 to 7 in a list (= container)
+(list 0 1 2 3 4 5 6 7) ; list function
+;; same as
+'(0 1 2 3 4 5 6 7) 
+;; latter is a so called quoted list, means "as it is" 
+;; otherwise 0 would be the function
+
+;;; ALL musical parameters in Opusmodus are stored in lists.
+
+;; lists can be infinitely nested
+
+(- (+ 1 2) 3) ; 1 + 2 - 3 = 0
+
+;;; ALL levels of a score (measure, voice, part, system, etc.)
+;;; are displayed as lists within lists.
+
+;; define variables for 2 lists with different content:
+(setf lst1 '(1 2 3 4 5))
+(setf lst2 '(a b c d e))
+
+;; collect lists into one list
+(list lst1 lst2) ; ((1 2 3 4 5) (a b c d e))
+
+;; merge lists into one list
+(append lst1 lst2) ; (1 2 3 4 5 a b c d e)
+
+;; Common Lisp also defines functions to retrieve values from a list:
+
+(first lst1) ; 1
+(second lst1) ; 2
+;; an so on until
+(tenth lst1) ; nil
+
+(rest lst1) ; (2 3 4 5)
+(butlast lst1) ; (1 2 3 4)
+(last lst1) ; (5)
+
+;; With the function nth specific singular items
+;; on a specific position in a list are retrieved.
+;; Note that the first item in a list is the 0th element. 
+
+(nth 3 lst1) ; 4
+(nth 0 lst2) ; a
+
 ;;; DOCUMENTATION
 
 #|
 Place the cursor anywhere in a function name and 
 press 'ctrl y' for the direct display of the arguments
-and a short description of the function. (Press esc to
-close this display)
+and a short description of the function. 
+(Press esc to close this display)
 
 Press 'cmd d' for extensive documentation, examples
 and occurrences in other documents. 
@@ -106,101 +155,4 @@ Works in Assistant as well!
 (rndn)
 
 (midi-to-pitch '(71 70 74 63 67 66))
-
-;;; VARIABLES
-
-;; If a material is used multiple times, it is helpful 
-;; to assign it to a variable with any name, which can 
-;;  then be used to call it up.
-
-(setf pitches (midi-to-pitch '(71 70 74 63 67 66)))
-;; now pitches hold the values from midi-to-pitch
-
-;; here the pitches are converted back to midi notes
-(pitch-to-midi pitches)
-
-;;; -------------------------------------------------------  
-
-;;; Shortcuts
-
-#|
-cmd e : Evaluate Expression
-
-cmd E: Evaluate All (whole document)
-
-cmd 1: Snippet Notation
-
-alt-cmd 1: Evaluate Score to Notation
-
-ctrl-alt-cmd 3: Hear last score
-
-cmd-shift 1: Graph numbers
-
-cmd-shift 2: Graph OMN
-|#
-
-;;; AUDITION and NOTATION of Code Snippets
-
-#|
-To see and hear the notation in OMN (OpusModus Notation) 
-of any selected part (even single notes)
-press 'cmd 1' (Notation).
-To see and hear the notation of more than one voice
-press 'cmd 2'
-To play it in the Midi-Player
-press 'cmd 3' (Midi Player)
-Just to hear any selected part
-press 'cmd 4' (Audition).
-
-To stop Audition press cmd esc.
-|#
-
-;; Webern's Concerto Op. 24 tone row
-'(b4 bb4 d5 eb4 g4 fs4 ab4 e4 f4 c5 cs5 a4)
-
-'((e c4 d4 e4 f4) (q g4 =) (e a4 = = =) (q g4 -)
-        (e a4 = = =) (q g4 -) (e f4 = = =) (q e4 =)
-        (e g4 = = =) (q c4 -)) ; "Alle meine Entchen"
-
-'((q d4 pp s eb4 < leg g4 < leg bb4 < leg a4 q. cs5 mf -e
-     3q gs5 > leg fs5 > leg c5 > b4 > leg f4 leg e4)
-  (t d4 < leg eb4 < leg g4 < leg bb4 q. a4 marc
-     t fs4 mf leg gs4 leg e. c5 e b4 t f5 leg e5 leg d5 leg
-     eb5 3q bb5 > a4 > bb5 > e a4 pp stacc -e))
-
-;; To see several parts at once press 'cmd-2'
-#!
-(((q cs4 pp -q t gs4 marc e.. fs4 mf leg e c4 
-     -e t b4 leg f4 q.. e4 pp))
-  ((-q e d4 leg eb4 h g4 mf leg q. g4 > -e))
-  ((s bb3 pp leg a3 h. db3 t gs4 mp fs3 < c5 < 
-      b3 q f4 marc e4)))
-!#
-
-#|
-To see and hear the notation of integers (0 = 60 = c4) 
-of any selected part (even single notes)
-press 'cmd 5' (Notation).
-To play it in the Midi-Player
-press 'cmd 6' (Midi Player)
-Just to hear any selected part
-press 'cmd 7' (Audition).
-|#
-	
-'(11 10 14 3 7 6 8 4 5 12 13 9)
-
-#|
-To see and hear the notation of intervals (positive = up, 
-negative = down) of any selected part 
-press 'cmd 8' (Notation).
-To play it in the Midi-Player
-press 'cmd 9' (Midi Player)
-Just to hear any selected part
-press 'cmd 0' (Audition).
-Intervals are generally starting with 0 = c4
-|#
-
-'(-1 4 -11 4 -1 2 -4 1 7 1 -4)
-
-
 

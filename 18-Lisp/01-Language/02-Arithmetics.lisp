@@ -11,7 +11,12 @@
 (+ 2 2) ; => 4
 
 #|
-The computer sees the opening parenthesis and realizes it is being given a list. When it reaches the closing parenthesis it is able to work out that it has seen a list of three elements. The first is the + sign, so it knows to add together the values of the remaining items on the list. So it evaluates them, the number 2 having the value 2 as before. Answer: 4
+The computer sees the opening parenthesis and realizes it is being 
+given a list. When it reaches the closing parenthesis it is able to 
+work out that it has seen a list of three elements. The first is the 
++ sign, so it knows to add together the values of the remaining items 
+on the list. So it evaluates them, the number 2 having the value 2 as 
+before. Answer: 4
 |#
 
 (+ 1 2 3 4) ; => 10
@@ -22,8 +27,12 @@ The computer sees the opening parenthesis and realizes it is being given a list.
 
 
 #|
-Instead of writing 1+20+300+4000+50000, one writes the plus sign as the first item of a list that can be as long as you wish.
-The list appears to be laid out like one might lay out a shopping list: (potatoes carrots onions bread milk) with no concession to the idea that + is part of arithmetic and a bit special. Be careful though. The first location on the list is special, and + has to come first.
+Instead of writing 1+20+300+4000+50000, one writes the plus sign as the 
+first item of a list that can be as long as you wish.
+The list appears to be laid out like one might lay out a shopping list: 
+(potatoes carrots onions bread milk) with no concession to the idea that 
++ is part of arithmetic and a bit special. Be careful though. The first
+ location on the list is special, and + has to come first.
 |#
 
 ;;; Multiplication
@@ -77,8 +86,10 @@ The list appears to be laid out like one might lay out a shopping list: (potatoe
 
 #|
 This is potentially confusing:
-If you try (/ 2 3) you get 2/3 which is probably an unpleasant surprise, if you were expecting 0.6666667. 
-If you had tried (/ 8 12) you would also have got 2/3, which might have been a pleasant surprise. 
+If you try (/ 2 3) you get 2/3 which is probably an unpleasant surprise, 
+if you were expecting 0.6666667. 
+If you had tried (/ 8 12) you would also have got 2/3, 
+which might have been a pleasant surprise. 
 If you don't want a fraction, you can always say:
 |# 
 
@@ -93,7 +104,8 @@ If you don't want a fraction, you can always say:
 ;; being the same as
  (/ 1 (* 2 3 4 5)) ; => 1/120
 
-;;This works OK in practice. A calculation such as 6×5×4/(3×2×1) gets translated to the following piece of Lisp:
+;;This works OK in practice. A calculation such as 6×5×4/(3×2×1) 
+gets translated to the following piece of Lisp:
 (/ (* 6 5 4) 3 2 1) ; => 20
 
 ;;; Modulo
