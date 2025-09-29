@@ -156,3 +156,10 @@ Works in Assistant as well!
 
 (midi-to-pitch '(71 70 74 63 67 66))
 
+;;; AUTOCOMPLETE
+
+#|
+Type an opening parenthesis and the first letter of a symbol,
+then press Tab to invoke the completion menu. Use the arrow 
+keys to navigate; Return inserts the selection.
+|#
