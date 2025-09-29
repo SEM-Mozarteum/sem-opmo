@@ -46,6 +46,7 @@ Thumbs.db
 *.opmo~
 *.lisp~
 [#]*[#]
+\#*\#
 
 # temporary Reaper files
 *.RPP-bak
