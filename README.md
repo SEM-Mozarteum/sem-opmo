@@ -1,12 +1,13 @@
 # Opusmodus Tutorial
 
-is a collection of patches for Opusmodus (Version 3 - 4.0.x)
-used as a step-by-step tutorial for the classes in Computer Assisted Composition 
+is a collection of patches for Opusmodus (Version 3 - 4.0.x)<br>
+used as a step-by-step tutorial for the classes in Computer Assisted Composition<br>
 at the Studio for Electronic Music at the Mozarteum, Salzburg, Austria. 
 
 ## Installation / Usage (Mac & Windows)
 
-1. Download the ZIP archive of this tutorial (Copy → Download ZIP or https://github.com/bornhoeft/sem-opmo/zipball/master) and unpack it.
+1. Download the ZIP archive of this tutorial.<br> 
+(Copy → Download ZIP or https://github.com/bornhoeft/sem-opmo/zipball/master) and unpack it.
 
 2. Copy the content in the Folder /Opusmodus/Documents in your home directory.
 
