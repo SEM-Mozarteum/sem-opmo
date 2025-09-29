@@ -1,0 +1,66 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; 2023/2025 (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; SHORTCUTS 
+
+;; OMN AUDITION & NOTATION
+
+#|
+To see and hear the notation in OMN (OpusModus Notation) 
+of any selected part (even single notes)
+press 'cmd 1' (Notation).
+To play it in the Midi-Player
+press 'cmd 3' (Midi Player)
+
+To stop Audition press cmd esc.
+|#
+
+;; Webern's Concerto Op. 24 tone row
+'(b4 bb4 d5 eb4 g4 fs4 ab4 e4 f4 c5 cs5 a4)
+
+'((e c4 d4 e4 f4) (q g4 =) (e a4 = = =) (q g4 -)
+        (e a4 = = =) (q g4 -) (e f4 = = =) (q e4 =)
+        (e g4 = = =) (q c4 -)) ; "Alle meine Entchen"
+
+'((q d4 pp s eb4 < leg g4 < leg bb4 < leg a4 q. cs5 mf -e
+     3q gs5 > leg fs5 > leg c5 > b4 > leg f4 leg e4)
+  (t d4 < leg eb4 < leg g4 < leg bb4 q. a4 marc
+     t fs4 mf leg gs4 leg e. c5 e b4 t f5 leg e5 leg d5 leg
+     eb5 3q bb5 > a4 > bb5 > e a4 pp stacc -e))
+
+;; To see and hear the notation of more than one voice
+;; press 'cmd 2'
+(((q cs4 pp -q t gs4 marc e.. fs4 mf leg e c4 
+     -e t b4 leg f4 q.. e4 pp))
+  ((-q e d4 leg eb4 h g4 mf leg q. g4 > -e))
+  ((s bb3 pp leg a3 h. db3 t gs4 mp fs3 < c5 < 
+      b3 q f4 marc e4)))
+
+;; INTEGERS
+
+#|
+To see and hear the notation of integers (0 = 60 = c4) 
+of any selected part (even single notes)
+press 'cmd 5' (Notation).
+To play it in the Midi-Player
+press 'cmd 6' (Midi Player)
+|#
+	
+'(11 10 14 3 7 6 8 4 5 12 13 9)
+
+;; INTERVALS
+
+#|
+To see and hear the notation of intervals (positive = up, 
+negative = down) of any selected part 
+press 'cmd 8' (Notation).
+To play it in the Midi-Player
+press 'cmd 9' (Midi Player)
+Intervals are generally starting with 0 = c4
+|#
+
+'(-1 4 -11 4 -1 2 -4 1 7 1 -4)
