@@ -1,0 +1,205 @@
+;;; ---------------------------------------------------------------------
+;;;
+;;; Tenebroso
+;;; Achim Bornhoeft (c) 2025
+;;; 2025-08-21
+;;;
+;;; ---------------------------------------------------------------------
+
+#|
+tenebroso
+
+Tenebrismus ist ein Begriff aus der Malerei, der sich von italienisch 
+oder spanisch tenebroso, „finster, dunkel“ ableitet. Gemeint ist eine 
+kräftige, besonders kontrastierende Form der Helldunkelmalerei 
+(Chiaroscuro), bei der sich Figuren und/oder Gegenstände vor einem 
+sehr dunklen oder schwarzen Hintergrund hell(er) abheben.
+
+https://de.wikipedia.org/wiki/Tenebrismus
+
+Tenebrism, from Italian tenebroso ('dark, gloomy, mysterious'), 
+also occasionally called dramatic illumination, is a style of painting 
+using especially pronounced chiaroscuro, where there are violent 
+contrasts of light and dark, and where darkness becomes a dominating 
+feature of the image.
+
+Tenebrism is a term used in painting that is derived from the Italian 
+or Spanish tenebroso, “dark, gloomy”. It refers to a strong, 
+particularly contrasting form of chiaroscuro painting (chiaroscuro), 
+in which figures and/or objects stand out brightly against a very 
+dark or black background. 
+|#
+
+;;; Franz Schubert, String Quartet No. 14 in D minor, D. 810
+;;; Second movement, Andante con moto, "Death and the Maiden"
+;;; Measures 1 to 32
+
+;; import of the score
+;; Preview with cmd-2
+(setf 
+ material
+ (musicxml-to-omn
+  ;; musicxml file is in folder "musicxml"
+  "~/Documents/werke/090-Schemen/sco/schubert-D810-2.musicxml"))
+
+;; assing each voice to a variable
+(assign-variable 'voc material)
+
+;; down transposition of the voices
+(setf voc1 (pitch-transpose -24 voc1)
+      voc2 (pitch-transpose -24 voc2)
+      voc3 (pitch-transpose -12 voc3)
+      voc4 (pitch-transpose -12 voc4))
+
+;; ---------------------------------------------------------------------
+;; individual corrections with dictum
+;; ---------------------------------------------------------------------
+
+;; orchestration of some double stops
+(setf voc2 (dictum '((:do (dechord x) :bar 6 :event 2)
+                     (:do (dechord x) :bar 6 :event 3)
+                     (:do (dechord x) :bar 7 :event 1))
+                   (omn-to-time-signature voc2 '(4 4))))
+
+(setf voc3 (dictum '((:do d2a2 :bar 7 :event 1))
+                   (omn-to-time-signature voc3 '(4 4))))
+
+(setf voc4 (dictum '((:do d2g2 :bar 6 :event 2)
+                     (:do d2g2 :bar 6 :event 3)
+                     (:do g2 :bar 8 :event 1))                    
+                   (omn-to-time-signature voc4 '(4 4))))
+
+;; replacement bars 14 to 16 with the orchestration above (bars 6 to 8)
+(setf voc2
+      (assemble-subseq
+       '((voc2 :start 1 :end 13)
+         (voc2 :start 6 :end 8)
+         (voc2 :start 17 :end 32))))
+
+(setf voc3
+      (assemble-subseq
+       '((voc3 :start 1 :end 13)
+         (voc3 :start 6 :end 8)
+         (voc3 :start 17 :end 32))))
+
+(setf voc4
+      (assemble-subseq
+       '((voc4 :start 1 :end 13)
+         (voc4 :start 6 :end 8)
+         (voc4 :start 17 :end 32))))
+
+;; transpose lowest notes within (e1 a1) an octave up
+(setf voc4 (dictum '(:within (e1 a1) 
+                     :do (pitch-transpose 12 x))          
+                   voc4))
+
+;; replace pp with ppp
+(setf voc1 (dictum '(:if pp :do ppp) voc1))
+(setf voc2 (dictum '(:if pp :do ppp) voc2)) 
+(setf voc3 (dictum '(:if pp :do ppp) voc3)) 
+(setf voc4 (dictum '(:if pp :do ppp) voc4))
+
+;; add text attributes
+(add-text-attributes
+ '(molto-legato "molto legato")
+ '(metal-sord "sord - practise metal mute"))
+
+;; add them to bar 1 in each system
+(setf voc1 (dictum '(:do molto-legato+metal-sord :bar 1 :event 1) voc1))
+(setf voc2 (dictum '(:do molto-legato+metal-sord :bar 1 :event 1) voc2))
+(setf voc3 (dictum '(:do molto-legato+metal-sord :bar 1 :event 1) voc3))
+(setf voc4 (dictum '(:do molto-legato+metal-sord :bar 1 :event 1) voc4))
+
+(setf voc2 (dictum '((:do d5 :bar 10..11)
+                     (:do flag :bar 10..11)) voc2))
+
+(setf voc3 (dictum '((:do c6 :bar 19)
+                     (:do flag :bar 19)
+                     (:do bb5 :bar 26 :event 3)
+                     (:do flag :bar 26 :event 3)
+                     (:do bb5 :bar 27)
+                     (:do flag :bar 27)
+                      (:do bb5 :bar 28 :event 1)
+                     (:do flag :bar 28 :event 1))
+                     voc3))
+
+(setf voc1 (dictum '((:do g5 :bar 28..29)
+                     (:do flag :bar 28..29)) voc1))
+
+;; use this before exporting to Sibelius!
+;;#|
+(setf voc1 (dictum '(:do (pitch-transpose -12 x)) voc1))
+(setf voc2 (dictum '(:do (pitch-transpose -12 x)) voc2))
+(setf voc3 (dictum '(:do (pitch-transpose -12 x)) voc3))
+(setf voc4 (dictum '(:do (pitch-transpose -12 x)) voc4))
+;;|#
+
+;;;---------------------------------------------------------
+;;; Score and Layout
+
+(def-score tenebroso
+    (:title "Tenebroso"
+     :composer "Achim Bornhoeft"
+     :copyright "Copyright © 2025"
+     :key-signature 'chromatic
+     :time-signature '((1 1 1 1) 4)
+     :tempo 6
+     :layout (list
+              (bracket-group
+               (contrabass-layout 'voc1 
+                                  :name "Doublebass 1" :abbr. "Db 1")
+               (contrabass-layout 'voc2 
+                                  :name "Doublebass 2" :abbr. "Db 2")
+               (contrabass-layout 'voc3 
+                                  :name "Doublebass 3" :abbr. "Db 3")
+               (contrabass-layout 'voc4 
+                                  :name "Doublebass 4" :abbr. "Db 4"))))
+  (voc1
+   :omn voc1
+   :channel 1
+   :sound 'gm
+   :program 'contrabass
+   :volume 100
+   :pan 44
+   :controllers (91 '(48))
+   )
+  
+  (voc2
+   :omn voc2
+   :channel 2
+   :sound 'gm
+   :program 'contrabass
+   :volume 100
+   :pan 54
+   :controllers (91 '(48))
+   )
+
+  (voc3
+   :omn voc3
+   :channel 3
+   :sound 'gm
+   :program 'contrabass
+   :volume 90
+   :pan 74
+   :controllers (91 '(60))
+   )
+
+  (voc4
+   :omn voc4
+   :channel 4
+   :sound 'gm
+   :program 'contrabass
+   :volume 90
+   :pan 84
+   :controllers (91 '(60))
+   )
+  ) 
+
+;; display the score
+(display-musicxml *last-score*)
+
+;; (defparameter *default-notation-editor* "MuseScore 4.app")
+(defparameter *default-notation-editor* "Sibelius.app")
+
+;; open in external editor
+(musicxml-to-editor)

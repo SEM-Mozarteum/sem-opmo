@@ -8,14 +8,15 @@
 ;;; COMMON LISP
 
 #|
-Common Lisp is a programming language that is built around lists.
+Common Lisp is a programming language that is built around 
+lists.
 In Lisp, programs and data are both written as lists.
 For example: (+ 1 2 3) means “add 1, 2, and 3.”
-Because code looks like data, you can easily change and create 
-new code while the program runs. This makes Lisp very flexible 
-and powerful. It’s often used for artificial intelligence, 
-symbolic computation, and rapid prototyping, but it can also be 
-used for general software development.
+Because code looks like data, you can easily change and 
+create new code while the program runs. This makes Lisp 
+very flexible and unique. It’s often used for artificial 
+intelligence, symbolic computation, and rapid prototyping, 
+but it can also be used for general software development.
 
 (See 'Common Lisp' documentation in Navigator.)
 |#
@@ -56,12 +57,13 @@ and show the output of the last expression.)
 ;; followed by 0 to N arguments
 
 ;; random function without arguments
-(rndn) ; default result: one floating point number between 0 and 1
+(rndn) ; default result: one float between 0 and 1
 
 ;; + function with two arguments
 (+ 1 2) ; result: 1 + 2 = 3
 
-;; random function with one argument (= highest random number - 1)
+;; random function with one argument 
+;; (= highest random number - 1)
 (random 10) ; random number between 0 and 9
 
 ;; OPUSMODUS has (+/- 800) inbuilt functions , 
@@ -108,8 +110,8 @@ and show the output of the last expression.)
 
 (- (+ 1 2) 3) ; 1 + 2 - 3 = 0
 
-;;; ALL levels of a score (measure, voice, part, system, etc.)
-;;; are displayed as lists within lists.
+;;; ALL levels of a score (measure, voice, part, system, 
+;;; etc.) are displayed as lists within lists.
 
 ;; define variables for 2 lists with different content:
 (setf lst1 '(1 2 3 4 5))
@@ -121,9 +123,10 @@ and show the output of the last expression.)
 ;; merge lists into one list
 (append lst1 lst2) ; (1 2 3 4 5 a b c d e)
 
-;; Common Lisp also defines functions to retrieve values from a list:
+;; Common Lisp also defines functions to retrieve 
+;; values from a list:
 
-(first lst1) ; 1
+(first lst2) ; a
 (second lst1) ; 2
 ;; an so on until
 (tenth lst1) ; nil
@@ -134,7 +137,7 @@ and show the output of the last expression.)
 
 ;; With the function nth specific singular items
 ;; on a specific position in a list are retrieved.
-;; Note that the first item in a list is the 0th element. 
+;; Note that the first item in a list has the position 0. 
 
 (nth 3 lst1) ; 4
 (nth 0 lst2) ; a
@@ -159,7 +162,10 @@ Works in Assistant as well!
 ;;; AUTOCOMPLETE
 
 #|
-Type an opening parenthesis and the first letter of a symbol,
-then press Tab to invoke the completion menu. Use the arrow 
-keys to navigate; Return inserts the selection.
+Type an opening parenthesis and the first letter of a 
+symbol, then press Tab to invoke the completion menu. 
+Use the arrow keys to navigate; 
+Return inserts the selection.
 |#
+
+;; (rnd
