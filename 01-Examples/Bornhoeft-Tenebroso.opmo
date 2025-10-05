@@ -1,33 +1,24 @@
-;;; ---------------------------------------------------------------------
+;;; ----------------------------------------------------------
 ;;;
 ;;; Tenebroso
 ;;; Achim Bornhoeft (c) 2025
 ;;; 2025-08-21
 ;;;
-;;; ---------------------------------------------------------------------
+;;; ----------------------------------------------------------
 
 #|
-tenebroso
+Tenebrism, from Italian tenebroso ('dark, gloomy, mysterious')
+also occasionally called dramatic illumination, is a style of 
+painting  using especially pronounced chiaroscuro, where there
+are violent contrasts of light and dark, and where darkness 
+becomes a dominating feature of the image.
 
-Tenebrismus ist ein Begriff aus der Malerei, der sich von italienisch 
-oder spanisch tenebroso, „finster, dunkel“ ableitet. Gemeint ist eine 
-kräftige, besonders kontrastierende Form der Helldunkelmalerei 
-(Chiaroscuro), bei der sich Figuren und/oder Gegenstände vor einem 
-sehr dunklen oder schwarzen Hintergrund hell(er) abheben.
-
-https://de.wikipedia.org/wiki/Tenebrismus
-
-Tenebrism, from Italian tenebroso ('dark, gloomy, mysterious'), 
-also occasionally called dramatic illumination, is a style of painting 
-using especially pronounced chiaroscuro, where there are violent 
-contrasts of light and dark, and where darkness becomes a dominating 
-feature of the image.
-
-Tenebrism is a term used in painting that is derived from the Italian 
-or Spanish tenebroso, “dark, gloomy”. It refers to a strong, 
-particularly contrasting form of chiaroscuro painting (chiaroscuro), 
-in which figures and/or objects stand out brightly against a very 
-dark or black background. 
+Tenebrism is a term used in painting that is derived from the 
+Italian or Spanish tenebroso, “dark, gloomy”. 
+It refers to a strong, particularly contrasting form of 
+chiaroscuro painting (chiaroscuro), in which figures and/or 
+objects stand out brightly against a very dark or black 
+background. 
 |#
 
 ;;; Franz Schubert, String Quartet No. 14 in D minor, D. 810
@@ -40,7 +31,7 @@ dark or black background.
  material
  (musicxml-to-omn
   ;; musicxml file is in folder "musicxml"
-  "~/Documents/werke/090-Schemen/sco/schubert-D810-2.musicxml"))
+  "~/Documents/code/github/sem-opmo/01-Examples/schubert-D810-2.musicxml"))
 
 ;; assing each voice to a variable
 (assign-variable 'voc material)
@@ -51,9 +42,9 @@ dark or black background.
       voc3 (pitch-transpose -12 voc3)
       voc4 (pitch-transpose -12 voc4))
 
-;; ---------------------------------------------------------------------
+;; ----------------------------------------------------------
 ;; individual corrections with dictum
-;; ---------------------------------------------------------------------
+;; ----------------------------------------------------------
 
 ;; orchestration of some double stops
 (setf voc2 (dictum '((:do (dechord x) :bar 6 :event 2)
@@ -69,7 +60,8 @@ dark or black background.
                      (:do g2 :bar 8 :event 1))                    
                    (omn-to-time-signature voc4 '(4 4))))
 
-;; replacement bars 14 to 16 with the orchestration above (bars 6 to 8)
+;; replacement bars 14 to 16 with the orchestration above 
+;; (bars 6 to 8)
 (setf voc2
       (assemble-subseq
        '((voc2 :start 1 :end 13)
@@ -105,10 +97,14 @@ dark or black background.
  '(metal-sord "sord - practise metal mute"))
 
 ;; add them to bar 1 in each system
-(setf voc1 (dictum '(:do molto-legato+metal-sord :bar 1 :event 1) voc1))
-(setf voc2 (dictum '(:do molto-legato+metal-sord :bar 1 :event 1) voc2))
-(setf voc3 (dictum '(:do molto-legato+metal-sord :bar 1 :event 1) voc3))
-(setf voc4 (dictum '(:do molto-legato+metal-sord :bar 1 :event 1) voc4))
+(setf voc1 (dictum '
+(:do molto-legato+metal-sord :bar 1 :event 1) voc1))
+(setf voc2 (dictum 
+'(:do molto-legato+metal-sord :bar 1 :event 1) voc2))
+(setf voc3 (dictum 
+'(:do molto-legato+metal-sord :bar 1 :event 1) voc3))
+(setf voc4 (dictum 
+'(:do molto-legato+metal-sord :bar 1 :event 1) voc4))
 
 (setf voc2 (dictum '((:do d5 :bar 10..11)
                      (:do flag :bar 10..11)) voc2))
@@ -147,13 +143,17 @@ dark or black background.
      :layout (list
               (bracket-group
                (contrabass-layout 'voc1 
-                                  :name "Doublebass 1" :abbr. "Db 1")
+                                  :name "Doublebass 1" 
+                                  :abbr. "Db 1")
                (contrabass-layout 'voc2 
-                                  :name "Doublebass 2" :abbr. "Db 2")
+                                  :name "Doublebass 2" 
+                                  :abbr. "Db 2")
                (contrabass-layout 'voc3 
-                                  :name "Doublebass 3" :abbr. "Db 3")
+                                  :name "Doublebass 3" 
+                                  :abbr. "Db 3")
                (contrabass-layout 'voc4 
-                                  :name "Doublebass 4" :abbr. "Db 4"))))
+                                  :name "Doublebass 4" 
+                                  :abbr. "Db 4"))))
   (voc1
    :omn voc1
    :channel 1
