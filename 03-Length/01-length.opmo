@@ -18,14 +18,15 @@ In traditional notation irrational divisions are described
 from the quarter note:
 
 1/3 is a triple eigths note
-1/5 is a quintulet sixtenth note
+1/5 is a quintuplet sixtenth note
 
 In OM the description of irrational divisions are 
-consequently also described as divisions of the whole note:
+consequently described as divisions of the whole note:
 
 1/12 is a triple eigths note 
 (12 triplets eigth notes fit in one 4/4 measure)
 1/20 is a quintuplet sixtenth note
+(20 quintuplets fit in one 4/4 measure)
 
 There is a differentiation between length and duration in OM:
 - Length is the actual note length
@@ -48,7 +49,7 @@ rests
 ;; Putting together pitches and durations with make-omn
 
 #|
-The function OMN is an acronym for OPUSMODUS NOTATION. 
+OMN is an acronym for OPUSMODUS NOTATION. 
 In make-omn the separate parameters of pitch, 
 length, dynamics and articulations are combined
 into individual events.
@@ -60,7 +61,7 @@ into individual events.
 
 ;; another example
 (setf pitches1 (integer-to-pitch (rnd-row :seed 134)))
-(setf durations1 (span pitches1 '(1/8 1/8 1/12 1/12 1/12)))
+(setf durations1 (span pitches1 '(1/8 1/16 1/16 1/4)))
 
 (setf mat1 (make-omn 
             :length durations1
@@ -90,19 +91,12 @@ if you do :span :pitch the the pitch is the MASTER
 4 -> denominator
 |#
 
-(gen-length '(1 2 4 8) 32) ; => (1/32 1/16 1/8 1/4)
+;; argument 1: numerator(s)
+;; argument 2: denominator(s)
+(gen-length '(8 4 2 1) 32) ; => (1/4 1/8 1/16 1/32)
 
+;; all combinations of numerators and denominators
 (gen-length '(1 4 8) '(4 8)) ; => ((1/4 1 2) (1/8 1/2 1))
-
-;; in LISP
-(loop for d in '(4 8) collect
-  (loop for n in '(1 4 8) collect (/ n d)))
-;; => ((1/4 1 2) (1/8 1/2 1))
-
-;; aequidistant divisions of a quarter
-;; in a nested loop construction
-(loop for d in '(1 2 3 4 5 6 7 8 9) collect 
-  (loop repeat d collect (/ 1 (* d 4))))
 
 ;;; ---------------------------------------------------------
 
@@ -111,6 +105,7 @@ if you do :span :pitch the the pitch is the MASTER
 ;; length-adjust fits as many notes as possible in a given
 ;; duration
 (setf mat1 '(s c4e4 e g4 s eb4 e cs4 s e4 e b4 s fs4 e a4 s gs4 e f4 s bb4 e d4))
+;; mat1 has a duration of 9/8
 
 (list
 (length-adjust 3/4 mat1)

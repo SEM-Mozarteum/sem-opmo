@@ -17,11 +17,6 @@ chords are written as directly consecutive notes:
 
 ;;; chordize / melodize / chordize-list / 
 
-;; midi-to-pitch interpret sublists as chords
-(setf chords 
-(midi-to-pitch '(58 (59 65 71) (60 67) (61) (62 64 68 70)))) 
-;; => (bb3 b3f4b4 c4g4 cs4 d4e4gs4bb4)
-
 ;; show the number of pitches in chords
 (get-chord-size chords) ; => (1 3 2 1 4)
 
@@ -35,9 +30,8 @@ chords are written as directly consecutive notes:
 (chordize-list 
  (midi-to-pitch '((60 56) (67 62) (62 65 66) (63 60 61))))
 
-;; if the first element in the list is a single midi note
 ;; midi-to-pitch interpret sublists automatically as chords
-(midi-to-pitch '(58 (59 65) (60 67) 61 62)) 
+(midi-to-pitch '((58 62) (59 65) (60 67) 61 62)) 
 ;; => (bb3 b3f4 c4g4 cs4 d4) 
 
 ;; Divide up a melody into intervals
@@ -46,8 +40,12 @@ chords are written as directly consecutive notes:
 ;; If there is a rest this rest is given as the last chord
 (chordize-list (gen-divide 4 '(c4 f4 g4 a4 d4 f3)))
 
-;; Divide up a melody in different chords
+;; Group a melody in different chords
 (chordize-list (gen-divide '(2 1 3) '(c4 f4 g4 a4 d4 f3)))
+
+;;; ---------------------------------------------------------
+
+;; extended example
 
 ;; construction of random chords
 (chordize
@@ -66,6 +64,7 @@ of chord clusters to avoid the identical note names that
 produce conflicts in notation display. The function will 
 also respell ascending pitch sequences to sharps and flats 
 when pitches descend.
+
 NOTE:
 This function works momentarily with chromatic pitches only.
 |#
@@ -73,57 +72,6 @@ This function works momentarily with chromatic pitches only.
 (respell '(c4cs4)) ; => (c4db4)
 (respell '(c4 db4 d4 eb4 e4 f4 gb4 g4 ab4 a4 bb4 b4)) 
 ;; => (c4 cs4 d4 ds4 e4 f4 fs4 g4 gs4 a4 as4 b4)
-
-;;; ---------------------------------------------------------
-
-;;; gen-chord
-
-#|
-The function GEN-CHORD generate chords with the unique
-pitches from a list. 
-The ambitus-chord arguments: 
-(1) is the max ambitus possible, randomly depending 
-on the intervals available in the pitches.
-The size of the chord generated will lie between chord-low 
-(2) and chord-high (3). The transposition of pitch values 
-can also be set to lie between transpose-low (4) and 
-transpose-high (5) parameters. 
-|#
-
-;; the maximum ambitus is 7, the chord contain between 
-;; 2 and 3 pitches with no transposition:
-(gen-chord 7 1 3 0 0 '(c4 db4 fs4 g4 c5 f5 gb5 b5)
-           :seed 12)
-;; the resulting chords have 3+3+2 pitches = 8 pitches in 
-;; the input list.
-
-;; the same calculation repeated 5 times.
-;; NOTE: the :seed keyword is now conected to gen-loop.
-(gen-loop 5
-(gen-chord 7 1 3 0 0 '(c4 db4 fs4 g4 c5 f5 gb5 b5))
-           :seed 12)
-
-;; the chords are in random order
-;; NOTE: 2 individual seeds
-(gen-loop 5 (rnd-order
-             (gen-chord 7 1 3 0 0 
-                        '(c4 db4 fs4 g4 c5 f5 gb5 b5))
-             :seed 123)
-          :seed 12)
-
-;; When the ambitus is quite high the possibilities 
-;; of chord increase. Transpositions between a 
-;; major second up and down are possible.
-(loop repeat 10 collect 
-        (gen-chord 11 3 4 -2 2 
-                   '(c4 db4 fs4 g4 c5 f5 gb5 b5)))  
-
-;; This should produce 2 chords
-(gen-chord 11 4 4 0 0 '(c4 db4 fs4 g4 c5 f5 gb5 b5)) 
-
-;; intervals but randomly transposed -1 down and 1 
-;; semitone up
-(gen-chord 11 2 2 -1 1 '(c4 db4 fs4 g4 c5 f5 gb5 b5))
 
 ;;; ---------------------------------------------------------
 
@@ -165,7 +113,8 @@ to choose from.
 ;; One pitch is chosen at random
 (dechord mat :pitch '?)
 
-(setf mat2 '((q c4 f4a4d5 e fs5) (s cs4 d4 fs4 q c4e4gs4)))
+(setf mat2 '((q c4 f4a4d5 e fs5) 
+             (s cs4 d4 ds4fs4 q c4e4gs4)))
 
 ;; The highest notes from chords are chosen. 
 ;; Single pitches are left unchanged
@@ -181,7 +130,7 @@ to choose from.
 
 ;; Remove duplicate chord pitches in a single list:
 (chord-pitch-unique '(c4g4c4 d4d4 f4a4b3a4 g4e3e3g4))
-=> (c4g4 d4 f4a4b3 g4e3)
+;; => (c4g4 d4 f4a4b3 g4e3)
 
 ;;; ---------------------------------------------------------
 
@@ -206,21 +155,29 @@ dissolves the chord by one pitch at the time. The process
 can be controlled by a variant option. 
 |#
 
-;; When he count and the level values are equal to the 
-;; chord size, the chord is dissolved completely
-
 (setf diss-chord '(c4e4gs4b4d5f5a5))
+
+;; arg1: number of chords
+;; arg2: number of dissolve levels
+
+;; When the count and the level values are equal to the 
+;; chord size, the chord is dissolved completely
+;; (length (melodize diss-chord)) ; => 7
 (chord-dissolve 7 7 diss-chord)
+
+;; If the number of chords is larger then the dissolve lebels
+;; or pitch count in the list, a reverse process will start
+(chord-dissolve 13 7 diss-chord)
+
+;; This process is reflected until the number of
+;; steps is reached
+(chord-dissolve 13 4 diss-chord)
 
 ;; The chord is dissolved in descending direction
 (chord-dissolve 7 7 diss-chord :variant 'd)
 
 ;; The same but in random order
 (chord-dissolve 7 7 diss-chord :variant 'ro)
-
-;; If the count value is larger then the chord size or 
-;; pitch count in the list, a reverse process will start
-(chord-dissolve 13 7 diss-chord :variant 'd)
 
 ;;; ---------------------------------------------------------
 
@@ -235,15 +192,73 @@ can be controlled by a variant option.
 (chord-interval-remove '(2 11) chord)
 ;; => (cs4e4a4)
 
+;;; ---------------------------------------------------------
+
+;; Detailed example:
+
+;; intervals of a chromatic scale
 (setf intervals (gen-integer 0 12))
+
+;; make a cluster
 (setf chord2 (chordize (integer-to-pitch intervals)))
 
-;; A little more complex example:
 ;; 10 chords with between 2 and 8 randomly removed
 ;; intervals between 3 and 7 (minor third and fifth)
 (gen-loop 10 (chord-interval-remove 
               (rnd-sample ; random pick from interval list
-               (rnd1 :low 2 :high 8) ; how many 
-               (gen-integer 3 7) ; list of intervals
+               (rndn 1 2 8) ; how many 
+               (gen-integer 1 7) ; list of intervals
                :norep t) ; possibly no repeated values
               chord2)) ; chord
+
+;;; ---------------------------------------------------------
+
+;;; gen-chord
+
+#|
+The function GEN-CHORD generate chords with the unique
+pitches from a list, which means until all notes of a 
+chord are used.
+
+The ambitus-chord arguments: 
+(1) is the max ambitus possible, randomly depending 
+on the intervals available in the list of pitches.
+The size of the chord generated will lie between chord-low 
+(2) and chord-high (3). The transposition of pitch values 
+can also be set to lie between transpose-low (4) and 
+transpose-high (5) parameters. 
+|#
+
+;; The maximum ambitus is 7, the chord contain between 
+;; 2 and 3 pitches with no transposition:
+(gen-chord 7 2 3 0 0 '(c4 db4 fs4 g4 c5 f5 gb5 b5)
+           :seed 12)
+;; The resulting chords have 3 + 3 + 2 pitches = 8 pitches 
+;; in the input list.
+
+;; This should produce 2 chords
+(gen-chord 7 4 4 0 0 '(c4 db4 fs4 g4 c5 f5 gb5 b5)) 
+
+;; Intervals but randomly transposed -1 down and 1 
+;; semitone up
+(gen-chord 11 2 2 -1 1 '(c4 db4 fs4 g4 c5 f5 gb5 b5))
+
+;; The same calculation repeated 5 times.
+;; NOTE: The :seed keyword is now conected to gen-loop.
+(gen-loop 5 (gen-chord 7 2 3 0 0 
+                       '(c4 db4 fs4 g4 c5 f5 gb5 b5))
+          :seed 12)
+
+;; The chords are in random order
+;; NOTE: 2 individual seeds
+(gen-loop 5 (rnd-order
+             (gen-chord 7 1 3 0 0 
+                        '(c4 db4 fs4 g4 c5 f5 gb5 b5))
+             :seed 123)
+          :seed 12)
+
+;; When the ambitus is quite high the possibilities 
+;; of chord increase. Transpositions between a 
+;; major second up and down are possible.
+(gen-loop 10 (gen-chord 11 3 4 -2 2 
+                        '(c4 db4 fs4 g4 c5 f5 gb5 b5)))

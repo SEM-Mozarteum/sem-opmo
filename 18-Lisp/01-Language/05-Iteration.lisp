@@ -84,4 +84,15 @@ The function must then take the same number of arguments as there are lists:
 ;; or with a loop
 (loop for i in '(1 2 3) collect (+ i 2)) ; => (3 4 5)
 
+;;; Length functions
+;; in LISP
+(loop for d in '(4 8) collect
+  (loop for n in '(1 4 8) collect (/ n d)))
+;; => ((1/4 1 2) (1/8 1/2 1))
+
+;; aequidistant divisions of a quarter
+;; in a nested loop construction
+(loop for d in '(1 2 3 4 5 6 7 8 9) collect 
+  (loop repeat d collect (/ 1 (* d 4))))
+
 

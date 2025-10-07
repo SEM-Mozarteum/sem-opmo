@@ -33,9 +33,9 @@ different types.
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-REPEAT
+;;; gen-repeat
 
-;; GEN-REPEAT returns any number of repeats of a 
+;; gen-repeat returns any number of repeats of a 
 ;; list or atom (number, pitch, name, etc.) creating
 ;; a new list:
 (gen-repeat 3 'c4) ; => (c4 c4 c4)
@@ -43,20 +43,21 @@ different types.
 ;; (The default duration can be changed in the Preferences
 ;; under Audition - Length)
 
-;; In plain LISP this would be:
-(loop repeat 3 collect 'c4)
-
 ;; The complete "bach" note-list is repeated 2 times:
 (gen-repeat 2 bach) 
 ;; => (bb3 a3 c4 b3 bb3 a3 c4 b3) 
 
 ;;; --------------------------------------------------------
 
-;;; midi-to-pitch / gen-integer / integer-to-pitch / 
+;;; gen-integer / midi-to-pitch / integer-to-pitch / 
 
 ;; Set the variable "integer-scale" to a list of 
 ;; chromatic midi pitches
 (setf midi-scale '(60 61 62 63 64 65 66 67 68 69 70 71))
+
+;; the same chromatic scale with the function gen-integer
+;; arguments: start, end
+(gen-integer 60 71)
 
 ;; and convert to note names:
 (setf pitch-scale (midi-to-pitch midi-scale))
@@ -67,9 +68,6 @@ different types.
 (midi-to-pitch (rnd-number 8 60 72 :seed 123))
 ;; => (e4 b4 fs4 d4 b4 fs4 eb4 fs4)
 ;; the seed argument sets and fixes ONE random choice.
-
-;; the same chromatic scale with the function gen-integer
-(gen-integer 60 71)
 
 ;; integer converted to pitch notation 0 = c4
 (integer-to-pitch '(0 1 2 3 4 5 6 7 8 9 10 11)) 
@@ -82,31 +80,47 @@ different types.
 ;;; ---------------------------------------------------------
 
 ;;; DODECAPHONIC FUNCTIONS
+;;; https://en.wikipedia.org/wiki/Twelve-tone_technique
 
 ;;; rnd-row / pitch-invert / reverse
+;;; pitch-list-plot
 
 ;; twelve-tone row as integers
-(setf row (rnd-row :seed 34)) 
+(setf row-integer (rnd-row :seed 34)) 
 ;; => (0 7 3 1 4 11 6 9 8 5 10 2)
 ;; as pitches with the keyword :type and set to :pitch
-(setf row-as-pitch (rnd-row :seed 34 :type :pitch)) 
+(setf row (rnd-row :seed 34 :type :pitch)) 
 ;; => (c4 g4 eb4 cs4 e4 b4 fs4 a4 gs4 f4 bb4 d4)
 
 ;; visualize the pitches
 (pitch-list-plot row-as-pitch :join-points t)
 
 ;; reversed row
-(reverse row-as-pitch)
+(setf retrograde (reverse row))
 
 ;; inverted pitches
-(setf inverse (pitch-invert row-as-pitch))
+(setf inversion (pitch-invert row))
 
 ;; reversed invertion of pitches
-(reverse inverse)
+(setf retrograde-inversion (reverse inversion))
+
+;; all forms together
+(list row retrograde inversion retrograde-inversion)
 
 ;;; ---------------------------------------------------------
 
-;;; integer-transpose / pitch-transpose
+;;; pitch-transpose / integer-transpose
+
+;; Pitches are transposed to a given value
+(pitch-transpose 2 '(c4 d4 e4))
+;; => (d4 e4 gb4)
+
+;; A pitch can also be used as a transposition level
+;; The pitch indicates the first new position of the list.
+;; Here the same transposition as above:
+(pitch-transpose 'd4 '(c4 d4 e4)) ; => (d4 e4 gb4)
+;; or a transposition one octave up
+(pitch-transpose 'c5 '(c4 d4 e4))
 
 ;; Transposes a sequence of integers to a given value.
 ;; integer-transpose is evaluated first an then passed
@@ -114,31 +128,15 @@ different types.
 (integer-to-pitch
 (integer-transpose 2 '(0 2 4)))
 
-;; Pitches are transposed to a given value
-(pitch-transpose 2 '(c4 d4 e4))
-;; => (d4 e4 gb4)
-
-;; A pitch can also be used as a transposition level
-;; Here the same transposition as above:
-(pitch-transpose 'd4 '(c4 d4 e4))
-;; => (d4 e4 gb4)
-
 ;;; ---------------------------------------------------------
 
-;;; integer-transpose-rnd / pitch-transpose-n
-
-;; A given number of randomly selected pitches in a list 
-;; is transposed by a specified value or values.
-;; 4 of the c4 are randomly transposed a fifth up or down
-(pitch-transpose-rnd 4 7 '(c4 c4 c4 c4 c4 c4 c4) :seed 456)
-;; => (c4 f3 c4 g4 c4 f3 f3)
+;;; pitch-transpose-n / integer-transpose-rnd / gen-loop
 
 ;; pitch-transpose-n will apply a sequence of 
 ;; transpositions on each individual pitch in a list.
 ;; each first pitch is not transposed, each second by a 
-;; major second
-(pitch-transpose-n '(0 2) '(c4 c4 g4 g4))
-;; => (c4 d4 g4 a4)
+;; major second, the third by a fifth
+(pitch-transpose-n '(0 2 7) '(c4 c4 g4 g4)) ; => (c4 d4 d5 g4)
 
 ;; transposition with pitches
 (pitch-transpose-n '(d5 e5) '(c4 c4 g4 g4))
@@ -147,8 +145,20 @@ different types.
 ;; Here a list of 6 randomly chosen intervals are used
 ;; as a transposition sequence
 ;; Note the nested calls of the functions
-(pitch-transpose-n 
- (flatten ; remove the sublists
-  (rnd-sample '(4 6 5 7 8) '(-2 -1 0 1 11)))
- ; takes n random samples (first list) from the second list
+(pitch-transpose-n
+ (rnd-sample 24 '(-2 7 0 14)) ; takes n random samples
  (gen-repeat 24 'c4)) ; 24 times c4
+
+;; A given number of randomly selected pitches in a list 
+;; is transposed by a specified value or values.
+;; 4 of the c4 are randomly transposed 7 semitones up or down
+;; 1. argument: how many?
+;; 2. argument: interval (semitones)
+;; 3. argument: sequence of (8) pitches
+(pitch-transpose-rnd 4 7 (gen-repeat 8 'c4))
+
+;; repeat the result 3 times (same results)
+(gen-repeat 3 (pitch-transpose-rnd 4 7 (gen-repeat 8 'c4)))
+
+;; repeat the calculation 3 times (different results)
+(gen-loop 3 (pitch-transpose-rnd 4 7 (gen-repeat 8 'c4)))
