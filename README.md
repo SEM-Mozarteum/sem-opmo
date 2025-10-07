@@ -19,7 +19,7 @@ at the Studio for Electronic Music at the Mozarteum, Salzburg, Austria.
 
 4. Opusmodus Workspace
 
-<img width="1509" height="939" alt="Bildschirmfoto 2025-09-30 um 10 12 48" src="https://github.com/user-attachments/assets/8c5645f7-dad5-4c90-af95-9880022d236e" />
+<img width="970" height="566" alt="Bildschirmfoto 2025-09-30 um 10 12 48" src="https://github.com/user-attachments/assets/8c5645f7-dad5-4c90-af95-9880022d236e" />
 
 
 
