@@ -1,5 +1,5 @@
 ("workspace-view/current"
- "03-Length/02-rest.opmo"
+ "02-Pitch/02-interval.opmo"
 )
 
 ("workspace-view/history"
@@ -7,6 +7,6 @@
 )
 
 ("workspace-view/layout-ratios"
- (1 (OM-CAPI::MAIN 236 NIL 532) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 716 NIL 168))
+ (1 (OM-CAPI::MAIN 236 NIL 573) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 716 NIL 168))
 )
 

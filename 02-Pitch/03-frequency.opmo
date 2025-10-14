@@ -44,7 +44,7 @@ attributes.
 |#
 
 ;; a list of 16 random frequencies
-(setf frequencies (rndn 16 100 2000 :seed 123))
+(setf frequencies (rndn 16 200 400 :seed 123))
 ;; The rndn function produces random numbers:
 ;; arguments: n, low, high
 
@@ -80,10 +80,10 @@ a quantisation.
 (cent-to-attribute cents) 
 ;; => (23c -19c -24c 14c 1c 4c 11c 14c -16c 22c 19c -15c -23c -11c -4c)
 
-;; Display the remaining cents in a score
+;; Display the microtones with remaining cents
 ;; 
 (make-omn
- :length '(q)
+ :length '(h)
  :pitch pitches
  :articulation (cent-to-attribute cents)
  :span :pitch)

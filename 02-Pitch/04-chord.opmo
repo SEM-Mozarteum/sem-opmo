@@ -15,24 +15,18 @@ chords are written as directly consecutive notes:
 
 ;;; ---------------------------------------------------------
 
-;;; chordize / melodize / chordize-list / 
+;;; chordize / melodize / chordize-list / midi-to-pitch
 
-;; show the number of pitches in chords
-(get-chord-size chords) ; => (1 3 2 1 4)
-
-;; CHORDIZE-LIST allows you to chordize melodic lists.
-(chordize-list '((c4 e4) (g4 c5)))
 (chordize '(c4 e4 g5 d3))
 ;; and vice versa
 (melodize '(c4d4f4)) ; => (c4 d4 f4)
 
+;; chordize-list allows you to chordize melodic lists.
+(chordize-list '((c4 e4) (g4 c5)))
+
 ;; several chords converted from midi melodies
 (chordize-list 
  (midi-to-pitch '((60 56) (67 62) (62 65 66) (63 60 61))))
-
-;; midi-to-pitch interpret sublists automatically as chords
-(midi-to-pitch '((58 62) (59 65) (60 67) 61 62)) 
-;; => (bb3 b3f4 c4g4 cs4 d4) 
 
 ;; Divide up a melody into intervals
 (chordize-list (gen-divide 2 '(c4 f4 g4 a4 d4 f3)))
@@ -43,16 +37,28 @@ chords are written as directly consecutive notes:
 ;; Group a melody in different chords
 (chordize-list (gen-divide '(2 1 3) '(c4 f4 g4 a4 d4 f3)))
 
+;; midi-to-pitch interpret sublists automatically as chords
+(midi-to-pitch '((58 62) (59 65 75) (60 67) 61 62)) 
+;; => (bb3d4 b3f4eb5 c4g4 cs4 d4) 
+
 ;;; ---------------------------------------------------------
 
 ;; extended example
 
 ;; construction of random chords
-(chordize
- (midi-to-pitch
-  (gen-loop 10 (rnd-number 
-                (rnd1 :low 2 :high 5) 60 69
-                :norep t))))
+(setf chords
+      (respell ; try to make correct interval notation
+       (chordize ; make chords from it
+        (midi-to-pitch ; convert to pitch
+         (gen-loop 10 ; make 10 different chords
+                   (rnd-number 
+                    (rndn 1 2 5) ; notes in chord 
+                    60 69 ; between c4 and ab4
+                    :norep t) ; no repetitions in chord
+                     :seed 123))))) ; fix random
+
+;; show the number of pitches in chords
+(get-chord-size (flatten chords)) ; => (5 4 4 3 4 3 4 3 3 4)
 
 ;;; ---------------------------------------------------------
 

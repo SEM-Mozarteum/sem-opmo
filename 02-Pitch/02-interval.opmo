@@ -26,13 +26,21 @@ relative distance.
 
 ;;; interval-ambitus / interval-scale
 
+;; This interval function provides a way of restricting interval content via an ambitus operation.
+
+(interval-ambitus 14 23) ; => 11
+;; This function is operation like a pitchclass operation:
+;; It reduces the interval to the octave of the interval:
+;; 23 - 12 = 11
+
 ;; This functions restricts the intervals of the input list
 ;; to a maximum ambitus keeping octave equivalent note names
 (interval-map 'c4
 (interval-ambitus 7 '(-12 3 -17 23))) ; (0 3 -5 -1)
 
-;; when the interval reaches the ambitus border
-;; the direction changes until the next 
+;; When the interval reaches the ambitus border
+;; the direction changes until the next change in direction
+;; resulting in a palindrome movement
 (interval-map 'c4 '(4 4 4 4 4 4 4) :ambitus '(c4 c5))
 ;; => (c4 e4 gs4 c5 gs4 e4 c4 e4)
 
@@ -63,6 +71,8 @@ relative distance.
 
 (interval-map 'c4 int-rnd)
 
+(interval-scale
+
 ;; with the keyword :rnd-order set to t (=true)
 ;; the intervals are shuffled randomly
 (interval-map 'c4
@@ -79,27 +89,29 @@ high-change, and low-repeat and high-repeat arguments.
 |#
 
 (interval-to-pitch
-(interval-repeat 8 4 10 1 4 6))
+(interval-repeat 8 1 4 1 1 6))
 
 (interval-to-pitch
 (interval-repeat 8 2 3 2 3 '(6 7) :seed 123))
 
 ;;; ---------------------------------------------------------
 
-;; extended examples
+;; extended example
 
-(gen-loop 4 ; create 4 lists
-          (cons 't 
-                ;; add "t" (1/32 duration) at the beginning 
-                ;; of each pitch list
-                (interval-to-pitch 
-                 ;; converting intervals to pitch
-                 (flatten 
-                  ;; remove all the inner lists of each 
+
+(cons 't 
+      ;; add "t" (1/32 duration) at the beginning 
+      ;; to set the duration for all notes
+      (flatten
+       ;; remove all the inner lists
+       (gen-loop 4 ; create 4 lists         
+                 (interval-to-pitch 
+                  ;; converting intervals to pitch
                   (interval-repeat
                    (rnd-sample 5 
                                (gen-integer 8 14)) 
                    2 3 2 3 '(12 8 6 7 3) 
-                   :seed 123))
-                 ;; each of the intervals is repeated 
-                 :start 'g3)) :seed 123)
+                   :seed 123)
+                  ;; each of the intervals is repeated 
+                  :start 'g3) 
+                 :seed 123)))

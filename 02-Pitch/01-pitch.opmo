@@ -44,7 +44,7 @@ different types.
 ;; under Audition - Length)
 
 ;; The complete "bach" note-list is repeated 2 times:
-(gen-repeat 2 bach) 
+(gen-repeat 200 bach) 
 ;; => (bb3 a3 c4 b3 bb3 a3 c4 b3) 
 
 ;;; --------------------------------------------------------
@@ -93,7 +93,7 @@ different types.
 ;; => (c4 g4 eb4 cs4 e4 b4 fs4 a4 gs4 f4 bb4 d4)
 
 ;; visualize the pitches
-(pitch-list-plot row-as-pitch :join-points t)
+(pitch-list-plot row :join-points t)
 
 ;; reversed row
 (setf retrograde (reverse row))
