@@ -46,12 +46,14 @@ It's a very useful function when creating variations from
 a single single process that has a randomising element. 
 |#
 
+(setf scale '(c4 cs4 d4 eb4 g4 c5))
+
 ;; 5 voices with gen-repeat, evaluate cmd-2
 (gen-loop 10
-(make-omn
- :pitch (gen-repeat-seq 48 1 5 '(c4 cs4 d4 eb4 g4 c5))
- :length '(1/16)
- :span :pitch) :seed 123)
+          (make-omn
+           :pitch (gen-repeat-seq 48 1 5 scale)
+           :length '(1/16)
+           :span :pitch) :seed 123)
 
 ;;; ---------------------------------------------------------
 
@@ -83,11 +85,13 @@ a single single process that has a randomising element.
      :tempo 80) 
   (violin1
    :omn inst1
-   :sound 'gm :program 0)
+   :sound 'gm 
+   :program 'violin)
   
   (violin2
    :omn inst2
-   :sound 'gm :program 0)
+   :sound 'gm 
+   :program 'violin)
   
   (viola
    :omn inst3

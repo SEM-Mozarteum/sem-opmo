@@ -108,8 +108,3 @@ https://gigamonkeys.com/book/loop-for-black-belts.html
         ; current value. (The 'and' is optional).
         ; At the end the result list 'reslis' is returned:
       finally (return (reverse reslis)))
-
-
-
-
-

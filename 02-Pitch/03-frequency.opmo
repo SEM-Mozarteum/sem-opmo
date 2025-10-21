@@ -2,7 +2,9 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) Achim Bornhoeft
+
+;;; 2015 - 2021 (c) Achim Bornhoeft
+;;; 2025 (c) Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; FREQUENCY
@@ -30,7 +32,7 @@ of spectral music is calculated in frequencies.
 (harmonics 'a2 12 :quantize 1/4)
 
 ;; quantization in eignthtones
-(harmonics 'a2 12 :quantize 1/8)
+(chordize (harmonics 'a2 12 :quantize 1/8))
 
 ;;; ---------------------------------------------------------
 
@@ -44,7 +46,7 @@ attributes.
 |#
 
 ;; a list of 16 random frequencies
-(setf frequencies (rndn 16 200 400 :seed 123))
+(setf frequencies (rndn 16 200 400 :seed 678))
 ;; The rndn function produces random numbers:
 ;; arguments: n, low, high
 
@@ -81,9 +83,10 @@ a quantisation.
 ;; => (23c -19c -24c 14c 1c 4c 11c 14c -16c 22c 19c -15c -23c -11c -4c)
 
 ;; Display the microtones with remaining cents
+
 ;; 
 (make-omn
- :length '(h)
+ :length '(h q)
  :pitch pitches
  :articulation (cent-to-attribute cents)
  :span :pitch)

@@ -2,7 +2,9 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) 2015 - 2021, Achim Bornhoeft
+
+;;; 2015 - 2021 (c) Achim Bornhoeft
+;;; 2025 (c) Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; LENGTH
@@ -24,9 +26,9 @@ In OM the description of irrational divisions are
 consequently described as divisions of the whole note:
 
 1/12 is a triple eigths note 
-(12 triplets eigth notes fit in one 4/4 measure)
+(12 triple eigth notes fit in one 4/4 measure)
 1/20 is a quintuplet sixtenth note
-(20 quintuplets fit in one 4/4 measure)
+(4 quintuplets fit in one 4/4 measure)
 
 There is a differentiation between length and duration in OM:
 - Length is the actual note length
@@ -95,16 +97,31 @@ if you do :span :pitch the the pitch is the MASTER
 ;; argument 2: denominator(s)
 (gen-length '(8 4 2 1) 32) ; => (1/4 1/8 1/16 1/32)
 
+(gen-length '(4) 8)
+
 ;; all combinations of numerators and denominators
 (gen-length '(1 4 8) '(4 8)) ; => ((1/4 1 2) (1/8 1/2 1))
 
+;; extended example
+
+;; make 24 random lengths
+(gen-loop 
+ 4 ; do this 4 times for 4 voices
+ (flatten ; remove parentheses
+  (gen-loop 
+   24 ; evaluate 24 times
+   (gen-length ; create one length
+    (rnd-sample 1 '(1 2 3 4)) ; random numerators (list)
+    (rnd-pick '(4 8))))) ; random denominators
+ :seed 456) ; seed to fix random
+
 ;;; ---------------------------------------------------------
 
-;;; gen-adjust
+;;; length-adjust
 
 ;; length-adjust fits as many notes as possible in a given
 ;; duration
-(setf mat1 '(s c4e4 e g4 s eb4 e cs4 s e4 e b4 s fs4 e a4 s gs4 e f4 s bb4 e d4))
+(setf mat1 '(s c4 e g4 s eb4 e cs4 s e4 e b4 s fs4 e a4 s gs4 e f4 s bb4 e d4))
 ;; mat1 has a duration of 9/8
 
 (list
@@ -114,7 +131,7 @@ if you do :span :pitch the the pitch is the MASTER
 
 ;;; ---------------------------------------------------------
 
-;;; gen-fit
+;;; length-fit
 
 #|
 This function will add a length value to the last 
@@ -128,4 +145,3 @@ end of the list to fit the time signature measures.
 ;; The type :rest will add a rest length value at the end 
 ;; of the list to fit the time signature.
 (length-fit lengths :type :rest)
-

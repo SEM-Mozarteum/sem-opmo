@@ -2,7 +2,9 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) 2015 - 2021, Achim Bornhoeft
+
+;;; 2015 - 2021 (c) Achim Bornhoeft
+;;; 2025 (c) Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; RESTS
@@ -34,10 +36,10 @@ rests in OM are represented as negativ lengths
 ;; "get-count" counts notes and rests:
 (get-count rhythms) ; => 6
 
-;; Notes
+;; notes
 (get-count rhythms :length :note) ; => 5
 
-;; Rests
+;; rests
 (get-count rhythms :length :rest) ; => 1
 
 ;;  Calculate the overall duration with "get-span"
@@ -45,34 +47,24 @@ rests in OM are represented as negativ lengths
 (get-span rhythms) ;  => 1/2
 
 ;; see 2 voices with cmd-2
-(list span-rhy (get-span (list span-rhy)))
-
-;;; ------------------------------------------------------
-
-;;; length-weigth
-
-;; A list of durations
-(setf len1 '(1/4 1/16 1/8 1/16 1/2 1/8 1/8 1/8 1/8))
-
-;; length-weight returns a weighted distribution of notes
-;; and rests (change randomly the prefix of the rhythms
-;; in the input list)
-(length-weight len1)
-;; e.g. (1/4 1/16 1/8 -1/16 1/2 -1/8 1/8 1/8 1/8)
-
-;; 5 voices three times more notes than rests
-(gen-loop 5
-(length-weight len1 :weight '(3 2)))
+(list rhythms (get-span (list rhythms)))
 
 ;;; ------------------------------------------------------
 
 ;;; length-invert
 
 ;; invert notes and lengths
-(setf rhy '(1/4 -1/8 1/4 -1/8  1/4 -1/8 1/4)) 
+(setf rhy '(1/4 -1/8 1/4 -1/8  1/4 -1/8 1/4 -1/8)) 
 
 ;; see result with cmd-2 (option-2 on Win)
+(setf rhy-inv (length-invert rhy))
+
 (list rhy (length-invert rhy))
+
+;; difference between inverse and reverse rhythm
+(list rhy
+      rhy-inv
+      (reverse rhy))
 
 ;;; ------------------------------------------------------
 
@@ -91,29 +83,34 @@ rests in OM are represented as negativ lengths
 
 ;; LENGTH-ALIGN is used to align a series of length lists 
 ;; with one another.
+;; set more than one variable at once with setf
 
-(setf v1 '(q h e. s q h e. s))
-(setf v2 '(q h e. q h))
-(setf va '(-e -s e s = = -e -s e s = = -e -s e s = =))
-(setf vc '(h q e. s q. e s))
+(setf v1 '(q h e. s q h e. s) ; 8/4
+      v2 '(q h e. q h) ; 27/16
+      va '(-e -s e s = = -e -s e s = = -e -s e s = =) ; 6/4
+      vc '(h q e. s q. e s)) ; 25/16
+
+;; Voices with different lengths, see with cmd-2
+;; OM adds rests for display but not actually changing the lists
+(setf strqt (list v1 v2 va vc))
 
 ;; Align all these lists by adding rests ('r) to the end ('e)
 ;; View with cmd-2 (opt-2 on Windows)
-(length-align (list v1 v2 va vc) :type 'r :position 'e)
+(length-align strqt :type 'r :position 'e)
 
 ;; Align all these lists by adding rests ('r) 
 ;; to the start ('s)
-(length-align (list v1 v2 va vc) :type 'r :position 's)
+(length-align strqt :type 'r :position 's)
 
 ;; Align all these lists by adding rests ('r) symmetrically
 ;; at the start and at the end
-(length-align (list v1 v2 va vc) :type 'r :position 'o)
+(length-align strqt :type 'r :position 'o)
 
 ;; Align all these lists by adding rests ('r) randomly ('r)
-(length-align (list v1 v2 va vc) :type 'r :position '?)
+(length-align strqt :type 'r :position '?)
 
 ;; Add new note lengths at the end
-(length-align (list v1 v2 va vc) :type 'n :position 'e)
+(length-align strqt :type 'n :position 'e)
 
 ;;; ------------------------------------------------------
 
@@ -127,11 +124,29 @@ rests in OM are represented as negativ lengths
        (length-augmentation 1/2 durlst)
        durlst 
        (length-augmentation 2 durlst)))
-      
+
+;; length-diminuition works only with integers     
 (setf dur-canon2
-      (quantize
-       (list  
-        (length-diminution 3 durlst)
-        (length-diminution 2 durlst)
-        durlst)
-       '(1 2 3 4 5 6 7 8)))
+      (list  
+       durlst
+       (length-diminution 2 durlst)
+       (length-diminution 4 durlst)))
+
+;;; ------------------------------------------------------
+
+;;; length-weight
+
+;; A list of durations
+(setf len1 '(1/4 1/16 1/8 1/16 1/2 1/8 1/8 1/8 1/8))
+
+;; length-weight returns a weighted distribution of notes
+;; and rests (change randomly the prefix of the rhythms
+;; in the input list)
+;; see distribution with cmd-2 (ctrl-2)
+(gen-loop 5 (length-weight len1))
+
+;; 5 voices three times more notes than rests
+(gen-loop 5 (length-weight len1 :weight '(3 1))
+          :seed 123)
+
+;;; ------------------------------------------------------

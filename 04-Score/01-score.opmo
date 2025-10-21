@@ -32,18 +32,19 @@ Hierarchy of a score in Opusmodus:
 (setf twelve-tone-row (rnd-row :seed 127))
 
 ;; and assign it to a variable:
-(setf note-mat (integer-to-pitch
+(setf note-mat1 (integer-to-pitch
                 twelve-tone-row))
 
 ;;; PITCH => DURATION
 
 ;; Then we create a list of durations spanned to the pitches:
-(setf dur-mat 
+(setf dur-mat1 
       (rnd-order
-       (span note-mat '(1/16 1/8 -1/4 1/4))
+       (span pitch-mat1 '(1/16 1/4 -1/4 1/8))
        :seed 234))
 
-;; Compare (length note-mat) /= (length dur-mat)!
+;; Compare (length note-mat) /= (length dur-mat)
+;; because of rests
 
 ;;; VOICE
 ;;; 2 musical voices derived from "note-mat"
@@ -53,8 +54,8 @@ Hierarchy of a score in Opusmodus:
 ;; (identical to "note-mat" and "dur-mat"
 (setf mat1 
       (make-omn
-       :pitch note-mat
-       :length dur-mat))
+       :pitch note-mat1
+       :length dur-mat1))
 
 #!
 ;; Its possible to make the omn in one:
@@ -66,7 +67,7 @@ Hierarchy of a score in Opusmodus:
        (rnd-order
         '(1/16 1/8 -1/4 1/4))
        :span :pitch))
-;; the disadvantage is that 'mat2' has to be disassembled
+;; the disadvantage is that 'mat1a' has to be disassembled
 ;; before specific contents of it can be reused
 !#
 
@@ -79,8 +80,8 @@ Hierarchy of a score in Opusmodus:
                        (integer-to-pitch 
                         (interval-invert twelve-tone-row))))
 
-;; new durations by random ordering
-(setf dur-mat2 (rnd-order dur-mat :seed 123))
+;; new durations by random ordering the original dur-mat
+(setf dur-mat2 (rnd-order dur-mat1 :seed 123))
 
 (setf mat2
       (make-omn
@@ -108,11 +109,10 @@ DEF-INSTRUMENT-SET document.
 ;;; SCORE
 
 #|
-This function defines a SCORE comparable to a notation 
+The function DEF-SCORE defines a SCORE comparable to a notation 
 program with Title, Subtitle, Composer, Copyright, etc. 
 This SCORE is in MUSIC-XML format and can be used in every 
-compatible notation program like MuseScore, Sibelius and 
-Finale.
+compatible notation program like MuseScore, Sibelius and Dorico.
 The DEF-SCORE instance DEFAULT options must have at least 
 the :key-signature, :time-signature and :tempo values.
 |#
@@ -126,10 +126,10 @@ the :key-signature, :time-signature and :tempo values.
      (piano-layout 'piano-rh 'piano-lh))
   
   (piano-rh ; name of the system
-   :omn mat1)
+   :omn mat1) ; material 1
   
   (piano-lh
-   :omn mat2))
+   :omn mat2)) ; material 2
 
 ;; display the score
 (display-musicxml 'piano-score)
@@ -159,8 +159,12 @@ the :key-signature, :time-signature and :tempo values.
 (setf voice2 (pitch-transpose 15 (list mat2 mat4 mat4)))
 
 ;; voices as transpositions of other voices
-(setf voice3 (pitch-transpose -6 voice1)) 
-(setf voice4 (pitch-transpose 6 voice2))
+(setf voice3 
+      (pitch-transpose -6 
+                       (rnd-order voice1 :seed 123))) 
+(setf voice4 
+      (pitch-transpose 6
+                       (rnd-order voice1 :seed 234)))
 
 ;;; PARTS
 
@@ -170,18 +174,18 @@ the :key-signature, :time-signature and :tempo values.
 
 ;;; SCORE
 
-(def-score duo ; name of the score
-           (:title "Duo"
-            :composer "Achim Bornhoeft"
-            :key-signature 'chromatic
-            :time-signature '(3 4)
-            :tempo 80
-            :layout (list
-		   (vibraphone-single-layout 'vibra)
-                    (piano-single-layout 'piano))) 
+(def-score duet ; name of the score
+    (:title "Duet"
+     :composer "Achim Bornhoeft"
+     :key-signature 'chromatic
+     :time-signature '(3 4)
+     :tempo 80
+     :layout (list
+              (vibraphone-single-layout 'vibra)
+              (piano-single-layout 'piano))) 
 
-;; Look for "Layout" and "Instrument-Layout-Presets" 
-;; in documentation.
+  ;; Look for "Layout" and "Instrument-Layout-Presets" 
+  ;; in documentation.
           
   (vibra ; name of the system
    :omn part1
@@ -196,20 +200,18 @@ the :key-signature, :time-signature and :tempo values.
    :program 'acoustic-grand-piano)
   ) 
 
-
-
 ;; display the notation
-(display-musicxml 'duo)
+(display-musicxml 'duet)
 
 ;; play the score in the midi player
-(display-midi 'duo)
+(display-midi 'duet)
 
 ;; display the notation in midi-player 
 ;; not starting automatically
-(display-midi 'duo :auto-play nil)
+(display-midi 'duet :auto-play nil)
 
-(defparameter *default-notation-editor* "Sibelius.app")
-;; (defparameter *default-notation-editor* "MuseScore 4.app")
+;; (defparameter *default-notation-editor* "Sibelius.app")
+(defparameter *default-notation-editor* "MuseScore 4.app")
 
 (musicxml-to-editor)
 

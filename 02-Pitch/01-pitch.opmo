@@ -2,7 +2,9 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) Achim Bornhoeft
+
+;;; 2015 - 2021 (c) Achim Bornhoeft
+;;; 2025 (c) Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; PITCH (NOTES)
@@ -126,7 +128,7 @@ different types.
 ;; integer-transpose is evaluated first an then passed
 ;; to integer-to-pitch
 (integer-to-pitch
-(integer-transpose 2 '(0 2 4)))
+ (integer-transpose 2 '(0 2 4)))
 
 ;;; ---------------------------------------------------------
 
