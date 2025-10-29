@@ -40,7 +40,7 @@ Hierarchy of a score in Opusmodus:
 ;; Then we create a list of durations spanned to the pitches:
 (setf dur-mat1 
       (rnd-order
-       (span pitch-mat1 '(1/16 1/4 -1/4 1/8))
+       (span note-mat1 '(1/16 1/4 -1/4 1/8))
        :seed 234))
 
 ;; Compare (length note-mat) /= (length dur-mat)

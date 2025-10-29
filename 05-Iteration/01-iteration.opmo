@@ -34,7 +34,29 @@
 ;; a given list with randomized repetitions between 
 ;; low and high.
 
-(setf pitches (gen-repeat-seq 48 1 3 '(c4 cs4 d4 eb4 g4 c5)))
+(setf pattern (gen-repeat-seq 24 2 5 '(c4 cs4 d4 eb4 g4 c5)))
+
+;;; ---------------------------------------------------------
+
+;;; FILTER-REPEAT
+
+#|
+Filter-repeat is a function designed to control the frequency
+and distribution of repeated values within a sequence
+|#
+
+;; all repetitions over 2 are truncated to 2
+(filter-repeat 2 pattern)
+
+;; All sucessive sequences of 2 equal notes are 
+;; reduced to 1
+(filter-repeat 1 '(gs4 fs3 a4 fs3 a4 bb5 a4 gs4) :seq 2)
+;; One of the occurences fs3 a4 is deleted
+
+;; All sucessive sequences of 3 equal notes are reduced to 1
+(filter-repeat 1 '(gs4 fs3 a4 fs3 fs3 a4 fs3 a4 bb5 a4 gs4) 
+               :seq 3)
+;; One of the occurences fs3 a4 fs3 is deleted
 
 ;;; ---------------------------------------------------------
 
@@ -49,16 +71,16 @@ a single single process that has a randomising element.
 (setf scale '(c4 cs4 d4 eb4 g4 c5))
 
 ;; 5 voices with gen-repeat, evaluate cmd-2
-(gen-loop 10
-          (make-omn
-           :pitch (gen-repeat-seq 48 1 5 scale)
-           :length '(1/16)
-           :span :pitch) :seed 123)
+(gen-loop 10 (make-omn
+              :pitch (gen-repeat-seq 48 1 5 scale)
+              :length '(1/16)
+              :span :pitch) :seed 123)
 
 ;;; ---------------------------------------------------------
 
 ;;; ASSIGN VARIABLE
 
+;; Display with cmd-2
 (setf ord-random
       (rnd-order
       (gen-loop 4
@@ -95,35 +117,19 @@ a single single process that has a randomising element.
   
   (viola
    :omn inst3
-   :sound 'gm :program 0)
+   :sound 'gm 
+   :program 'viola)
   
   (violoncello
    :omn inst4
-   :sound 'gm :program 0)
+   :sound 'gm
+   :program 'cello)
   )
 
-(display-midi (compile-score 'random-measures))
 (display-musicxml 'random-measures)
 
 ;;; ---------------------------------------------------------
-
-;;; FILTER-REPEAT
-
-(setf pattern (gen-repeat-seq 24 3 5 '(c4 cs4 d4 eb4 g4 c5)))
-
-;; all repetitions over 2 are truncated to 2
-(filter-repeat 2 pattern)
-
-;; All sucessive sequences of 2 equal notes are reduced to 1
-(filter-repeat 1 '(gs4 fs3 a4 fs3 a4 bb5 a4 gs4) :seq 2)
-;; One of the occurences fs3 a4 is deleted
-
-;; All sucessive sequences of 3 equal notes are reduced to 1
-(filter-repeat 1 '(gs4 fs3 a4 fs3 fs3 a4 fs3 a4 bb5 a4 gs4) 
-               :seq 3)
-;; One of the occurences fs3 a4 fs3 is deleted
-
-;;; ---------------------------------------------------------
+;;; Lisp Iteration Functions
 ;;; ---------------------------------------------------------
 
 ;;; DOLIST

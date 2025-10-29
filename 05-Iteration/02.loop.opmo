@@ -32,9 +32,10 @@ https://gigamonkeys.com/book/loop-for-black-belts.html
 
 ;;; ---------------------------------------------------------
 
-;; The loop variable can be anything: integers, bread, x, etc.
+;; The loop variable can be named in any way e.g. integers, 
+;; name, var, x, etc.
 (loop for integers from 0 to 12 collect integers) 
-(loop for bread from 0 to 12 collect bread)
+(loop for name from 0 to 12 collect name)
 (loop for x from 0 to 12 collect x)
 
 ;; => (0 1 2 3 4 5 6 7 8 9 10 11 12)
@@ -68,8 +69,6 @@ https://gigamonkeys.com/book/loop-for-black-belts.html
 (loop for i from 1 to 5 collect
   (loop for j from 0 to 4 collect (+ i j)))
 
-
-
 ;; Rearrange a nested list by taking each position in a 
 ;; seperate list (matrix transformation)
 
@@ -84,8 +83,6 @@ https://gigamonkeys.com/book/loop-for-black-belts.html
         ; into a separate list
         (chordize
         (loop for j in lists collect (nth i j))))
-
-
 
 ;; Remove all repetitions in a list
 
