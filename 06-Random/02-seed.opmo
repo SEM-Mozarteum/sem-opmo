@@ -2,7 +2,9 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) 2015 - 2021, Achim Bornhoeft
+
+;;; 2015 - 2021 (c) Achim Bornhoeft
+;;; 2025 (c) Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; RANDOM
@@ -92,7 +94,6 @@ rnd1 :seed 34
 !#
 
 ;; count-up seed value.
-
 (loop with seed = (init-seed 34)
        repeat 5
        collect (rnd1))
@@ -128,6 +129,8 @@ rnd1 :seed 38
                          '(60 62 63 65 66 68 69 70 72))
                          collect rnd-row into reslis
                          when (equal '(60) (last rnd-row))
+            ;; when the last value of rnd-row is c4 then
+            ;; return all results including the last list
                          return reslis)))
 
 ;; With pitches, returning only the last list
@@ -138,4 +141,5 @@ rnd1 :seed 38
                         '(f4 bb4 c4 d4 fs4 a4 c5 eb4 gs4))
          collect rnd-row into reslis
          when (equal '(c4) (last rnd-row))
-           return (last reslis)))
+             ; when the last value of rnd-row is c4 then
+           return (last reslis))) ; return only the last list

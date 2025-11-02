@@ -145,3 +145,41 @@ end of the list to fit the time signature measures.
 ;; The type :rest will add a rest length value at the end 
 ;; of the list to fit the time signature.
 (length-fit lengths :type :rest)
+
+;;; ---------------------------------------------------------
+
+(setf beethoven-ode
+'(q e4 e4 f4 g4 g4 f4 e4 d4 c4 c4 d4 e4 q. e4 e d4 h d4))
+
+;;; quantum
+
+#|
+The QUANTUM function will increase or decrease length 
+values randomly between 0 and a given fraction value 
+using the loop macro (see chapter 05-iteration)
+|#
+(setf trans
+      (loop for j in (gen-transition 0 0.1 8 1) collect 
+        (quantum beethoven-ode 
+                 :fraction j 
+                 :seed 123)))
+
+;;; get-span
+
+;; get all the lengths of all voices in 4/4 measures
+(setf length-all-voices (get-span trans))
+
+;;; max-of-seq
+
+;; get the longest voice in 4/4 measures
+(setf length-max-voice (max-of-seq length-all-voices))
+
+;;; fit-to-span
+
+(setf trans-fit
+      (loop with span-val = length-max-voice
+            for i in trans
+            collect (quantize 
+                     (fit-to-span span-val i)
+                     '(1 2 3 4 5))))
+;; (get-span trans-fit) => (5 5 5 5 5 5 5 5) 

@@ -143,7 +143,7 @@ rests in OM are represented as negativ lengths
 ;; and rests (change randomly the prefix of the rhythms
 ;; in the input list)
 ;; see distribution with cmd-2 (ctrl-2)
-(gen-loop 5 (length-weight len1))
+(gen-loop 500 (length-weight len1))
 
 ;; 5 voices three times more notes than rests
 (gen-loop 5 (length-weight len1 :weight '(3 1))

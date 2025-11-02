@@ -2,7 +2,9 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) 2015 - , Achim Bornhoeft
+
+;;; 2015 - 2021 (c) Achim Bornhoeft
+;;; 2025 (c) Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; Iteration
@@ -11,39 +13,39 @@
 
 ;;; GEN-REPEAT
 
-;; GEN-REPEAT returns any number of repeats of a list or atom.
+;; GEN-REPEAT returns any number of repeats of a list 
+or atom.
 
 (gen-repeat 3 'c4)
 
 (gen-repeat 3 '((c4 g4) (d4 a4)))
 
-;; If the second argument is a list then each list is 
-;; repeated  individually.
+;; If the first argument is a list then each list is 
+;; repeated individually.
 (gen-repeat '(3) '((c4 g4) (d4 a4)))
 
-;; If the list has more than one number, then the first list
-;; is repeated with the first number, the second with the
-;; second number, etc.
+
+;; If the first argument list has more than one number, 
+;; then the first list is repeated with the first number, 
+;; the second with the second number, etc.
 (gen-repeat '(2 3) '((c4 g4) (d4 a4)))
 
 ;;; ---------------------------------------------------------
 
 ;;; GEN-REPEAT-SEQ
 
-;; GEN-REPEAT-SEQ generates lists by repeating elements from
-;; a given list with randomized repetitions between 
+;; GEN-REPEAT-SEQ generates lists by repeating elements 
+;; from a given list with randomized repetitions between 
 ;; low and high.
-
 (setf pattern (gen-repeat-seq 24 2 5 '(c4 cs4 d4 eb4 g4 c5)))
 
 ;;; ---------------------------------------------------------
 
 ;;; FILTER-REPEAT
 
-#|
-Filter-repeat is a function designed to control the frequency
-and distribution of repeated values within a sequence
-|#
+;; Filter-repeat is a function designed to control the 
+;; frequency and distribution of repeated values within 
+;; a sequence. 
 
 ;; all repetitions over 2 are truncated to 2
 (filter-repeat 2 pattern)
@@ -62,11 +64,10 @@ and distribution of repeated values within a sequence
 
 ;;; GEN-LOOP
 
-#|
-GEN-LOOP can be  used to execute a form multiple times. 
-It's a very useful function when creating variations from 
-a single single process that has a randomising element. 
-|#
+
+;; GEN-LOOP can be  used to execute a form multiple times. 
+;; It's a very useful function when creating variations from 
+;; a single single process that has a randomising element. 
 
 (setf scale '(c4 cs4 d4 eb4 g4 c5))
 
@@ -82,23 +83,24 @@ a single single process that has a randomising element.
 
 ;; Display with cmd-2
 (setf ord-random
-      (rnd-order
-      (gen-loop 4
-      (rnd-order 
-       ; 2 identical measures
-       '((-h.. e c4 mf fs4 f e4 mf e4 p ds4 d4 q cs4)
-         (-h.. e c4 mf fs4 f e4 mf e4 p ds4 d4 q cs4))
-       ;; 4 voices of 2 measure are randomly ordered
-       ;; by its lengths        ;
-       :type :length))
-      ;; and then the pitches of each voice
-      ;; are randomly Ordered as well
-      :type :pitch))
+      (rnd-order ; by pitch
+       (gen-loop 4 ;; measures repeated 4 times
+        (rnd-order ; by length
+         ;; 2 identical measures randomly ordered
+         '((-h.. e c4 mf fs4 f e4 mf e4 p ds4 d4 q cs4)
+           (-h.. e c4 mf fs4 f e4 mf e4 p ds4 d4 q cs4))
+         ;; 4 voices of 2 measure are randomly ordered
+         ;; by its lengths        ;
+         :type :length))
+       ;; and then the pitches of each voice
+       ;; are randomly ordered as well
+       :type :pitch :seed 2358))
 
 ;; The function assign-variable set several sucessive
 ;; items in a list to numbered variables. The starting
 ;; number is 1
 
+;; assign each voice to its own variable
 (assign-variable 'inst ord-random)
 
 (def-score random-measures
@@ -129,7 +131,7 @@ a single single process that has a randomising element.
 (display-musicxml 'random-measures)
 
 ;;; ---------------------------------------------------------
-;;; Lisp Iteration Functions
+;;; Common Lisp Iteration Functions
 ;;; ---------------------------------------------------------
 
 ;;; DOLIST
@@ -137,18 +139,16 @@ a single single process that has a randomising element.
 #|
 There are two older and therefore less commonly used 
 loop macros in LISP:
-
 DOLIST binds a variable to the elements of a list in order
 and stops in the end of the list.
 |#
 
-(dolist (x '(60 61 62 63)) (print x))
+(dolist (x '(60 61 62 63)) (print (+ 12 x)))
 
-#|
-DOLIST always returns NIL. Note that the value of x in the
-above example was never NIL: 
-the NIL below the 63 was the value that dolist returns.
-|#
+
+;; DOLIST always returns NIL. Note that the value of x in the
+;; above example was never NIL: 
+;; the NIL below the 75 was the value that dolist returns.
 
 ;;; ---------------------------------------------------------
 
@@ -174,6 +174,8 @@ there are lists:
 |#
 
 (mapcar #'+ '(1 2 3) '(4 5 6)) ; ⇒ (5 7 9)
+
+(mapcar #'> '(1 7 3) '(4 5 6)) ; ⇒ (nil t nil)
 
 ;; Definingj an own function to process over a list
 (defun add2 (n)

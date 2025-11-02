@@ -2,7 +2,9 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) 2015 - 2021, Achim Bornhoeft
+
+;;; 2015 - 2021 (c) Achim Bornhoeft
+;;; 2025 (c) Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; SCORE
@@ -120,7 +122,7 @@ the :key-signature, :time-signature and :tempo values.
 (def-score piano-score ; name of the score
     ;; general score definition:
     (:key-signature 'chromatic
-     :time-signature '(4 4)
+     :time-signature '(2 4)
      :tempo 60
      :layout 
      (piano-layout 'piano-rh 'piano-lh))
@@ -165,6 +167,8 @@ the :key-signature, :time-signature and :tempo values.
 (setf voice4 
       (pitch-transpose 6
                        (rnd-order voice1 :seed 234)))
+
+;; (setf strqt (list voice1 voice2 voice3 voice4))
 
 ;;; PARTS
 
@@ -258,8 +262,7 @@ list of time-signature measures.
 ;;; TEMPO
 
 ;; Calculates random tempos for each time signature change
-(setf temps (rnd (length time-sig) 
-                 :low 40 :high 120 :seed 321))
+(setf temps (rndn (length time-sig) 40 120 :seed 321))
 
 #|
 The function MAKE-TEMPO brings together lists of changing 

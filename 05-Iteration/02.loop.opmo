@@ -1,8 +1,11 @@
+;;; -------------------------------------------------------
 ;;; ---------------------------------------------------------
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) 2015 - , Achim Bornhoeft
+
+;;; 2015 - 2021 (c) Achim Bornhoeft
+;;; 2025 (c) Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; LOOP (macro in LISP)
@@ -30,7 +33,7 @@ https://cl-cookbook.sourceforge.net/loop.html
 https://gigamonkeys.com/book/loop-for-black-belts.html
 |#
 
-;;; ---------------------------------------------------------
+;;; -------------------------------------------------------
 
 ;; The loop variable can be named in any way e.g. integers, 
 ;; name, var, x, etc.
@@ -43,6 +46,7 @@ https://gigamonkeys.com/book/loop-for-black-belts.html
 (loop for midinote from 60 to 72 collect midinote)
 (midi-to-pitch (loop for m from 60 to 72 collect m))
 
+;; loop in a list
 ;; an octave transposition
 (loop for i in '(60 61 62 63 64 65) collect (+ i 12))
 
@@ -69,29 +73,36 @@ https://gigamonkeys.com/book/loop-for-black-belts.html
 (loop for i from 1 to 5 collect
   (loop for j from 0 to 4 collect (+ i j)))
 
-;; Rearrange a nested list by taking each position in a 
-;; seperate list (matrix transformation)
+;; Loop with a termination condition
+(loop for x from 1 ; open loop
+         for y = (* x x) ; calculation
+         until (>= y 729) ; termination condition
+         finally (return (list x y))) ; x * x = y
 
-(defparameter lists '((c4 d4 e4 f4) 
-                      (d4 e4 f4 g4) 
-                      (f4 g4 a4 b4)
-                      (g4 a4 b4 c5)))
+;; Loop with until as termination condition
+(loop for x in '(1 2 3 4 5) ; loop with x in list
+      until (> x 3) ; until x is larger than 3
+        collect x) ; collect x into a list
 
-(loop for i from 0 to 3 ; index in list
-      collect 
-        ; collect each nth position of every list
-        ; into a separate list
-        (chordize
-        (loop for j in lists collect (nth i j))))
+;; the same with while
+(loop for x in '(1 2 3 4 5)
+      while (< x 4) ; while x is smaller than 4
+        collect x)
 
-;; Remove all repetitions in a list
+;; a when conditional statement
+(loop repeat 10 ; do it 10 times
+        for x = (random 100) ; make a random number
+        when (< x 50) ; when x is smaller than 50
+        collect x) ; collect x
+
+;;; Remove all repetitions in a list
 
 ;; a list with repetitions
 (setf replst '(1 1 2 3 4 5 5 6 7 7 7 8))
 
-;; the variable 'last' is overwritten after each 
-;; conditional test
 (loop with last = NIL
+      ; the variable 'last' is overwritten after each 
+      ; conditional test
       for i in replst
       when (not (equal last i))
         ; test if the current value is equal to 
@@ -100,8 +111,38 @@ https://gigamonkeys.com/book/loop-for-black-belts.html
         ; if not, the value is collected into 'reslis'
         ; which is a named list of results (could 
         ; have any name).
-      and do (setf last i)
+        and do (setf last i)
         ; and the 'last' variable is set to the 
         ; current value. (The 'and' is optional).
         ; At the end the result list 'reslis' is returned:
-      finally (return (reverse reslis)))
+      finally (return reslis))
+
+;; if conditional in a loop
+(loop repeat 10 ; repeat it 10 times
+       for x = (random 100) ; random numbers between 0 and 99
+       if (evenp x) ; when x is an even number
+         collect x into evens ; collect it into "evens"
+       else ; if not
+         collect x into odds ; collect it into "odds"
+        ; at the end return a list of even and odd numbers
+       finally (return (list evens odds)))
+
+;; nested loops
+(loop for i from 1 to 5 collect
+  (loop for j from 0 to 4 collect (+ i j)))
+
+;; Rearrange a nested list by taking each position in a 
+;; separate list (matrix transformation)
+(setf lists 
+      '((c4 d4 e4 f4) 
+        (d4 e4 f4 g4) 
+        (f4 g4 a4 b4)
+        (g4 a4 b4 c5)))
+
+(loop for i from 0 to 3 ; index in list
+      collect 
+        ; collect each nth position of every list
+        ; into a separate list beginning with ID 0
+        ; and ending with ID 3
+        (chordize
+        (loop for j in lists collect (nth i j))))

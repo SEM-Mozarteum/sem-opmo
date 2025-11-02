@@ -2,52 +2,42 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) 2015 - 2021, Achim Bornhoeft
+
+;;; 2015 - 2021 (c) Achim Bornhoeft
+;;; 2025 (c) Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; RANDOM
 
 ;;; ---------------------------------------------------------
 
-;;; RND1 
+;;; RNDN
 
-#|
-RND1 returns a random floating point number between 0.0 and 
-1.0. If the low and high is an integer then the function 
-returns a random number between low and high values.
-|#
+;; RNDN generates random numbers
+;;
 
-;; 1 number between 0 and 1
-(rnd1) 
+;; one floating point number between 0 and 1
+(rndn)
 
-;;; ---------------------------------------------------------
+;; five floating point numbers between 0 and 1
+(rndn 5) 
 
-;;; RND-NUMBER
+;; 10 ingteger numbers
+;; When both arguments are integers the output will create
+;; integers as well
+(rndn 10 0 10)
 
-;; RND-NUMBER generates a series of numbers in a given range. 
+;; 10 floating point numbers
+;; If one argument is a floating point number the
+;; output creates floating point (decimal) numbers
+(rndn 10 0 10.0)
 
-;; 10 numbers between 0 and 1
-(rnd-number 10 0 1.0) 
-;; same with rnd1
-(gen-repeat 10 (rnd1))
+;; with seed you the random numbers are the same each time
+(rndn 10 0 10 :seed 123)
 
-;;; ---------------------------------------------------------
-
-;;; RND
-
-#|
-By default RND returns a list of random floating point 
-numbers N between 0.0 and 1.0. If the low and high is 
-an integer then the function returns a list of random 
-numbers N between low and high values.
-|#
-
-;; 10 numbers between 0 and 1
-(rnd 10) 
-
-;; 10 pitches between midi 60 and 84
+;; 10 pitches between midi 60 and 84 
 (setf pitches (midi-to-pitch 
-               (rnd 20 :low 60 :high 84)))
+               (rndn 20 60 84))) ; integers
 
 (make-omn
  :pitch pitches
@@ -61,7 +51,8 @@ numbers N between low and high values.
 ;; RND-REPEAT can be used to choose randomly a given 
 ;; number N of items from a sequence.
 
-(setf lengths (rnd-repeat (length pitches) '(1/16 1/8 1/4)))
+(setf lengths (rnd-repeat 
+               (length pitches) '(1/16 1/8 1/4)))
 
 (setf mat1 (make-omn 
             :pitch pitches
@@ -76,9 +67,22 @@ The function RND-PICK will pick either a single item from a
 list, or a sublist from a list of lists.
 |#
 
+;; one random samples
 (rnd-pick '(0 1 2 3 4 5 6 7 8 9))
 
+;; take 10 picks from the list
+(gen-loop 10 (rnd-pick '(0 1 2 3 4 5 6 7 8 9)))
+
+;; one random sublist
 (rnd-pick '((c4 d4) (e4 f4)))
+
+(gen-loop 10 (chordize (rnd-pick '((c4 d4) (e4 f4)))))
+
+;; one element of each sublist
+(rnd-pick '((c4 d4) (e4 f4)) :type 'list)
+
+(gen-loop 10 (chordize 
+              (rnd-pick '((c4 d4) (e4 f4)) :type 'list)))
 
 ;;; ---------------------------------------------------------
 
@@ -100,6 +104,15 @@ of items from a sequence.
              :length (rnd-sample (length pitches) lengths)
              ))
 
+;; Pick items without consecutive repeat:
+(rnd-sample 10 '(c4 d4 e4 f4 g4 a4) :norep t :seed 2567)
+
+;; cycle throug the sublists and taking different amount
+;; of random values
+(rnd-sample '(1 2 1 3 2 3) 
+            '((c4 d4) (e4 f4 g4) (a4 b4)) 
+            :norep t :seed 134)
+
 ;;; ---------------------------------------------------------
 
 ;;; RND-UNIQUE
@@ -112,7 +125,8 @@ The function RND-UNIQUE can be used to choose randomly a given n (number) of uni
 
 ;; If the number of samples is larger than the lists length
 ;; only the nonrepeated elements of the list are chosen.
-(rnd-unique 8 '(0 1 1 2 3 4 5))
+(rnd-unique 8 '(0 1 1 2 3 4 5) :seed 123)
+;; => (1 4 0 5 3 2)
 
 ;; the list can be of any type of elements
 (rnd-unique 6 '(c4 cs4 c4 c5 fs4 f4 fs4 g4 b4 f4 c5))
@@ -154,7 +168,6 @@ or to shuffle the order of the contents of a series of lists.
    :omn mat3
    :sound 'gm :program 0)) 
 
-(display-midi (compile-score 'random-pitches))
 (display-musicxml 'random-pitches)
 
 ;;; ---------------------------------------------------------
@@ -163,12 +176,12 @@ or to shuffle the order of the contents of a series of lists.
 
 ;; RND-SAMPLE-SEQ can be used to choose randomly a given 
 ;; number of succesive items from a sequence. 
-(setf mat (gen-loop (length lengths)  
-                 (rnd-sample-seq 4 (interval-to-pitch
+(setf mat 
+      (gen-loop 6 (rnd-sample-seq 4 (interval-to-pitch
                                     ; Messiaen Modus 2
-                                    '(1 2 1 2 1 2 1 2)))))
+                                     '(1 2 1 2 1 2 1 2)))))
 
-;; 2 of 3 pitches in the each sublist of pitches are 
+;; 2 of 4 pitches in the each sublist of mat are 
 ;; transposed by an octave
 (setf pitches (sort-asc (pitch-transpose-rnd 2 12 mat)))
 
@@ -196,7 +209,6 @@ or to shuffle the order of the contents of a series of lists.
    :omn lh
    :sound 'gm :program 0))
 
-(display-midi (compile-score 'random-transpositions))
 (display-musicxml 'random-transpositions)
 
 ;;; ---------------------------------------------------------
@@ -216,14 +228,14 @@ or to shuffle the order of the contents of a series of lists.
 
 ;;; RND-SUM-TO-SIZE
 
-;; This function returns a list of numbers which add up to 
+;; This function returns a list of integers which add up to 
 ;; N (total) into a given size (list length). 
 
+(setf sum1 (rnd-sum-to-size 45 8 '(2 3 5 7 11 13 17 19)))
+;; (find-sum sum1)
 
-(rnd-sum-to-size 45 8 '(2 3 5 7 11 13 17 19))
-
-(rnd-sum-to-size 25 7 '(6 11 13 1 3))
-;; => (1 6 3 3 6 3 3)
+(rnd-sum-to-size 25 7 '(6 11 13 1 3) :seed 123)
+;; => (find-sum '(1 4 4 1 13 1 1))
 
 (rnd-sum-to-size 25 3 '(6 11 13 1 3))
 ;; => (1 11 13)
@@ -235,4 +247,4 @@ or to shuffle the order of the contents of a series of lists.
 ;; => (1 1 1 1 2 1 1)
 
 (rnd-sum-to-size 17 7 '(1 2))
-;; => (3 3 3 2 2 1 3)
+;; => (find-sum '(3 3 3 2 2 1 3))
