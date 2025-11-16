@@ -50,7 +50,7 @@ https://gigamonkeys.com/book/loop-for-black-belts.html
 ;; an octave transposition
 (loop for i in '(60 61 62 63 64 65) collect (+ i 12))
 
-(defparameter midis '(60 61 62 63 64 65 66 67 68 69 70))
+(setf midis '(60 61 62 63 64 65 66 67 68 69 70))
 (loop for i in midis collect (midi-to-pitch (+ i 12)))
 
 ;; There a many keywords available for LOOP
@@ -67,16 +67,12 @@ https://gigamonkeys.com/book/loop-for-black-belts.html
       for freq = 40 ; starting the variable freq with 40
         then (* freq 1.1) ; then multiplying each other
         ; number with 1.1 and collect its value in a list
-      collect (hertz-to-pitch freq)) 
-
-;; Nested loops are created like this:
-(loop for i from 1 to 5 collect
-  (loop for j from 0 to 4 collect (+ i j)))
+      collect (hertz-to-pitch freq))
 
 ;; Loop with a termination condition
 (loop for x from 1 ; open loop
          for y = (* x x) ; calculation
-         until (>= y 729) ; termination condition
+         until (>= y 729); termination condition
          finally (return (list x y))) ; x * x = y
 
 ;; Loop with until as termination condition
@@ -139,10 +135,14 @@ https://gigamonkeys.com/book/loop-for-black-belts.html
         (f4 g4 a4 b4)
         (g4 a4 b4 c5)))
 
-(loop for i from 0 to 3 ; index in list
+(loop for i from 0 to (- (length lists) 1) ; indexes in list
+        ; calculated by the length of lists
       collect 
         ; collect each nth position of every list
         ; into a separate list beginning with ID 0
         ; and ending with ID 3
-        (chordize
-        (loop for j in lists collect (nth i j))))
+        (loop for j in lists collect (nth i j)))
+
+;; OM Version of the same functionality
+;; (Many functions in OM are made with the loop macro)
+(matrix-transpose lists)

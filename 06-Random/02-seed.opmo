@@ -7,7 +7,7 @@
 ;;; 2025 (c) Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
-;;; RANDOM
+;;; RANDOM SEED
 
 ;;; ---------------------------------------------------------
 
@@ -96,7 +96,7 @@ rnd1 :seed 34
 ;; count-up seed value.
 (loop with seed = (init-seed 34)
        repeat 5
-       collect (rnd1))
+       collect (rndn))
 
 #!
 init-seed :seed 34
@@ -105,8 +105,10 @@ rnd1 :seed 35
 rnd1 :seed 36
 rnd1 :seed 37
 rnd1 :seed 38
-(0.74985707 0.27639356 0.58018506 0.46898025 0.49766842)
+(0.90709025 0.74985707 0.27639356 0.58018506 0.46898025)
 !#
+
+;; Conditional seed
 
 ;; Returning all lists until the list has 60 = c4 
 ;; as the last element excluding the last list.

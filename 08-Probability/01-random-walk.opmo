@@ -28,15 +28,16 @@ rest probability, same as being stationary.
 (gen-walk 16)
 ;; => e.g. (1 1 -1 1 -1 1 1 1 1 -1 1 1 1 -1 1)
 
-(list-plot (gen-walk 150 :start 0) 
+(list-plot (gen-walk 150 :start 0 :seed 234) 
            :style :axis :join-points t)
 
 ;; also with pitches from a specific start point
 (pitch-list-plot
-(setf pitch (gen-walk 64 :start 'c4)))
+ (setf pitch (gen-walk 64 :start 'c4 :seed 234))
+ :join-points t :file "~/Desktop/pitch-plot.png")
 
-;; The probability to move forward is bigger 
-;; than going backward.
+;; The probability to move forward (up) is bigger 
+;; than going backward (down).
 (setf pitch (gen-walk 64 
                       :step '(1 2) 
                       :backward 0.3 
