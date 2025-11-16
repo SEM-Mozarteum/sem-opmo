@@ -3,24 +3,21 @@
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
 ;;; (c) 2015 - 2021, Achim Bornhoeft
-;;; ---------------------------------------------------------
-
-;;; RANDOM
 
 ;;; ---------------------------------------------------------
 
-;;;  GEN-GROUP
+;;; PROBABILITY
 
-;;; -----------------------
-;;; Example from Nicolas!
-;;; -----------------------
+;;; ---------------------------------------------------------
 
+;;; GEN-GROUP
+;;; Example from Nicolas Speda
 
-#|
-GEN-GROUP will generate series of groups based on the random 
-distribution of values from a list. In its simplest form the 
-function makes n random generations based on a list's 
-content and length.
+#| 
+GEN-GROUP will generate series of groups based on the 
+random distribution of values from a list. In its simplest 
+form the function makes n random generations based on a 
+list's content and length. 
 |#
 
 ;; Without keywords it creates 5 lists with 5 elements each. 

@@ -21,20 +21,21 @@ for increasing or decreasing the size of the fluctuations
 
 (list-plot
  (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1)
-               :variance 0.1)
- :join-points t)
+               :variance 0.5)
+ :join-points t  :point-radius 2)
 
 #|
 The variance is an additional value for increasing or 
 decreasing the size of the fluctuations :around :above 
 or :below the tendency values.
-
-The function rnd-variance controls the variance calculated with
-the equation (+/- value (* value (/ variance 2)))
+The function rnd-variance controls the variance calculated 
+with the equation (+/- value (* value (/ variance 2)))
 |#
 (loop repeat 1000 
         collect (rnd-variance 3 1) into reslis
-        finally (return (list (apply 'min reslis) (apply 'max reslis))))
+        finally (return 
+                 (list (apply 'min reslis) 
+                       (apply 'max reslis))))
 ;; around 1.5 and 4.5
 
 ;; With :variance 0 its the original envelope:
@@ -59,7 +60,8 @@ the equation (+/- value (* value (/ variance 2)))
  :join-points t
  :point-radius 2)
 
-;; With :variance 0.5 above (compared to normal with 0.5 variance
+;; With :variance 0.5 above (compared to normal with 
+;; 0.5 variance
 (list-plot
  (list tend-var
  (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
@@ -68,7 +70,8 @@ the equation (+/- value (* value (/ variance 2)))
  :join-points t
  :point-radius 2)
 
-;; With :variance 0.5 below (compared to normal with 0.5 variance
+;; With :variance 0.5 below (compared to normal with 
+;; 0.5 variance
 (list-plot
  (list tend-var
  (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 

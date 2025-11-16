@@ -11,20 +11,20 @@
 
 ;;; GEN-MARKOV
 
-#|
-The function GEN-MARKOV will use Markov analysis on a list of 
-items in order to work out relationships between each item in 
-the list. It will then use these relationships to generate a 
-new, but related series of values.  In a Markov process events 
-happening in the past create a state, or context, for working 
-out the probabilities of events to come.
+#| 
+The function GEN-MARKOV will use Markov analysis on a list
+of items in order to work out relationships between each item
+in the list. It will then use these relationships to generate
+a new, but related series of values.  In a Markov process 
+events happening in the past create a state, or context, for 
+working out the probabilities of events to come. 
 |#
 
 (gen-markov '(a b c a d c b))
 => (b c a d c a d)
 
 #|
-In the above example, a may be followed by b or d; b is always 
+In the above example, a may be followed by b or d; b is always
 followed by c; c may be followed by a or b; and d is always 
 followed by c. Following this analysis, GEN-MARKOV has 
 generated a sequence following a similar set of rules. 
@@ -61,15 +61,18 @@ individually:
 
 #|
 The function GEN-MARKOV-TRANSITIONS generates Markov 
-transition tables based on a given sequence. 
-The transitions can be stored and use to generate Markov chain.
+transition tables based on a given sequence. The transitions 
+can be stored and use to generate Markov chain.
 |#
+
 (setf transition
       (gen-markov-transitions
        '(c4 d4 c4 c4 d4 e4 f4 f4 d4 g4 c4 f4 c4 g4)))
 
-;; The function GEN-MARKOV-FROM-TRANSITIONS is able to generate 
-;; Markov chain sequences from Markov transitions tables.
+
+;; The function GEN-MARKOV-FROM-TRANSITIONS is able to 
+;; generate Markov chain sequences from Markov transitions 
+;; tables.
 (gen-markov-from-transitions transition :size 20)
 
 ;; There is even the possibility to extract higher level

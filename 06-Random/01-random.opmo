@@ -120,7 +120,8 @@ of items from a sequence.
 ;;; RND-UNIQUE
 
 #|
-The function RND-UNIQUE can be used to choose randomly a given n (number) of unique items from a sequence.
+The function RND-UNIQUE can be used to choose randomly a 
+given n (number) of unique items from a sequence.
 |#
 
 (rnd-unique 6 '(0 1 2 3 4 5 6 7 8 9))

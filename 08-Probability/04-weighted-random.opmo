@@ -22,10 +22,10 @@
 
 ;;; WEIGHT-PICK / GEN-WEIGHT
 
-#|
+#| 
 The function WEIGHT-PICK returns an element selected at 
-random,  based on the weight value. The elements with 
-higher weight values are more likely to be selected.
+random, based on the weight value. The elements with 
+higher weight values are more likely to be selected. 
 |#
 
 (weight-pick '((a 4) (b 3) (c 7)) :seed 123)
@@ -35,11 +35,11 @@ higher weight values are more likely to be selected.
 
 ;;; GEN-WEIGHT
 
-#|
-The function GEN-WEIGHT  enables you to create rest lengths 
-in a list of note lengths. The :weight keyword allows you 
-to control the weighting between note and rest values 
-in relation to a sequence lengths.
+#| 
+The function GEN-WEIGHT  enables you to create rest 
+lengths  in a list of note lengths. The :weight keyword 
+allows you to control the weighting between note and rest 
+values in relation to a sequence lengths. 
 |#
 
 ;; 4 times more mp than ff
@@ -81,11 +81,11 @@ in relation to a sequence lengths.
 
 ;;; LENGTH-WEIGHT
 
-#|
+#| 
 The function LENGTH-WEIGHT enables you to create rest 
 lengths  in a list of note lengths. The :weight keyword 
 allows you to control the weighting between note and rest 
-values in relation to a sequence lengths.
+values in relation to a sequence lengths. 
 |#
 
 (setf len1 '(1/4 1/16 1/8 1/16 1/2 1/8 1/8 1/8 1/8))

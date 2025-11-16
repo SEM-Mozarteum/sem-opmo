@@ -32,6 +32,11 @@ spanned to the number of pitches.
            :length '(1/16)
            :articulation '(stacc)
            :span :pitch))
+#|
+'(s e4 mf stacc b5 stacc e5 stacc fs4 stacc bb4 stacc e5 
+stacc b5 stacc eb4 stacc a5 stacc g5 stacc b4 stacc g5 
+stacc gs4 stacc e5 stacc f5 stacc)
+|#
 
 ;; repeated articulations are extended:
 '((q e5 leg fs5 leg) (gs5 leg a5 cs6))
@@ -109,7 +114,7 @@ spanned to the number of pitches.
           collect 'leg
           else
           collect '-
-          ; for the last note collect -
+          ; for the last note collect "-"
           )))
            
 (setf mat2 
@@ -138,15 +143,15 @@ you can create a file 'User Attributes.lisp' in the Opusmodus
 'Extensions' folder:
 ~/Documents/Opusmodus/User Source/Extensions/
  - if it hasn't been created already. For attributes that are 
-specific for a certain composition, you might want to add your 
-custom attribute definitions, say, at the top of the file 
-generating that composition. To be able to add your own 
-attributes (playing techniques) to the system you need to add a 
-new list with two or three arguments to the existing list. 
-The first argument is a symbol (name) which you will use in the 
-omn-script, the second argument is a string (text) that will be 
-displayed in the score above the note. The third argument is an 
-optional attribute type.
+specific for a certain composition, you might want to add 
+your custom attribute definitions, say, at the top of the 
+file generating that composition. To be able to add your own 
+attributes (playing techniques) to the system you need to add
+a new list with two or three arguments to the existing list. 
+The first argument is a symbol (name) which you will use in 
+the omn-script, the second argument is a string (text) that 
+will be displayed in the score above the note. The third 
+argument is an optional attribute type.
 |#
 
 

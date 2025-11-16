@@ -11,7 +11,8 @@
 
 ;;; GEN-BROWNIAN-MOTION
 
-#|This function generates N samples of brownian motion. 
+#| 
+This function generates N samples of brownian motion. 
 Brownian motion, also called Brownian movement, any of 
 various physical phenomena in which some quantity is 
 constantly undergoing small, random fluctuations. 
@@ -21,7 +22,8 @@ direction for the random oscillations, then over a period
 of time the particles will tend to be spread evenly 
 throughout the medium. Brownian motion is also referred 
 to as 1/f² noise, which is also referred to as brown noise,
-a specific form of red noise.|#
+a specific form of red noise. 
+|#
 
 (list-plot (gen-brownian-motion 128)
            :zero-based t :point-radius 2 :join-points t)
@@ -36,11 +38,13 @@ a specific form of red noise.|#
 
 ;; brownian motion with lower and upper limit
 
-#| Drift is controlling the drift rate for the Brownian 
+#| 
+Drift is controlling the drift rate for the Brownian 
 motion. It's a deterministic component that continuously
  pushes the particle in one direction. If drift is positive, 
 the particle will tend to move upwards; if it's negative, 
-the particle will tend to move downwards.|#
+the particle will tend to move downwards. 
+|#
 (list-plot 
  (gen-brownian-motion 128 :drift 0.2 :seed 345)
  :zero-based t :point-radius 2 :join-points t :style :fill)
@@ -49,10 +53,12 @@ the particle will tend to move downwards.|#
  (gen-brownian-motion 128 :drift -0.2 :seed 234)
  :zero-based t :point-radius 2 :join-points t :style :fill)
 
-#| Amp scales the standard deviation of the random component 
+#| 
+Amp scales the standard deviation of the random component 
 of the motion, making the steps more or less random. Larger 
 values of amp will result in more drastic random movements 
-in the particle's position.|#
+in the particle's position. 
+|#
 (list-plot 
  (gen-brownian-motion 128 :amp 20 :seed 1234567)
  :zero-based t :point-radius 2 :join-points t :style :fill)
@@ -72,35 +78,39 @@ in the particle's position.|#
 
 ;; Mapping brownian result to pitches
 (pitch-list-plot
-(vector-to-pitch '(c3 c5) 
-                 (gen-brownian-motion 50 :seed 123))
+ (vector-to-pitch '(c3 c5) 
+                  (gen-brownian-motion 50 :seed 123))
  :point-radius 2 :join-points t :style :fill)    
 
+;; ----------------------------------------------------------
 
-;;; Example defun for brown noise
+;; Example defun for brown noise
 
 (defun brown-noise (num-samples &key (step 0.02))
   "Generate NUM-SAMPLES of brown noise.
-STEP is the maximum random change per sample."
-  (let ((x 0.0)
-        (samples (make-array num-samples)))
-    (dotimes (i num-samples samples)
-      ;; Generate white noise
-      (let ((w (- (random (* 2 step)) step))) 
-        ;; value between -step and +step
-        ;; Integration produces the 1/f² spectrum
-        (setf x (+ x w))
-        ;; Optional: soft clipping to limit drift
-        (when (> (abs x) 1.0)
-          (setf x (/ x (abs x))))
-        ;; Store the sample
-        (setf (aref samples i) x)))))
+STEP controls the maximum random step size."
+  (let ((x 0.0))
+    (loop
+       with samples = (make-array num-samples)
+       for i from 0 below num-samples
+       ;; white noise step in [-step, +step]
+       for w = (- (random (* 2 step)) step)
+       ;; value between -step and +step
+       do
+         ;; Integration produces the 1/f² spectrum
+         (setf x (+ x w))
+         ;; soft clipping to limit drift
+         (when (> (abs x) 1.0)
+           (setf x (/ x (abs x))))
+         ;; Store the sample
+         (setf (aref samples i) x)
+       finally (return samples))))
 
 ;; Example: show 50 samples
 (list-plot 
-(let ((noise (brown-noise 10000)))
+(let ((noise (brown-noise 1000)))
    (subseq noise 0 50))
- :zero-based t :point-radius 2 :join-points t)
+ :zero-based t :point-radius 2 :join-points t :style :fill)
 
  
 
