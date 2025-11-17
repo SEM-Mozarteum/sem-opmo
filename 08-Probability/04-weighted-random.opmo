@@ -7,10 +7,22 @@
 
 ;;; WEIGHTED RANDOM
 
+#|
+Weighted random is a method of selecting an item from a list 
+where each item has a different probability of being chosen. 
+Unlike a standard random selection where all items have an 
+equal chance, weighted randomness allows certain items to be 
+picked more frequently than others based on their assigned 
+"weight" or probability. 
+|#
+
 ;;; ---------------------------------------------------------
 
-;; weights: 10% = 1, 30%  = 3, 60% = 6
-;; 
+#|
+Weighted randomness can be achieved by randomly selecting 
+from a list with a different number of elements:
+list of 10 elements: weights: 10% = 1, 30%  = 3, 60% = 6 
+|#
 (setf weight-lst
       '(1 3 3 3 6 6 6 6 6 6))
 
@@ -18,29 +30,15 @@
 ;; e.g. (1 6 6 6 6 6 6 3 3 6 1 6 6 3 6 6 3 6 6 3)
 ;; see the  different results
 
-;;; ---------------------------------------------------------
-
-;;; WEIGHT-PICK / GEN-WEIGHT
-
-#| 
-The function WEIGHT-PICK returns an element selected at 
-random, based on the weight value. The elements with 
-higher weight values are more likely to be selected. 
-|#
-
-(weight-pick '((a 4) (b 3) (c 7)) :seed 123)
-;; => b
+;; example with pitches
+(rnd-sample 20 '(c4 c4 c4 c4 d4 d4 f4 g4 g4 g4) :seed 1234)
 
 ;;; ---------------------------------------------------------
 
 ;;; GEN-WEIGHT
 
-#| 
-The function GEN-WEIGHT  enables you to create rest 
-lengths  in a list of note lengths. The :weight keyword 
-allows you to control the weighting between note and rest 
-values in relation to a sequence lengths. 
-|#
+;; gen-weight can be used to generate lists based on a series 
+;; of probabilistic weightings.
 
 ;; 4 times more mp than ff
 (gen-weight 10 '((ff 1) (mp 4)) :seed 54)
@@ -52,12 +50,11 @@ values in relation to a sequence lengths.
              :seed 45)
  :style :axis :point-radius 2 :join-points nil)
 
-;; With OMN structures
+;; With OMN length structures
 (gen-weight 10 '(((5e = = = =) 4) ((h) 2)
                  ((e = s = = =) 1) ((q - q - e =) 2)))
 
-
-;; chords with weighted number of pitches
+;; chords with weighted number of pitches in a chord
 (setf weights (gen-weight 20 
                           '((1 5) (2 4) (3 3) (4 2) (5 1)) 
                           :seed 1234))
@@ -65,18 +62,16 @@ values in relation to a sequence lengths.
 (loop for i in weights
       with seed = (init-seed 34)  
       append (chordize (midi-to-pitch 
-                        (rnd-number i 60 80)))
-      finally (init-seed nil))
+                        (rnd-number i 60 80))))
 
-
+;; weight-pick is the same as gen-weight but returns one 
+;; element only
 (loop repeat 20
-      for w = (gen-weight 1 
-                          '((1 5) (2 4) (3 3) (4 2) (5 1))) 
-      collect (chordize
+      for w = (weight-pick '((1 5) (2 4) (3 3) (4 2) (5 1))) 
+      append (chordize
                (midi-to-pitch
-                (rnd-number (first w) 60 80))))
+                (rnd-number w 60 80))))
            
-
 ;;; ---------------------------------------------------------
 
 ;;; LENGTH-WEIGHT

@@ -1,12 +1,12 @@
 ("workspace-view/current"
- "09-Articulation/01-articulation.opmo"
+ "08-Probability/07-evolutionary.opmo"
 )
 
 ("workspace-view/history"
- (("06-Random/01-random.opmo" "01-random.opmo") ("04-Score/01-score.opmo" "01-score.opmo") ("04-Score/exercise-score.opmo" "exercise-score.opmo") ("05-Iteration/01-iteration.opmo" "01-iteration.opmo") ("05-Iteration/02.loop.opmo" "02.loop.opmo") ("03-Length/01-length.opmo" "01-length.opmo") ("06-Random/02-seed.opmo" "02-seed.opmo") ("06-Random/exercise1.opmo" "exercise1.opmo") ("03-Length/02-rest.opmo" "02-rest.opmo") ("03-Length/exercise-length.opmo" "exercise-length.opmo") ("07-Velocity/01-velocity.opmo" "01-velocity.opmo") ("07-Velocity/exercise-velocity.opmo" "exercise-velocity.opmo") ("12-Editing/01-editing.opmo" "01-editing.opmo") ("12-Editing/02-dictum.opmo" "02-dictum.opmo") ("08-Probability/01-random-walk.opmo" "01-random-walk.opmo") ("08-Probability/02-brownian-motion.opmo" "02-brownian-motion.opmo") ("08-Probability/03-group-random.opmo" "03-group-random.opmo") ("08-Probability/04-weighted-random.opmo" "04-weighted-random.opmo") ("08-Probability/05-markov-chains.opmo" "05-markov-chains.opmo") ("02-Pitch/01-pitch.opmo" "01-pitch.opmo") ("02-Pitch/02-interval.opmo" "02-interval.opmo") ("02-Pitch/03-frequency.opmo" "03-frequency.opmo") ("08-Probability/06-tendency.opmo" "06-tendency.opmo") ("09-Articulation/01-articulation.opmo" "01-articulation.opmo"))
+ (("06-Random/01-random.opmo" "01-random.opmo") ("04-Score/01-score.opmo" "01-score.opmo") ("04-Score/exercise-score.opmo" "exercise-score.opmo") ("05-Iteration/01-iteration.opmo" "01-iteration.opmo") ("05-Iteration/02.loop.opmo" "02.loop.opmo") ("03-Length/01-length.opmo" "01-length.opmo") ("06-Random/02-seed.opmo" "02-seed.opmo") ("06-Random/exercise1.opmo" "exercise1.opmo") ("03-Length/02-rest.opmo" "02-rest.opmo") ("03-Length/exercise-length.opmo" "exercise-length.opmo") ("07-Velocity/01-velocity.opmo" "01-velocity.opmo") ("07-Velocity/exercise-velocity.opmo" "exercise-velocity.opmo") ("12-Editing/01-editing.opmo" "01-editing.opmo") ("12-Editing/02-dictum.opmo" "02-dictum.opmo") ("08-Probability/01-random-walk.opmo" "01-random-walk.opmo") ("08-Probability/02-brownian-motion.opmo" "02-brownian-motion.opmo") ("08-Probability/03-group-random.opmo" "03-group-random.opmo") ("08-Probability/04-weighted-random.opmo" "04-weighted-random.opmo") ("08-Probability/05-markov-chains.opmo" "05-markov-chains.opmo") ("02-Pitch/01-pitch.opmo" "01-pitch.opmo") ("02-Pitch/02-interval.opmo" "02-interval.opmo") ("02-Pitch/03-frequency.opmo" "03-frequency.opmo") ("08-Probability/06-tendency.opmo" "06-tendency.opmo") ("09-Articulation/01-articulation.opmo" "01-articulation.opmo") ("08-Probability/07-evolutionary.opmo" "07-evolutionary.opmo"))
 )
 
 ("workspace-view/layout-ratios"
- (1 (OM-CAPI::MAIN 423 NIL 598) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 787 NIL 97))
+ (1 (OM-CAPI::MAIN 423 NIL 1021) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 954 NIL 97))
 )
 

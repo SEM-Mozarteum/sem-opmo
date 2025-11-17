@@ -31,25 +31,32 @@ list's content and length.
 (gen-group '(c4 d4 e4 g4 a4)
 	           :size 8 :group 4)
 
-;; :unison value of '(2) = 2 groups of unisons
-;; With 5 sublists it's 2:3
-;; evaluated with cmd-2
-(make-omn
- :pitch (gen-group '(c4 d4 e4 g4 a4) :unison '(2) :seed 1234)
- :length '(1/4)
- :span :pitch)
-
-;; Therefore with a :unison value of '(1), all four groups 
-;; will output in :unison. 
+#|
+The :unison keyword defines, how many elements in the 
+resulting lists are maximal in unison. Therefore with a 
+:unison value of '(1), all four groups will output in unison. 
+|#
 (make-omn
  :pitch (gen-group '(c4 d4 e4 g4 a4) :unison '(1) :seed 1234)
  :length '(1/4)
  :span :pitch)
 
+#|
+;; With a :unison value of '(2), two groups of unisons are 
+generated (with 5 sublists in this case, the proportion of
+equal pitches it's 2:3)
+|#
+;; evaluate with cmd-2 and compare each vertical row
+(make-omn
+ :pitch (gen-group '(c4 d4 e4 g4 a4) :unison '(2) :seed 1234)
+ :length '(1/16)
+ :span :pitch)
+
 ;; The number of unisons can randomly vary.
 (make-omn
- :pitch (gen-group '(c4 d4 e4 g4 a4) :unison '(3 4) :seed 1234)
- :length '(1/4)
+ :pitch (gen-group '(c4 d4 e4 g4 a4) 
+                   :unison '(3 4) :seed 1234)
+ :length '(1/16)
  :span :pitch)
 
 ;; A :unison value with the same size as the number 
@@ -92,17 +99,17 @@ list's content and length.
    :sound 'gm :program 0))
 
 (display-musicxml 'group1)
-(display-midi (compile-score 'group1))
 
 ;;; ---------------------------------------------------------
 
 ;;;  GEN-UNISON
 
 #|
-The function GEN-UNISON will generate series of groups based on the random distribution of values from a list. With an :unison value of (1), all four groups will output in unison.
+The function GEN-UNISON will generate series of groups based 
+on the random distribution of values from a list. With an 
+:unison value of (1), all four groups will output in unison.
 |#
 
-(progn
 (setf pitches (gen-unison
  (list
   (rnd-order '(c5 cs4 d4 ds4 c5 cs4 d4 ds4))
@@ -141,7 +148,5 @@ The function GEN-UNISON will generate series of groups based on the random distr
    :omn mat3
    :program 'violin
    :sound 'gm :program 0))
-)
 
 (display-musicxml 'group2)
-(display-midi (compile-score 'group2))

@@ -32,48 +32,55 @@ The function rnd-variance controls the variance calculated
 with the equation (+/- value (* value (/ variance 2)))
 |#
 (loop repeat 1000 
-        collect (rnd-variance 3 1) into reslis
+        collect (rnd-variance 3.0 1.0) into reslis
         finally (return 
                  (list (apply 'min reslis) 
                        (apply 'max reslis))))
-;; around 1.5 and 4.5
+;; around 1.5 and 4.5, should be around 2 and 4
 
 ;; With :variance 0 its the original envelope:
-(list-plot
+(setf tend-0 (list-plot
  (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
                :variance 0)
  :join-points t
- :point-radius 2)
+ :point-radius 2))
 
-;; With :variance 0.5:
-(setf tend-var
+;; With :variance 0.3:
+(setf tend-0.3
       (list-plot
  (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
                :variance 0.3)
  :join-points t
  :point-radius 2))
 
-;; With :variance 3:
+;; With :variance 1:
+(setf tend-1
 (list-plot
  (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
-               :variance 3)
+               :variance 1)
  :join-points t
+ :point-radius 2))
+
+;; see all three together
+(list-plot (list tend-0 tend-0.2 tend-1)
+            :join-points t
  :point-radius 2)
 
 ;; With :variance 0.5 above (compared to normal with 
-;; 0.5 variance
+;; 0.3 around variance
 (list-plot
- (list tend-var
- (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
+ (list tend-0.3
+ (setf tend-above 
+       (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
                :variance 0.5 
-               :type :above))
+               :type :above)))
  :join-points t
  :point-radius 2)
 
-;; With :variance 0.5 below (compared to normal with 
-;; 0.5 variance
+;; With additional :variance 0.5 below (compared to normal 
+;; with 0.3 around variance
 (list-plot
- (list tend-var
+ (list tend-0.3 tend-above
  (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
                :variance 0.5 
                :type :below))
@@ -95,8 +102,7 @@ with the equation (+/- value (* value (/ variance 2)))
   (setf durs (vector-to-length '1/16 1 4 tendency))
   (setf mat1 (make-omn
               :pitch pitches
-              :length durs))
-  )
+              :length durs)))
 
 ;;; ---------------------------------------------------------
 
@@ -119,62 +125,23 @@ with the equation (+/- value (* value (/ variance 2)))
 
 ;;; ---------------------------------------------------------
 
-;;; Tendency mask with undocumented envelope function
+(setf data (list-plot (gen-brownian-motion 128 :seed 43)
+                      :zero-based t 
+                      :point-radius 2 
+                      :join-points t))
+(setf len (length data))
 
-(progn
-  (init-seed 123)
-  (list-plot
-   (setf upper-env 
-         (second
-          (matrix-transpose 
-           (gen-divide 2
-                       (envelope-exp  
-                        '(0 10  1 15  3 12  5 17  6 11  8 20) 1 20)))))
-   :join-points t 
-   :zero-based t
-   :point-radius 3)
+(setf l-limit (envelope-samples 
+               '(0 0 1 -1 2 -1 3 -2 4 3 5 -1 6 0) len))
+(setf u-limit (envelope-samples 
+               '(0 1 1 4 2 2 3 4 6 4) len))
 
-  (setf lower-env 
-        (second
-         (matrix-transpose 
-          (gen-divide 2
-                      (envelope-exp 
-                       '(0 9  2 5  3 7  5 3  6 8  7 1) 1 20)))))
+(xy-plot (list l-limit u-limit) :join-points t)
 
-  (list-plot (list upper-env lower-env
-                   (loop for i in upper-env
-                         for j in lower-env
-                         append (rnd-number 1 j i)))
-             :join-points t 
-             :zero-based t)
-  (init-seed nil)
-  )
-
-(progn
-  (init-seed 123)
-  (list-plot
-   (setf upper-env 
-         (second
-          (matrix-transpose 
-           (gen-divide 2
-                       (envelope-exp  
-                        '(0 10  1 15  3 12  5 17  6 11  8 20) 1 20)))))
-   :join-points t 
-   :zero-based t
-   :point-radius 3)
-
-  (setf lower-env 
-        (second
-         (matrix-transpose 
-          (gen-divide 2
-                      (envelope-exp 
-                       '(0 9  2 5  3 7  5 3  6 8  7 1) 1 20)))))
-
-  (list-plot (list upper-env lower-env
-                   (loop for i in upper-env
-                         for j in lower-env
-                         append (rnd-number 1 j i)))
-             :join-points t 
-             :zero-based t)
-  (init-seed nil)
-  )
+(list-plot
+ (list tend-0.3 tend-above
+ (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
+               :variance 0.5 
+               :type :below))
+ :join-points t
+ :point-radius 2)
