@@ -106,7 +106,10 @@ with the equation (+/- value (* value (/ variance 2)))
 
 ;;; ---------------------------------------------------------
 
-;;; Tendency with gen-transisiton
+;;; Tendency with GEN-TRANSITION
+
+;; gen-transitions takes the arguments: 
+;; number of values, start, end, curve.
 
 ;; upper limit of random numbers
 (defparameter  upper
@@ -125,23 +128,37 @@ with the equation (+/- value (* value (/ variance 2)))
 
 ;;; ---------------------------------------------------------
 
+;;; GEN-ENVELOPE-TRANSITION
+
 (setf data (list-plot (gen-brownian-motion 128 :seed 43)
                       :zero-based t 
                       :point-radius 2 
                       :join-points t))
+
 (setf len (length data))
 
+;; envelope consists of x/y pairs
 (setf l-limit (envelope-samples 
                '(0 0 1 -1 2 -1 3 -2 4 3 5 -1 6 0) len))
 (setf u-limit (envelope-samples 
                '(0 1 1 4 2 2 3 4 6 4) len))
 
+;; compare envelope and sampled envelope
+(xy-plot
+ (list '(0 0 1 -1 2 -1 3 -2 4 3 5 -1 6 0)
+       l-limit)
+ :join-points t :point-radius 2)
+
+;; upper and lower limit
 (xy-plot (list l-limit u-limit) :join-points t)
 
+(setf xll (second (matrix-transpose (pair-up l-limit))))
+(setf xul (second (matrix-transpose (pair-up u-limit))))
+
+(setf adj (gen-envelope-tendency data l-limit u-limit 
+                                 :seed 12))
+
 (list-plot
- (list tend-0.3 tend-above
- (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
-               :variance 0.5 
-               :type :below))
+ (list xll adj xul)
  :join-points t
  :point-radius 2)

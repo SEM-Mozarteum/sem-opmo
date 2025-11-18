@@ -78,7 +78,7 @@ list of 10 elements: weights: 10% = 1, 30%  = 3, 60% = 6
 
 #| 
 The function LENGTH-WEIGHT enables you to create rest 
-lengths  in a list of note lengths. The :weight keyword 
+lengths in a list of note lengths. The :weight keyword 
 allows you to control the weighting between note and rest 
 values in relation to a sequence lengths. 
 |#
@@ -87,16 +87,17 @@ values in relation to a sequence lengths.
 
 (length-weight len1) ; 50/50 %
 
+;; 3 times more notes than rests
 (length-weight len1 :weight '(3 1) :seed 54)
 ;;  (-1/4 1/16 1/8 -1/16 1/2 1/8 1/8 1/8 1/8)
 
+;; see with cmd-2
 (append
 (length-weight '((q c4 d4 e4 f4 g4 a4 b4)
                  (q c4 d4 e4 f4 g4 a4 b4))
                :weight '((3 1) (5 2))
                :seed 52)
  (list '(q c4 d4 e4 f4 g4 a4 b4)))
-
 ;; ((-q - e4 f4 - a4 b4) (-q - e4 f4 - - b4)
 
 ;;; ---------------------------------------------------------
@@ -130,7 +131,6 @@ values in relation to a sequence lengths.
    :join-points t :point-radius 2 :style :axis)
   "Extracting and rounding probabilities (y-values) from env.")
      
-
 (defparameter weight-pitch
   (flatten
    (loop for i in gliss-prob

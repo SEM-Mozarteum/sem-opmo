@@ -32,6 +32,7 @@ rest probability, same as being stationary.
            :style :axis :join-points t)
 
 ;; also with pitches from a specific start point
+;; image is saved on disk
 (pitch-list-plot
  (setf pitch (gen-walk 64 :start 'c4 :seed 234))
  :join-points t :file "~/Desktop/pitch-plot.png")
@@ -39,10 +40,10 @@ rest probability, same as being stationary.
 ;; The probability to move forward (up) is bigger 
 ;; than going backward (down).
 (setf pitch (gen-walk 64 
-                      :step '(1 2) 
+                      :step '(1 2) ; stepsize random 
                       :backward 0.3 
                       :forward 0.7
-                      :start 'c4 
+                      :start 'c4 ; start pitch
                       :seed 234))
 
 (make-omn :pitch pitch

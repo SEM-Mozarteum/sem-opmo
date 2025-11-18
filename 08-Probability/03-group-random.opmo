@@ -24,18 +24,16 @@ list's content and length.
 ;; All numbers have the same probability
 (gen-group '(0 1 2 3 4))
 
-;; See the difference with the following group
-(gen-group '(0 1 2 3 4) :seed 123)
-
 ;; Set the number and size of groups
 (gen-group '(c4 d4 e4 g4 a4)
-	           :size 8 :group 4)
+	           :size 8 :group 4 :seed 234)
 
 #|
 The :unison keyword defines, how many elements in the 
 resulting lists are maximal in unison. Therefore with a 
 :unison value of '(1), all four groups will output in unison. 
 |#
+;; evaluate with cmd-2 and compare each vertical row
 (make-omn
  :pitch (gen-group '(c4 d4 e4 g4 a4) :unison '(1) :seed 1234)
  :length '(1/4)
@@ -46,7 +44,6 @@ resulting lists are maximal in unison. Therefore with a
 generated (with 5 sublists in this case, the proportion of
 equal pitches it's 2:3)
 |#
-;; evaluate with cmd-2 and compare each vertical row
 (make-omn
  :pitch (gen-group '(c4 d4 e4 g4 a4) :unison '(2) :seed 1234)
  :length '(1/16)
@@ -58,6 +55,8 @@ equal pitches it's 2:3)
                    :unison '(3 4) :seed 1234)
  :length '(1/16)
  :span :pitch)
+
+;;; Score example
 
 ;; A :unison value with the same size as the number 
 ;; of groups will generate a series of highly 
@@ -116,8 +115,9 @@ on the random distribution of values from a list. With an
   (rnd-order '(e4 f4 g4 gs4 c5 cs4 d4 ds4))
   (rnd-order '(a4 as4 b4 c5 a4 as4 b4 c5))
   (rnd-order '(cs5 d5 ds5 e5 cs5 d5 ds5 e5)))
- :unison '(1 2 3 4 4 3 2 1)))
+ :unison '(1 2 3 4 4 3 2 1) :seed 123))
 
+;; see with cmd-2
 (setf mat (make-omn 
             :pitch pitches
             :length '(1/8)

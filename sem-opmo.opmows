@@ -1,5 +1,5 @@
 ("workspace-view/current"
- "08-Probability/07-evolutionary.opmo"
+ "07-Velocity/01-velocity.opmo"
 )
 
 ("workspace-view/history"
@@ -7,6 +7,6 @@
 )
 
 ("workspace-view/layout-ratios"
- (1 (OM-CAPI::MAIN 423 NIL 1021) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 954 NIL 97))
+ (1 (OM-CAPI::MAIN 236 NIL 610) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 787 NIL 97))
 )
 

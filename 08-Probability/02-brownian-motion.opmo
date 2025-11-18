@@ -41,12 +41,12 @@ a specific form of red noise.
 #| 
 Drift is controlling the drift rate for the Brownian 
 motion. It's a deterministic component that continuously
- pushes the particle in one direction. If drift is positive, 
+pushes the particle in one direction. If drift is positive, 
 the particle will tend to move upwards; if it's negative, 
 the particle will tend to move downwards. 
 |#
 (list-plot 
- (gen-brownian-motion 128 :drift 0.2 :seed 345)
+ (gen-brownian-motion 128 :drift 0.05 :seed 123)
  :zero-based t :point-radius 2 :join-points t :style :fill)
 
 (list-plot 
@@ -59,8 +59,11 @@ of the motion, making the steps more or less random. Larger
 values of amp will result in more drastic random movements 
 in the particle's position. 
 |#
+
 (list-plot 
- (gen-brownian-motion 128 :amp 20 :seed 1234567)
+ (list
+  (gen-brownian-motion 128 :amp 2 :seed 1234567)
+  (gen-brownian-motion 128 :amp 3 :seed 1234567))
  :zero-based t :point-radius 2 :join-points t :style :fill)
 
 ;; Map the values between a lower and an upper limit
@@ -84,7 +87,7 @@ in the particle's position.
 
 ;; ----------------------------------------------------------
 
-;; Example defun for brown noise
+;;; Example defun for brown noise
 
 (defun brown-noise (num-samples &key (step 0.02))
   "Generate NUM-SAMPLES of brown noise.

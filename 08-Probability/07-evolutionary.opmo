@@ -11,15 +11,21 @@
 
 ;;; GEN-MUTATE
 
+#|
+GEN-MUTATE returns a random element from a list and 
+mutates randomly to a given mutation probability.
+The function is modelled after the Darwinian evolutionary 
+theory.
+|#
+
 ;;; ---------------------------------------------------------
 ;;; Random operation of mutation type not clear!!!
 ;;; Deviation or Replacement?
 ;;; ---------------------------------------------------------
 
-;; GEN-MUTATE returns a random element from a list and 
-;; mutates randomly to a given mutation probability.
-
+;; first population
 (setf lst (rndn 3 :seed 345))
+;; '(0.10542764 0.43240792 0.72332895)
 
 ;; Calculate 24 mutation lists
 ;; The default count of mutations is 1, therefore up to
@@ -27,20 +33,18 @@
 (setf mut-lists (gen-mutate 12 lst :seed 123))
 
 #|
-(
-(0.10542764 0.43240792 0.72332895) 
-(0.10542764 0.43240792 0.72332895) 
-(0.71371884 0.43240792 0.72332895) 
-(0.71371884 0.43240792 0.72332895) 
-(0.71371884 0.43240792 0.72332895) 
-(0.71371884 0.43240792 0.72332895) 
-(0.71371884 0.15850497 0.72332895) 
-(0.71371884 0.15850497 0.80816484) 
-(0.82697636 0.15850497 0.80816484) 
-(0.82697636 0.15850497 0.80816484) 
-(0.82697636 0.15850497 0.80816484) 
-(0.7484988  0.15850497 0.80816484)
-)
+((0.10542764 0.43240792 0.72332895) 
+ (0.10542764 0.43240792 0.72332895) 
+ (0.71371884 0.43240792 0.72332895) 
+ (0.71371884 0.43240792 0.72332895) 
+ (0.71371884 0.43240792 0.72332895) 
+ (0.71371884 0.43240792 0.72332895) 
+ (0.71371884 0.15850497 0.72332895) 
+ (0.71371884 0.15850497 0.80816484) 
+ (0.82697636 0.15850497 0.80816484) 
+ (0.82697636 0.15850497 0.80816484) 
+ (0.82697636 0.15850497 0.80816484) 
+ (0.7484988  0.15850497 0.80816484))
 |#
 
 ;; flatten the mut-lists to apply the pitches to one vector
@@ -70,47 +74,42 @@
 
 ;;; GEN-POPULATION / GEN-MUTATE-POPULATION
 
-;;; ---------------------------------------------------------
-;;; Random operation of mutation type not clear!!!
-;;; Deviation or Replacement?
-;;; ---------------------------------------------------------
-
 #|
 GEN-POPULATION returns a random population with n floating
-point numbers between 0 and 1. Each list will contain a number 
-of elements between low and high.
+point numbers between 0 and 1. Each list will contain a 
+number of elements between low and high.
 |#
 
 ;; 5 generations of lengths between 3 and 7
 (setf population (gen-population 5 3 7 :seed 56))
 
 #|
-(
-(0.9078272 0.05199222 0.95386976 0.5921951 0.93476516) ; 5
-(0.19755595 0.18478737 0.18754587 0.2855475 0.4052874) ; 5
-(0.6416326 0.86454636 0.3624713 0.95245344 0.33112416 
-0.49055362) ; 6 
-(0.76038296 0.25854617 0.27156326 0.36454925) ; 4
-(0.17618607 0.38432425 0.37086514 0.33166522)) ; 4
+((0.9078272 0.05199222 0.95386976 0.5921951 0.93476516) ; 5
+ (0.19755595 0.18478737 0.18754587 0.2855475 0.4052874) ; 5
+ (0.6416326 0.86454636 0.3624713 0.95245344 0.33112416 
+  0.49055362) ; 6 
+ (0.76038296 0.25854617 0.27156326 0.36454925) ; 4
+ (0.17618607 0.38432425 0.37086514 0.33166522)) ; 4
 |#
 
-;; The GEN-MUTATE-POPULATION function will randomly select 
-;; some of the populations to be mutated. This function takes 
-;; a population in the form of a list of lists.
-;; The probability is the likelyness of the list to mutate.
+#|
+The GEN-MUTATE-POPULATION function will randomly select 
+some of the populations to be mutated. This function takes 
+a population in the form of a list of lists.
+The probability is the likelyness of the list to mutate.
+|#
+
 (setf mutation2 (gen-mutate-population
                 population :prob 0.2 :seed 34))
 
 #|
-(
-(0.9078272 0.05199222 0.95386976 0.5921951 0.93476516) 
-(0.19755595 0.18478737 0.18754587 0.2855475 0.4052874) 
-(0.3392996 0.86454636 0.3624713 0.95245344 0.33112416 
-0.49055362) 
-;; row 3: first number mutated
-(0.76038296 0.25854617 0.27156326 0.36454925) 
-(0.17618607 0.38432425 0.37086514 0.33166522)
-)
+((0.9078272 0.05199222 0.95386976 0.5921951 0.93476516) 
+ (0.19755595 0.18478737 0.18754587 0.2855475 0.4052874) 
+ (0.3392996 0.86454636 0.3624713 0.95245344 0.33112416 
+  0.49055362) 
+;; only row 3, first number mutated
+ (0.76038296 0.25854617 0.27156326 0.36454925) 
+ (0.17618607 0.38432425 0.37086514 0.33166522))
 |#
 
 ;; The count is the number of populations which can mutate 
@@ -121,18 +120,16 @@ of elements between low and high.
                              :seed 1234))
 
 #|
-(
-(0.9078272 0.05199222 0.95386976 0.5921951 0.44780603) 
-; last number 
-(0.19755595 0.18478737 0.23864259 0.2855475 0.4052874) 
-; third number
-(0.46458408 0.86454636 0.3624713 0.95245344 0.33112416 
-0.49055362) 
-; first number 
-(0.6103702 0.25854617 0.27156326 0.41215798) 
-; first and last number 
-(0.17618607 0.38432425 0.37086514 0.33166522)
-)
+((0.9078272 0.05199222 0.95386976 0.5921951 0.44780603) 
+;; last number 
+ (0.19755595 0.18478737 0.23864259 0.2855475 0.4052874) 
+;; third number
+ (0.46458408 0.86454636 0.3624713 0.95245344 0.33112416 
+  0.49055362) 
+;; first number 
+ (0.6103702 0.25854617 0.27156326 0.41215798) 
+;; first and last number 
+ (0.17618607 0.38432425 0.37086514 0.33166522))
 |#
 
 ;; flatten is used to make it visible in list-plot
@@ -207,6 +204,6 @@ of elements between low and high.
 ;; => ((f p p mp pp p) (p f f mf ff))
 
 ;; and also with OM notation
-(gen-crossover
- '(e = = = q =) '(s = = = e s = h) :seed 34)
-;; => ((e = = h) (s = = = e s = e q =))
+(gen-loop 5 (gen-crossover
+             '(e = = = q =) '(s = = = e s = h)) 
+          :seed 34)
