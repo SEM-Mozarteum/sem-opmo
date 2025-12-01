@@ -18,7 +18,7 @@ Articulation is a text attribute attached to a note:
 
 ;; make some pitches
 (setf pitches (midi-to-pitch 
-               (rnd-number 15 60 84 :seed 89)))
+               (rndn 15 60 84 :seed 89)))
 
 #|
 the make-omn has the keyword :span to automatically span
@@ -29,9 +29,12 @@ spanned to the number of pitches.
 
 (setf mat (make-omn
            :pitch pitches
-           :length '(1/16)
+           :length '(1/16) 
+           ;; must be a quoted list to be spanned
+           ;; quoting prevents from beeing evaluated as
+           ;; function or variable
            :articulation '(stacc)
-           :span :pitch))
+           :span :pitch)) ; spanned to number of pitches
 #|
 '(s e4 mf stacc b5 stacc e5 stacc fs4 stacc bb4 stacc e5 
 stacc b5 stacc eb4 stacc a5 stacc g5 stacc b4 stacc g5 
@@ -43,7 +46,7 @@ stacc gs4 stacc e5 stacc f5 stacc)
 ;; same as the dynamics
 '(p< < < < mf pp< < ff)
 
-;; An example with articulations
+;; An example with articulationa, 4 measures
 (setf pitches 
       '((e4 b5 e5) 
         (fs4 bb4 e5 b5) 
@@ -51,12 +54,13 @@ stacc gs4 stacc e5 stacc f5 stacc)
         (gs4 e5 f5)))
 
 ;; get sum of al lengths
+;; mclength collects all lengths in one list
 (setf pitch-numb-sum (sum (mclength pitches)))
       
 (setf velocities
       (velocity-to-dynamic
        (get-velocity
-        (rnd-number pitch-numb-sum 0.27 0.85 
+        (rndn pitch-numb-sum 0.27 0.85 
                     :seed 123)
         :type :symbol)))
 
@@ -64,10 +68,11 @@ stacc gs4 stacc e5 stacc f5 stacc)
            :pitch pitches
            :length '(1/16)
            :velocity velocities
-           :articulation '(stacc+ten) ; combined articulations
+           :articulation '(stacc+ten) 
+           ;; combined articulations
            :span :pitch))
 
-;; To merge several attributes use merge-attributes
+;; To merge several attribute lists use merge-attributes
 (merge-attributes
  '(stacc - stacc - - marc - - -)
  '(- - marc - - marc - - -)
@@ -78,7 +83,7 @@ stacc gs4 stacc e5 stacc f5 stacc)
 ;; Seperate attributes
 (disjoin-attributes 'leg+ponte) ; => (leg ponte)
 
-;; pedals are articulations as well
+;; Pedals are articulations as well
 (setf sequence 
       '((s eb6 p< leg f5 < leg c5 < leg f5 <)
         (s bb3 stacc a3 mp ped g3 ped a3 f ped c4 ped h f4)))
@@ -88,43 +93,49 @@ stacc gs4 stacc e5 stacc f5 stacc)
 
 (progn 
   ;; evaluate all expressions in between one after the other
-(setf pitches2 
-      '((b4 fs5 e3 a5) (e5 b5 c4) (g5 a4 ds3 d4) (c6 b5 a4) 
-        (c5 eb5 gs4) (b4 f5 f5 fs5 gs5 a5) (cs4 g4 c6) (gs5)))
+  (setf pitches2 
+        '((b4 fs5 e3 a5) 
+          (e5 b5 c4) 
+          (g5 a4 ds3 d4) 
+          (c6 b5 a4)      
+          (c5 eb5 gs4) 
+          (b4 f5 f5 fs5 gs5 a5) 
+          (cs4 g4 c6) 
+          (gs5)))
 
-;; get lengths of all sublists
-(setf pitch-numb2 (mclength pitches2))
+  ;; get lengths of all pitch sublists
+  (setf pitch-numb2 (mclength pitches2))
 
-;; sum ot all pitches
-(setf pitch-sum (length (flatten pitches2)))
+  ;; sum ot all pitches
+  (setf pitch-sum (length (flatten pitches2)))
 
-;; collect lengths for each pitch list
-(setf lengths2 
-      (loop for i in pitch-numb2
-        collect (gen-repeat i '(1/8))))
+  ;; collect 1/8 notes for each pitch list
+  (setf lengths2 
+        (loop for i in pitch-numb2
+              collect (gen-repeat i '(1/8))))
 
-;; automatic legato bows
-(setf articulations2 
-      (loop for i in pitches2 collect
+  ;; automatic legato bows
+  (setf articulations2 
+        (loop for i in pitches2 collect
         ; loop over all measures
-        (loop for x from 1 to (length i)
+                (loop for x from 1 to (length i)
           ; loop over all notes in each measure
-          if (not (= x (length i)))
-          ; if its not the last note
-          collect 'leg
-          else
-          collect '-
-          ; for the last note collect "-"
-          )))
+                      if (not (= x (length i)))
+          ; if its not the last note of the measure
+                        collect 'leg
+                      else
+                        collect '-
+          ; for the last note collect "-" to end the slur
+                          )))
            
-(setf mat2 
-      (make-omn 
-       :pitch pitches2
-       :length lengths2
-       :articulation articulations2))
+  (setf mat2 
+        (make-omn 
+         :pitch pitches2
+         :length lengths2
+         :articulation articulations2))
 
-(flatten mat2) ; to ignore the predefined measures
-)
+  (flatten mat2) ; to ignore the predefined measures
+  )
 
 ;;; ---------------------------------------------------------
 

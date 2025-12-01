@@ -28,11 +28,12 @@ a specific form of red noise.
 (list-plot (gen-brownian-motion 128)
            :zero-based t :point-radius 2 :join-points t)
 
-;; specify the starting point around (!) 0.5
+;;; why the brownian motions start "around" 0.5
 (list-plot (gen-brownian-motion 40 :start 0.5)
            :zero-based t :point-radius 2 :join-points t)
 
 ;; 40 different brownian motions
+;;; why there are 4 groups of motions?
 (list-plot (gen-loop 40 (gen-brownian-motion 128) :seed 1234)
             :zero-based t :point-radius 0.1 :join-points t)
 
