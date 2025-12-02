@@ -44,8 +44,9 @@ event. In a second order Markov process the probabilities
 for the next selection depend on the last two events.
 |#
 
-(gen-markov '(ds4 a4 b4 f4 ds4 e4 as4 e4 d4 ds4 d4 e4 f4
-                fs4 g4 cs4 d4 as4 b4 c4 b4 b4 cs4 d4 cs4 d4)
+;; "Brother John" as Marcov input
+(gen-markov '(c4 d4 e4 c4 c4 d4 e4 c4 e4 f4 g4 e4 f4 g4 g4
+                 a4 g4 f4 e4 c4 g4 a4 g4 f4 e4 c4 c4 g3 c4) 
               :level 2)
 
 ;; When multiple lists are provided, each one will be 
@@ -89,8 +90,9 @@ can be stored and use to generate Markov chains.
       (gen-markov-transitions
        '(c4 d4 c4 c4 d4 e4 f4 f4 d4 g4 c4 f4 c4 g4) :level 2))
 #|
-=>
-(((c4 d4) (e4 1) (c4 1)) 
+(((c4 d4) (e4 1) (c4 1))
+ ;; combination of c4 d4 leads with 
+ ;; equal probability to e4 or c4
  ((d4 c4) (c4 1)) 
  ((c4 c4) (d4 1)) 
  ((d4 e4) (f4 1)) 

@@ -28,17 +28,22 @@
 (integer-to-pitch (ambitus-instrument 'vibraphone))
 
 #|
-Diese Funktion filtert Tonhöhen, Velocities und Artikulationen 
-aus der Sequenz heraus, die außerhalb des vorgegebenen Ambitus liegen. 
-Die Länge der entfernten Tonhöhe wird in die Restlänge invertiert. 
-Die Spanne der Sequenz bleibt unverändert.
+This function filters pitches, velocities and articulations
+from a sequence, that are outside of a specified ambitus.
+The length of the removed pitches will be converted to
+rest lengths. The span of the sequence therefore stays
+unaltered.
 |#
 (ambitus-filter 'vibraphone pitches)
 
-#|
-LENGTH-LEGATO inverts length-rests to a length-note and 
-adds the sum of the rests in sequence to the previous length-note.
-|#
+
+;;; ---------------------------------------------------------
+
+;;; length-legato
+
+;; length-legato inverts length-rests to a length-note and adds
+;; the sum of the rests in sequence to the previous length-note.
+
 (length-legato (ambitus-filter 'violoncello pitches))
 
 ;; Filter pitches for piano notation
@@ -86,10 +91,12 @@ adds the sum of the rests in sequence to the previous length-note.
 
 ;;; filter-events
 
-#| The function FILTER-EVENTS checks whether an event contains 
+#| 
+The function FILTER-EVENTS checks whether an event contains 
 the given element. When an element is found the event is 
 returned. All other events are transformed into rests. 
-The option remain will invert the process. |#
+The option remain will invert the process. 
+|#
 
 (filter-events 'd4 '(e c4 mp -e fermata e. d4 -h e. c4 e e4))
 ;; => (-q e. d4 mp -h.s)

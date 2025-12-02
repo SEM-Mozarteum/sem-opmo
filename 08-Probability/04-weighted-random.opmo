@@ -51,7 +51,7 @@ list of 10 elements: weights: 10% = 1, 30%  = 3, 60% = 6
  :style :axis :point-radius 2 :join-points nil)
 
 ;; With OMN length structures
-(gen-weight 10 '(((5e = = = =) 4) ((h) 2)
+(gen-weight 10 '(((5q = = = =) 4) ((h) 2)
                  ((e = s = = =) 1) ((q - q - e =) 2)))
 
 ;; chords with weighted number of pitches in a chord
@@ -64,8 +64,8 @@ list of 10 elements: weights: 10% = 1, 30%  = 3, 60% = 6
       append (chordize (midi-to-pitch 
                         (rnd-number i 60 80))))
 
-;; weight-pick is the same as gen-weight but returns one 
-;; element only
+;; weight-pick is the same as gen-weight 
+;; but returns one element only
 (loop repeat 20
       for w = (weight-pick '((1 5) (2 4) (3 3) (4 2) (5 1))) 
       append (chordize
