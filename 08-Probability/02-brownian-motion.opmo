@@ -9,7 +9,7 @@
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-BROWNIAN-MOTION
+;;; gen-brownian-motion
 
 #| 
 This function generates N samples of brownian motion. 
@@ -34,7 +34,7 @@ a specific form of red noise.
 
 ;; 40 different brownian motions
 ;;; why there are 4 groups of motions?
-(list-plot (gen-loop 40 (gen-brownian-motion 128) :seed 1234)
+(list-plot (gen-loop 30 (gen-brownian-motion 128))
             :zero-based t :point-radius 0.1 :join-points t)
 
 ;; brownian motion with lower and upper limit

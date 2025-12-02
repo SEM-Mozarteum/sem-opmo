@@ -19,7 +19,7 @@ velocity range is from 0–127, with 127 being the loudest).
 
 ;;; ---------------------------------------------------------
 
-;;; GET-VELOCITY
+;;; get-velocity
 
 ;; The are 12 dynamic symbols in Opusmodus by default
 (get-velocity '(pppp ppp pp p mp mf f ff fff ffff))
@@ -36,13 +36,13 @@ velocity range is from 0–127, with 127 being the loudest).
 ;; => (ppppp pppp ppp pp p mp mf f ff fff ffff fffff)
 
 ;; 10 random velocity values between 0.01 and 1.0
-(get-velocity (rnd-number 10 0.01 1 :seed 123) :type :symbol) 
+(get-velocity (rndn 10 0.01 1 :seed 123) :type :symbol) 
 ;; The values are rounded to fit the appropriate dynamic 
 ;; symbol: => (p fffff mp pppp fffff mf pp mf p fffff)
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-CRESC / GEN-DIM /  GEN-CRESC-DIM
+;;; gen-cresc / gen-dim / gen-cresc-dim
 
 ;; Make a crescendo from pp to f in 7 steps
 (gen-cresc 7 'pp 'f) ; => (pp p p mp mf mf f)
@@ -69,9 +69,9 @@ velocity range is from 0–127, with 127 being the loudest).
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-DYNAMIC
+;;; gen-dynamic
 
-;; Gen-dynamic generates a dynamic (crescendo and diminuendo) 
+;; gen-dynamic generates a dynamic (crescendo and diminuendo) 
 ;; over a given number of steps (count).
 
 (gen-dynamic '(3 1) '(p f))
@@ -124,10 +124,10 @@ velocity range is from 0–127, with 127 being the loudest).
 
 ;;; ---------------------------------------------------------
 
-;;; OMN EXAMPLE
+;;; OMN example
 
 ;; Make random numbers
-(setf vel (rnd-number 16 0.1 0.8 :seed 3))
+(setf vel (rndn 16 0.1 0.8 :seed 3))
 
 ;; Convert them to dynamics
 (setf vel1 (get-velocity vel :type :symbol))

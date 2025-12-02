@@ -9,10 +9,10 @@
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-TENDENCY
+;;; gen-tendency
 
 #|
-The GEN-TENDENCY function generates N samples of given values 
+The gen-tendency function generates N samples of given values 
 (floating numbers) with a tendency (direction) given by the 
 values next to each-other. The variance is an additional value
 for increasing or decreasing the size of the fluctuations 
@@ -106,7 +106,7 @@ with the equation (+/- value (* value (/ variance 2)))
 
 ;;; ---------------------------------------------------------
 
-;;; Tendency with GEN-TRANSITION
+;;; Tendency with gen-transisiton
 
 ;; gen-transitions takes the arguments: 
 ;; number of values, start, end, curve.
@@ -128,7 +128,7 @@ with the equation (+/- value (* value (/ variance 2)))
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-ENVELOPE-TRANSITION
+;;; gen-envelope-transition
 
 (setf data (list-plot (gen-brownian-motion 128 :seed 43)
                       :zero-based t 
@@ -152,9 +152,9 @@ with the equation (+/- value (* value (/ variance 2)))
 ;; upper and lower limit
 (xy-plot (list l-limit u-limit) :join-points t)
 
+;; (for display only)
 (setf xll (second (matrix-transpose (pair-up l-limit))))
 (setf xul (second (matrix-transpose (pair-up u-limit))))
-
 (setf adj (gen-envelope-tendency data l-limit u-limit 
                                  :seed 12))
 

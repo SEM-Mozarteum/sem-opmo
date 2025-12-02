@@ -11,9 +11,9 @@
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-REPEAT
+;;; gen-repeat
 
-;; GEN-REPEAT returns any number of repeats of a list 
+;; This function returns any number of repeats of a list 
 or atom.
 
 (gen-repeat 3 'c4)
@@ -32,18 +32,18 @@ or atom.
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-REPEAT-SEQ
+;;; gen-repeat-seq
 
-;; GEN-REPEAT-SEQ generates lists by repeating elements 
+;; gen-repeat-seq generates lists by repeating elements 
 ;; from a given list with randomized repetitions between 
 ;; low and high.
 (setf pattern (gen-repeat-seq 24 2 5 '(c4 cs4 d4 eb4 g4 c5)))
 
 ;;; ---------------------------------------------------------
 
-;;; FILTER-REPEAT
+;;; filter-repeat
 
-;; Filter-repeat is a function designed to control the 
+;; filter-repeat is a function designed to control the 
 ;; frequency and distribution of repeated values within 
 ;; a sequence. 
 
@@ -62,24 +62,25 @@ or atom.
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-LOOP
+;;; gen-loop
 
 
-;; GEN-LOOP can be  used to execute a form multiple times. 
+;; This function can be  used to execute a form multiple times. 
 ;; It's a very useful function when creating variations from 
 ;; a single single process that has a randomising element. 
 
 (setf scale '(c4 cs4 d4 eb4 g4 c5))
 
+
 ;; 5 voices with gen-repeat, evaluate cmd-2
 (gen-loop 10 (make-omn
-              :pitch (gen-repeat-seq 48 1 5 scale)
+              :pitch (gen-repeat-seq 120 1 10 scale)
               :length '(1/16)
               :span :pitch) :seed 123)
 
 ;;; ---------------------------------------------------------
 
-;;; ASSIGN VARIABLE
+;;; assign-variable
 
 ;; Display with cmd-2
 (setf ord-random
@@ -134,7 +135,7 @@ or atom.
 ;;; Common Lisp Iteration Functions
 ;;; ---------------------------------------------------------
 
-;;; DOLIST
+;;; dolist
 
 #|
 There are two older and therefore less commonly used 
@@ -146,21 +147,21 @@ and stops in the end of the list.
 (dolist (x '(60 61 62 63)) (print (+ 12 x)))
 
 
-;; DOLIST always returns NIL. Note that the value of x in the
+;; always returns NIL. Note that the value of x in the
 ;; above example was never NIL: 
 ;; the NIL below the 75 was the value that dolist returns.
 
 ;;; ---------------------------------------------------------
 
-;;; DOTIMES
+;;; dotimes
 
-;; DOTIMES iterates over integers
+;; iterates over integers
 
 (dotimes (i 4) (print (* i i)))
 
 ;;; ---------------------------------------------------------
 
-;;; MAPCAR
+;;; mapcar
 
 #|
 Common Lisp also has several forms (functions and macros) for

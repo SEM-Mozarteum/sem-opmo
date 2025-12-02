@@ -11,10 +11,9 @@
 
 ;;; ---------------------------------------------------------
 
-;;; RNDN
+;;; rndn
 
-;; RNDN generates random numbers
-;;
+;; generates random numbers
 
 ;; one floating point number between 0 and 1
 (rndn)
@@ -46,9 +45,9 @@
 
 ;;; ---------------------------------------------------------
 
-;;; RND-REPEAT
+;;; rnd-repeat
 
-;; RND-REPEAT can be used to choose randomly a given 
+;; can be used to choose randomly a given 
 ;; number N of items from a sequence.
 
 (setf lengths (rnd-repeat 
@@ -60,10 +59,10 @@
 
 ;;; ---------------------------------------------------------
 
-;;; RND-PICK
+;;; rnd-pick
 
 #|
-The function RND-PICK will pick either a single item from a 
+The function rnd-pick will pick either a single item from a 
 list, or a sublist from a list of lists.
 |#
 
@@ -72,7 +71,6 @@ list, or a sublist from a list of lists.
 
 ;; take 10 picks from the list
 (gen-loop 10 (rnd-pick '(0 1 2 3 4 5 6 7 8 9)))
-
 
 (setf intervals '((c4 d4) (e4 f4)))
 
@@ -88,12 +86,10 @@ list, or a sublist from a list of lists.
 
 ;;; ---------------------------------------------------------
 
-;;; RND-SAMPLE
+;;; rnd-sample
 
-#|
-RND-SAMPLE can be used to choose randomly a given number 
-of items from a sequence. 
-|#
+;; can be used to choose randomly a given number 
+;; of items from a sequence. 
 
 (setf mat2
 (make-omn 
@@ -117,10 +113,10 @@ of items from a sequence.
 
 ;;; ---------------------------------------------------------
 
-;;; RND-UNIQUE
+;;; rnd-unique
 
 #|
-The function RND-UNIQUE can be used to choose randomly a 
+The function rnd-unique can be used to choose randomly a 
 given n (number) of unique items from a sequence.
 |#
 
@@ -142,12 +138,10 @@ given n (number) of unique items from a sequence.
 
 ;;; ---------------------------------------------------------
 
-;;; RND-ORDER
+;;; rnd-order
 
-#|
-RND-ORDER can be used to shuffle the order of a list, 
-or to shuffle the order of the contents of a series of lists.
-|#
+;; can be used to shuffle the order of a list, or to shuffle 
+;; the order of the contents of a series of lists.
 
 (setf mat3
       (make-omn 
@@ -174,9 +168,9 @@ or to shuffle the order of the contents of a series of lists.
 
 ;;; ---------------------------------------------------------
 
-;;; RND-SAMPE-SEQ
+;;; rnd-sample-seq
 
-;; RND-SAMPLE-SEQ can be used to choose randomly a given 
+;; can be used to choose randomly a given 
 ;; number of succesive items from a sequence. 
 (setf mat 
       (gen-loop 6 (rnd-sample-seq 4 (interval-to-pitch
@@ -215,7 +209,7 @@ or to shuffle the order of the contents of a series of lists.
 
 ;;; ---------------------------------------------------------
 
-;;; RND-SUM
+;;; rnd-sum
 
 ;; A possibility to generate random durations which add
 ;; up to a given overall duration.
@@ -228,7 +222,7 @@ or to shuffle the order of the contents of a series of lists.
 
 ;;; ---------------------------------------------------------
 
-;;; RND-SUM-TO-SIZE
+;;; rnd-sum-to-size
 
 ;; This function returns a list of integers (!) which add up to 
 ;; N (total) into a given size (list length). 

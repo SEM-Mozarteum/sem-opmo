@@ -9,10 +9,10 @@
 
 ;;; ---------------------------------------------------------
 
-;;; DISTRIBUTE-STREAM
+;;; distribute-stream
 
 #|
-The function DISTRIBUTE-STREAM returns a new sequence of items
+The function distribute-stream returns a new sequence of items
 distributed against lists of lengths sequentially.
 It takes (usually) a single pitch stream and distributes 
 its content amongst to a series of voices or parts. 

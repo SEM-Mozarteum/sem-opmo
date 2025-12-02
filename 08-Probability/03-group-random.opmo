@@ -10,8 +10,8 @@
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-GROUP
-;;; Example from Nicolas Speda
+;;; gen-group
+;;; (Example from Nicolas Speda)
 
 #| 
 GEN-GROUP will generate series of groups based on the 
@@ -101,10 +101,10 @@ equal pitches it's 2:3)
 
 ;;; ---------------------------------------------------------
 
-;;;  GEN-UNISON
+;;;  gen-unison
 
 #|
-The function GEN-UNISON will generate series of groups based 
+The function gen-unison will generate series of groups based 
 on the random distribution of values from a list. With an 
 :unison value of (1), all four groups will output in unison.
 |#
@@ -141,12 +141,12 @@ on the random distribution of values from a list. With an
   
   (inst3
    :omn mat2
-   :program 'violin
+   :program 'viola
    :sound 'gm :program 0)
   
   (inst4
    :omn mat3
-   :program 'violin
+   :program 'cello
    :sound 'gm :program 0))
 
 (display-musicxml 'group2)

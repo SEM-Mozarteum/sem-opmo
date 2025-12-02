@@ -9,12 +9,11 @@
 
 #|
 1. 
-Import the Midi File dido.mid from the
-folder 15-Import-Export'/Material and import it to Opusmodus.
+Import the Midi File dido.mid and import it to Opusmodus.
 
 2. 
 Correct the file in OMN to 4 parts only directly in OMN.
 
 3. 
-Export the score either to Midi or via MusicXML to any notation program.
+Export the score either via MusicXML to any notation program.
 |#

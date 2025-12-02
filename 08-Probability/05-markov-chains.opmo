@@ -9,10 +9,10 @@
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-MARKOV
+;;; gen-markov
 
 #| 
-The function GEN-MARKOV will use Markov analysis on a list
+The function gen-markov will use Markov analysis on a list
 of items in order to work out relationships between each item
 in the list. It will then use these relationships to generate
 a new, but related series of values.  In a Markov process 
@@ -68,9 +68,13 @@ for the next selection depend on the last two events.
  :pitch markovs
  :length '(1/8)
  :span :pitch)
+
+;;; ---------------------------------------------------------
+
+;;; gen-markov-transitions
  
 #|
-The function GEN-MARKOV-TRANSITIONS generates Markov 
+The function gen-markov-transitions generates Markov 
 transition tables based on a given sequence. The transitions 
 can be stored and use to generate Markov chains.
 |#
@@ -98,6 +102,10 @@ can be stored and use to generate Markov chains.
  ((c4 f4) (c4 1)) 
  ((f4 c4) (g4 1)))
 |#
+
+;;; ---------------------------------------------------------
+
+;;; gen-markov-from-transitions
 
 ;; The function GEN-MARKOV-FROM-TRANSITIONS is able to 
 ;; generate Markov chain sequences from Markov transitions 

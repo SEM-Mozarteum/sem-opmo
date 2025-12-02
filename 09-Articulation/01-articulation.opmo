@@ -139,9 +139,9 @@ stacc gs4 stacc e5 stacc f5 stacc)
 
 ;;; ---------------------------------------------------------
 
-;;; TEXT ATTRIBUTES
+;;; add-text-attributes
 
-;; Add text attributes to a score
+;; Add text attributes to a score.
 
 (add-text-attributes
  '(ord-tasto "ord⟶tasto") 

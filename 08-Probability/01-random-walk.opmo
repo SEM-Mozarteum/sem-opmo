@@ -9,7 +9,7 @@
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-WALK
+;;; gen-walk
 
 #|
 This function returns a series of intervals of given step and 
@@ -40,12 +40,12 @@ rest probability, same as being stationary.
 ;; The probability to move forward (up) is bigger 
 ;; than going backward (down).
 (setf pitch (gen-walk 64 
-                      :step '(1 2) ; stepsize random 
+                      :step '(1 2 4) ; stepsize random 
                       :backward 0.3 
                       :forward 0.7
                       :start 'c4 ; start pitch
-                      :seed 234))
+                     ))
 
 (make-omn :pitch pitch
-          :length '(1/16)
+          :length '(1/2)
           :span :pitch)

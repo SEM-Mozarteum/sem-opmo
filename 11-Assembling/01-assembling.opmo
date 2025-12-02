@@ -5,9 +5,11 @@
 ;;; (c) 2015 - 2021, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
-;;; ASSEMBLe-SUBSEQ
+;;; ASSEMBLING, DISASSEMBLING
 
 ;;; ---------------------------------------------------------
+
+;;; assemble-subseq
 
 ;; First we create 2 sequences of different musical material:
 (setf pitches1 (midi-to-pitch
@@ -53,7 +55,7 @@
 
 ;;; ---------------------------------------------------------
 
-;;; DISASSEMBLE-OMN
+;;; disassemble-omn
 
 ;; the disassemble-omn function deconstrut the omn object in its 
 ;; seperate parameters
@@ -64,20 +66,3 @@
 (omn :pitch seq-1)
 (omn :length seq-2)
 (omn :velocity mat-select2)
-
-;;; ---------------------------------------------------------
-
-;;; GET-EVENTS
-
-;; The function GET-EVENTS allows you to assemble a new sequence 
-;; from a number of events of a given bar and a given omn sequence. 
-
-
-
-
-
-
-
-  
-
-

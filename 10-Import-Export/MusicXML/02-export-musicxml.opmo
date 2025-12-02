@@ -1,0 +1,45 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXPORT MusicXML
+
+;;; ---------------------------------------------------------
+
+;;; musicxml-to-editor
+
+;; By default MuseScore 4 as the notation editor:
+(defparameter *default-notation-editor* "MuseScore 4.app")
+
+#|
+To set a different editor, replace the string with your 
+preferred application’s name and place the expression 
+in your User Function.
+|#
+
+(defparameter *default-notation-editor* "Dorico 6.app")
+(defparameter *default-notation-editor* "Sibelius.app")
+
+#| 
+To export a score from Opusmodus there are several
+different possibilities.
+
+Anything that is displayed in the Notation Viewer can be
+exported by clicking on the upper left symbol and choose:
+"Open in External Editor ..."
+
+The Score is opened in the default editor, see above.
+|#
+
+;; To open the last compiled score (DEF-SCORE, PS or snippet) 
+;; from the composer in the notation editor evaluate:
+
+(musicxml-to-editor)
+
+;; To open the 2nd instrument from the last compiled score 
+;; (DEF-SCORE, PS or snippet) in the notation editor:
+
+(musicxml-to-editor :instrument 1)

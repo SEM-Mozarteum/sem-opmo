@@ -35,7 +35,7 @@ list of 10 elements: weights: 10% = 1, 30%  = 3, 60% = 6
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-WEIGHT
+;;; gen-weight
 
 ;; gen-weight can be used to generate lists based on a series 
 ;; of probabilistic weightings.
@@ -74,10 +74,10 @@ list of 10 elements: weights: 10% = 1, 30%  = 3, 60% = 6
            
 ;;; ---------------------------------------------------------
 
-;;; LENGTH-WEIGHT
+;;; length-weight
 
 #| 
-The function LENGTH-WEIGHT enables you to create rest 
+The function length-weight enables you to create rest 
 lengths in a list of note lengths. The :weight keyword 
 allows you to control the weighting between note and rest 
 values in relation to a sequence lengths. 
@@ -99,78 +99,4 @@ values in relation to a sequence lengths.
                :seed 52)
  (list '(q c4 d4 e4 f4 g4 a4 b4)))
 ;; ((-q - e4 f4 - a4 b4) (-q - e4 f4 - - b4)
-
-;;; ---------------------------------------------------------
-
-;;; Weighted random values from an envelope (undocumented)
-
-;; number of events
-(setf event-number 32)
-
-;;; ENVELOPE-EXP
-
-(defparameter gliss-prob-env
-  (xy-plot ; needs lists of x/y values
-   (gen-divide 2 ; combine x and y value in a list
-               (envelope-exp 
-                '(0 1 1 2 2 3 3 5 4 10 5 20 6 30 7 50 8 80)
-                1.0 event-number)) ; linear interpolation
-   :join-points t
-   :point-radius 2)
-  "x/y value pairs from an envelope of x/y-values."
-  )
-
-(defparameter gliss-prob
-  (list-plot
-   (mapcar #'round 
-; rounding y-values for gen-weight (needs integers)
-           (second ; all y-values
-            (matrix-transpose 
-             ; all x and y values in seperate lists
-             gliss-prob-env)))
-   :join-points t :point-radius 2 :style :axis)
-  "Extracting and rounding probabilities (y-values) from env.")
-     
-(defparameter weight-pitch
-  (flatten
-   (loop for i in gliss-prob
-     initially (rnd-seed 123)   
-     collect
-     (gen-weight 1 (list 
-                    (list 'cs4 i) 
-                    (list 'c4 40))
-                 :seed  (seed)))))
-
-#!
-(ps 'gm
-    :multi (make-omn
-            :length (gen-repeat
-                     (length weight-pitch)
-                     's)
-            :pitch weight-pitch)
-    :time-signature '(4 4))
-!#
-
-;; the same with gliss
-(defparameter weight-gliss
-  (flatten
-   (loop for i in gliss-prob
-     initially (rnd-seed 123)   
-     collect
-     (gen-weight 1 (list 
-                    (list 'gliss i) 
-                    (list '- 30))
-                 :seed (seed)))))
-
-#!
-(ps 'gm
-    :multi (make-omn
-            :length (gen-repeat
-                     (length weight-gliss)
-                     'h)
-            :pitch '((b4))
-            :articulation weight-gliss)
-    :time-signature '(2 4))
-!#
-
 

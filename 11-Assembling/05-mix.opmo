@@ -9,12 +9,12 @@
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-COLLECT
+;;; gen-collect
 
-#|
-The function GEN-COLLECT makes it possible for n items from a list  
-to be collected incrementally and placed in a new list, and the 
-remaining items collected and placed in another list.
+#| 
+The function GEN-COLLECT makes it possible for n items from 
+a list to be collected incrementally and placed in a new list, 
+and the remaining items collected and placed in another list. 
 |#
 
 (setf mat '((c4 db4 ab4 f4 g4 bb4) (a4 eb4 b4 e4 d4 gb4)
@@ -34,11 +34,11 @@ remaining items collected and placed in another list.
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-COMBINE
+;;; gen-combine
 
 #|
-GEN-COMBINE makes a simple matrix transformation, taking all first elements
-of a list of lists, all second elements, etc.
+gen-combine makes a simple matrix transformation, taking all 
+first elements of a list of lists, all second elements, etc.
 This is often useful when distributing chords to voices.
 |#
 
@@ -59,9 +59,9 @@ This is often useful when distributing chords to voices.
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-DIVIDE
+;;; gen-divide
 
-;; GEN-DIVIDE can be used to divide a list of items into sublists 
+;; gen-divide can be used to divide a list of items into sublists 
 ;; of a given size. 	
 (integer-to-pitch (gen-divide 2 '(0 1 2 3 4 5 6 7 8 9)))
 ;; => ((0 1) (2 3) (4 5) (6 7) (8 9))
@@ -72,9 +72,9 @@ This is often useful when distributing chords to voices.
 
 ;;; ---------------------------------------------------------
 
-;;;  GEN-FRAGMENT
+;;;  gen-fragment
 
-;; GEN-FRAGMENT returns a fragment of a sequence from an existing 
+;; gen-fragment returns a fragment of a sequence from an existing 
 ;; list or lists.
 (gen-fragment 1 '(3) '(c4 d4 e4 f4 g4 a4))
 ;; => (c4 d4 e4)
@@ -106,21 +106,13 @@ This is often useful when distributing chords to voices.
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-INTERLEAVE
+;;; gen-interleave
 
-;; GEN-INTERLEAVE will step through each item in the list, 
-;; generating a sublist of a given length beginning with that item.
+;; will step through each item in the list, generating a 
+;; sublist of a given length beginning with that item.
 (gen-interleave 3 '(g4 a4 f4 g4 c4))
 ;; => (g4 a4 f4) (a4 f4 g4) (f4 g4 c4))
 
 ;; Alternating between 2 and 3 notes
 (gen-interleave '(2 3) '(g4 a4 f4 g4 c4 d4))
 ;; => ((g4 a4) (a4 f4 g4) (f4 g4) (g4 c4 d4) (c4 d4))
-
-	
-       
-   
-
-
-
-

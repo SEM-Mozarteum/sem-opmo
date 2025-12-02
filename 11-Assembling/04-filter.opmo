@@ -9,7 +9,7 @@
 
 ;;; ---------------------------------------------------------
 
-;;; AMBITUS-FILTER
+;;; ambitus-instrument / ambitus-filter
 
 (defparameter pitches
 '((3q g5 pp g3 g1 g2 c2 c4 eb1 d4 b3 e3 g4 b2) 
@@ -24,8 +24,7 @@
 (3q bb6 pp g3 eb2 d4 bb5 a3 a5 b4 c3 g4 d7 g2) 
 (e c2 pp d5 a2 e4 e3 e2 d6 g4)))
 
-;; Verwenden Sie diese Funktion, um den Bereich von Instrumenten 
-;; herauszufinden.
+;; Use this function to get the amitus of instruments.
 (integer-to-pitch (ambitus-instrument 'vibraphone))
 
 #|
@@ -62,17 +61,19 @@ adds the sum of the rests in sequence to the previous length-note.
 
 ;;; ---------------------------------------------------------
 
-;;; FILTER-FIRST / FILTER-LAST
+;;; filter-first / filter-last
 
 (filter-first 3 '(c4 d4 e4 f4 g4 a4))
 ;; => (c4 d4 e4)
 
-;; Multiple lists can be used, for example - to get the first three values of each list:
+;; Multiple lists can be used, for example - 
+;;to get the first three values of each list:
 
 (filter-first 3 '((c4 d4 e4 f4 g4 a4) (c3 d3 e3 f3 g3 a3)))
 ;; => ((c4 d4 e4) (c3 d3 e3))
 
-;; Or to get the first three values of the first list, and only the first two from the second list:
+;; Or to get the first three values of the first list, 
+;;and only the first two from the second list:
 
 (filter-first '(3 2) '((c4 d4 e4 f4 g4 a4) (c3 d3 e3 f3 g3 a3)))
 ;; => ((c4 d4 e4) (c3 d3))
@@ -83,11 +84,12 @@ adds the sum of the rests in sequence to the previous length-note.
 
 ;;; ---------------------------------------------------------
 
-;;; FILTER-EVENTS
+;;; filter-events
 
-#|
-The function FILTER-EVENTS checks whether an event contains the given element. When an element is found the event is returned. All other events are transformed into rests. The option remain will invert the process.
-|#
+#| The function FILTER-EVENTS checks whether an event contains 
+the given element. When an element is found the event is 
+returned. All other events are transformed into rests. 
+The option remain will invert the process. |#
 
 (filter-events 'd4 '(e c4 mp -e fermata e. d4 -h e. c4 e e4))
 ;; => (-q e. d4 mp -h.s)
@@ -100,7 +102,10 @@ The function FILTER-EVENTS checks whether an event contains the given element. W
 
 ;;; ---------------------------------------------------------
 
-;;; GET-EVENTS
+;;; get-events
+
+;; The function GET-EVENTS allows you to assemble a new sequence 
+;; from a number of events of a given bar and a given omn sequence. 
 
 (defparameter  
     seq1 '((e c4e4g4 he c5)
@@ -131,7 +136,7 @@ The function FILTER-EVENTS checks whether an event contains the given element. W
 
 ;;; ---------------------------------------------------------
 
-;;; POSITION-FILTER
+;;; position-filter
 
 ;; Filter elements from a list
 
@@ -171,7 +176,3 @@ The function FILTER-EVENTS checks whether an event contains the given element. W
         collect
         (position-filter
          (rnd-number 10 1 24) violin)))
-
-
-
-

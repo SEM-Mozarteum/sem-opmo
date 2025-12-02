@@ -1,0 +1,85 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2025, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; IMPORT MusicXML
+
+;;; ---------------------------------------------------------
+
+;;; musicxml-to-score
+
+(setf island 
+      "~/Documents/code/github/sem-opmo/10-Import-Export/MusicXML/island.xml")
+;; the path has to be adapted to the individual system
+
+(musicxml-to-score island)
+
+;; Imports "20190217-diary.xml" and creates a score file 
+;; named "my-diary" and add a note to the score
+(musicxml-to-score island :name "my-diary" :note "First Draft")
+
+;;; ---------------------------------------------------------
+
+;;; musicxml-to-omn
+
+#| The MUSICXML-TO-OMN function enables users to import their 
+;; own compositions, originally created in applications such 
+as Finale, Sibelius, Dorico, or MuseScore, directly into 
+Opusmodus notation. |#
+
+
+;; cmd-2 to see all voices combined 
+(musicxml-to-omn island)
+
+;; Return only the OMN sequence 
+;; for the first instrument/voice:
+(musicxml-to-omn island :inst 1)
+
+;; Return measures 33 through 48 (inclusive) 
+;; of the first instrument:
+(musicxml-to-omn island :inst 1 :start 2 :end 3) 
+
+;; Return pitch data only for the second instrument, 
+;; measures 10–20:
+(musicxml-to-omn island
+                 :inst 2
+                 :start 2
+                 :end 3
+                 :type :pitch)
+
+;;; ---------------------------------------------------------
+
+;;; musicxml-metadata
+
+;; This function parses a MusicXML file and returns a 
+;; property list containing essential score metadata
+
+(musicxml-metadata island)
+
+#|
+(:title "Untitled score" 
+ :movement-title nil 
+ :composer "Composer / arranger" 
+ :lyricist nil 
+ :date "2025-12-02" 
+ :software "MuseScore Studio 4.6.3" 
+ :source nil 
+ :copyright nil 
+ :relation nil 
+ :key-signature ((c major 7)) 
+ :time-signature ((4 4 7)) 
+ :tempo ((q 60 7)) 
+ :clef-layouts (treble-layout treble-layout alto-layout bass-layout bass-layout) 
+ :layout-name ("Violins 1" "Violins 2" "Violas" "Violoncellos" "Contrabasses") 
+ :layout-abbr ("Vlns. 1" "Vlns. 2" "Vlas." "Vcs." "Cbs.") 
+ :instruments (inst1 inst2 inst3 inst4 inst5) 
+ :channel (1 4 7 11 14) 
+ :program (49 49 49 49 49) 
+ :volume (100 100 100 100 100) 
+ :pan (0 0 0 0 0))
+|#
+
+ 
