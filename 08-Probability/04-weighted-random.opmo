@@ -41,7 +41,7 @@ list of 10 elements: weights: 10% = 1, 30%  = 3, 60% = 6
 ;; of probabilistic weightings.
 
 ;; 4 times more mp than ff
-(gen-weight 10 '((ff 1) (mp 4)) :seed 54)
+(gen-weight 10 '((ff 1) (mp 4)) :seed 123)
 ;; => (mp mp ff mp ff mp ff mp mp mp)
 
 ;; See the distribution with 100 elements
@@ -53,6 +53,9 @@ list of 10 elements: weights: 10% = 1, 30%  = 3, 60% = 6
 ;; With OMN length structures
 (gen-weight 10 '(((5q = = = =) 4) ((h) 2)
                  ((e = s = = =) 1) ((q - q - e =) 2)))
+
+;; a different example
+(flatten (gen-weight 40 '(((s) 2) ((h) 4) ((w) 4))))
 
 ;; chords with weighted number of pitches in a chord
 (setf weights (gen-weight 20 
