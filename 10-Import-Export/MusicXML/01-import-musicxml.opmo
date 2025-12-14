@@ -13,22 +13,25 @@
 
 (setf island 
       "~/Documents/code/github/sem-opmo/10-Import-Export/MusicXML/island.xml")
-;; the path has to be adapted to the individual system
+;; NOTE: the path has to be adapted to the individual system
 
 (musicxml-to-score island)
 
 ;; Imports "20190217-diary.xml" and creates a score file 
 ;; named "my-diary" and add a note to the score
-(musicxml-to-score island :name "my-diary" :note "First Draft")
+(musicxml-to-score island :name "my-diary" 
+                   :note "First Draft")
 
 ;;; ---------------------------------------------------------
 
 ;;; musicxml-to-omn
 
-#| The MUSICXML-TO-OMN function enables users to import their 
-;; own compositions, originally created in applications such 
-as Finale, Sibelius, Dorico, or MuseScore, directly into 
-Opusmodus notation. |#
+#| 
+The MUSICXML-TO-OMN function enables users to import 
+their own compositions, originally created in applications 
+such as Finale, Sibelius, Dorico, or MuseScore, directly 
+into Opusmodus notation. 
+|#
 
 
 ;; cmd-2 to see all voices combined 
@@ -82,4 +85,3 @@ Opusmodus notation. |#
  :pan (0 0 0 0 0))
 |#
 
- 

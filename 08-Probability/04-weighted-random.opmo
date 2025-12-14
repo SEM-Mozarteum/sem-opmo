@@ -60,21 +60,27 @@ list of 10 elements: weights: 10% = 1, 30%  = 3, 60% = 6
 ;; chords with weighted number of pitches in a chord
 (setf weights (gen-weight 20 
                           '((1 5) (2 4) (3 3) (4 2) (5 1)) 
-                          :seed 1234))
+                          :seed 123))
 
-(loop for i in weights
-      with seed = (init-seed 34)  
-      append (chordize (midi-to-pitch 
-                        (rnd-number i 60 80))))
+;; loop through list numbers in chord
+(loop for i in weights 
+      with seed = (init-seed 234) 
+      for x = (midi-to-pitch (rndn i 60 80))
+      if (listp x) 
+        append (chordize x)
+      else 
+        collect x)
 
 ;; weight-pick is the same as gen-weight 
 ;; but returns one element only
 (loop repeat 20
-      for w = (weight-pick '((1 5) (2 4) (3 3) (4 2) (5 1))) 
-      append (chordize
-               (midi-to-pitch
-                (rnd-number w 60 80))))
-           
+      for x = (weight-pick '((1 5) (2 4) (3 3) (4 2) (5 1)))
+      for y = (midi-to-pitch (rndn x 60 80))
+      if (listp y) 
+        append (chordize y)
+      else 
+        collect y)
+    
 ;;; ---------------------------------------------------------
 
 ;;; length-weight

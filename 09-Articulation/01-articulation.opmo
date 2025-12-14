@@ -58,17 +58,25 @@ stacc gs4 stacc e5 stacc f5 stacc)
 (setf pitch-numb-sum (sum (mclength pitches)))
       
 (setf velocities
-      (velocity-to-dynamic
        (get-velocity
-        (rndn pitch-numb-sum 0.27 0.85 
-                    :seed 123)
-        :type :symbol)))
+        (rndn pitch-numb-sum 0.25 0.85 
+                    :seed 123)))
+
+;; all velocities below 0.5 in staccato
+;; all above in tenuto
+(setf articulations
+      (loop for i in velocities
+              if (< i 0.5) 
+              collect 'stacc
+              else collect 'ten))
 
 (setf mat (make-omn
            :pitch pitches
            :length '(1/16)
            :velocity velocities
-           :articulation '(stacc+ten) 
+           ;; omn accepts also numbers between 0 and 1
+           ;; directly and converts them to dynamics
+           :articulation articulations 
            ;; combined articulations
            :span :pitch))
 
@@ -99,7 +107,7 @@ stacc gs4 stacc e5 stacc f5 stacc)
           (g5 a4 ds3 d4) 
           (c6 b5 a4)      
           (c5 eb5 gs4) 
-          (b4 f5 f5 fs5 gs5 a5) 
+          (b4 f5 e5 fs5 gs5 a5) 
           (cs4 g4 c6) 
           (gs5)))
 
@@ -134,7 +142,7 @@ stacc gs4 stacc e5 stacc f5 stacc)
          :length lengths2
          :articulation articulations2))
 
-  (flatten mat2)) ; to ignore the predefined measures
+  (flatten mat2)) ; delete all inner parentheses
 
 ;;; ---------------------------------------------------------
 
@@ -150,10 +158,10 @@ stacc gs4 stacc e5 stacc f5 stacc)
 
 #|
 For making a custom set of attributes permanently available, 
-you can create a file 'User Attributes.lisp' in the Opusmodus 
-'Extensions' folder:
+you can create a file 'User Attributes.lisp' in the Opusmodus
+ 'Extensions' folder:
 ~/Documents/Opusmodus/User Source/Extensions/
- - if it hasn't been created already. For attributes that are 
+(if it hasn't been created already.) For attributes that are
 specific for a certain composition, you might want to add 
 your custom attribute definitions, say, at the top of the 
 file generating that composition. To be able to add your own 

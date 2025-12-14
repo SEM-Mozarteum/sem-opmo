@@ -31,12 +31,13 @@ or :below the tendency values.
 The function rnd-variance controls the variance calculated 
 with the equation (+/- value (* value (/ variance 2)))
 |#
+
 (loop repeat 1000 
         collect (rnd-variance 3.0 1.0) into reslis
         finally (return 
                  (list (apply 'min reslis) 
                        (apply 'max reslis))))
-;; around 1.5 and 4.5, should be around 2 and 4
+;; creating numbers around 1.5 and 4.5
 
 ;; With :variance 0 its the original envelope:
 (setf tend-0 (list-plot
@@ -62,7 +63,7 @@ with the equation (+/- value (* value (/ variance 2)))
  :point-radius 2))
 
 ;; see all three together
-(list-plot (list tend-0 tend-0.2 tend-1)
+(list-plot (list tend-0 tend-0.3 tend-1)
             :join-points t
  :point-radius 2)
 
@@ -111,41 +112,83 @@ with the equation (+/- value (* value (/ variance 2)))
 ;; gen-transitions takes the arguments: 
 ;; number of values, start, end, curve.
 
+(setf vals 40)
+
 ;; upper limit of random numbers
+;; 4. argument of gen-transisiton is curve
 (defparameter  upper
-  (gen-transition 10 20 20 1))
+  (gen-transition 10 20 vals 1.5))
 
 ;; lower limit of random numbers
 (defparameter  lower
-      (gen-transition 10 1 20 1))
+      (gen-transition 10 1 vals 1.5))
 
 ;; random between upper and lower limits
 (list-plot (list upper lower
             (loop for i in upper
              for j in lower
-             collect (rnd1 :low j :high i)))
+             collect (rndn j i)))
            :join-points t)
 
 ;;; ---------------------------------------------------------
 
-;;; gen-envelope-transition
+;;; Tendency with envelopes
 
-(setf data (list-plot (gen-brownian-motion 128 :seed 43)
+;; the lower limit of the tendency
+;; creates separate lists for x and y and select the second
+(setf lowlim (second (envelope-samples 
+               '(0 0 1 -1 2 1 3 -2 4 3 5 -1 6 0) 50 nil)))
+
+;; the upper limit of the tendency
+(setf uplim (second (envelope-samples 
+               '(0 1 1 4 2 2 3 4 6 4) 50 nil)))
+
+;; random between upper and lower limits
+(list-plot (list lowlim uplim
+            (loop for i in uplim
+             for j in lowlim
+             collect (rndn j i)))
+           :join-points t)
+
+;;; ---------------------------------------------------------
+
+;;; gen-envelope-tendency
+
+#|
+This function takes a list of data and adjusts the values 
+to fit within the specified lower and upper envelope limits.
+If a value is outside the given envelope, the function will 
+adjust it to fit within the envelope and all subsequent 
+values in the list are also adjusted by the same amount, 
+which helps to preserve the original shape of the data.
+|#
+
+;; a brownian motion with 128 points
+(setf data 
+       (list-plot
+        ;; ranges the motion between high and low
+        (vector-range -2 5
+                   (gen-brownian-motion 128 :seed 43))
                       :zero-based t 
                       :point-radius 2 
                       :join-points t))
 
+;; length of data (128)
 (setf len (length data))
 
 ;; envelope consists of x/y pairs
+;; envelope for the lower limit of the tendency
 (setf l-limit (envelope-samples 
-               '(0 0 1 -1 2 -1 3 -2 4 3 5 -1 6 0) len))
+               '(0 0 1 -1 2 1 3 -2 4 3 5 -1 6 0) len))
+
+;; envelope for the upper limit of the tendency
 (setf u-limit (envelope-samples 
                '(0 1 1 4 2 2 3 4 6 4) len))
 
-;; compare envelope and sampled envelope
+;; compare envelope and sampled envelope#
 (xy-plot
- (list '(0 0 1 -1 2 -1 3 -2 4 3 5 -1 6 0)
+;; xy-plot display of a list of x/y-values
+ (list '(0 0 1 -1 2 1 3 -2 4 3 5 -1 6 0)
        l-limit)
  :join-points t :point-radius 2)
 
@@ -153,11 +196,16 @@ with the equation (+/- value (* value (/ variance 2)))
 (xy-plot (list l-limit u-limit) :join-points t)
 
 ;; (for display only)
-(setf xll (second (matrix-transpose (pair-up l-limit))))
-(setf xul (second (matrix-transpose (pair-up u-limit))))
-(setf adj (gen-envelope-tendency data l-limit u-limit 
+;; 1. making pairs of x/y values
+;; 2. separate first and second values
+;; 3. take only the second values (= y-values)
+(setf xll (second (matrix-transpose (pair-up l-limit)))
+      xul (second (matrix-transpose (pair-up u-limit)))
+      ;; adjusting the data within the envelopes
+      adj (gen-envelope-tendency data l-limit u-limit 
                                  :seed 12))
 
+;; display all
 (list-plot
  (list xll adj xul)
  :join-points t

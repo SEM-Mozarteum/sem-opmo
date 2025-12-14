@@ -19,12 +19,14 @@ do it all for you. Let's start with the first method.
 
 ;;; midi-to-score / compile-score
 
-;; The  midi-to-score function does the conversion with
-;; the given quantisation
-;; compile-score writes this file with a given name and
-;; optionally only a specific part between start and end to disk.
-;; The output can directly be found in the utilities panel
-;; under "S" (Scores).
+#|
+The  midi-to-score function does the conversion with
+the given quantisation compile-score writes this file with 
+a given name andoptionally only a specific part between 
+start and end to disk. The output can directly be found in 
+the utilities panel under "S" (Scores).
+|#
+
 (compile-score
  (midi-to-score
   "~/Documents/Opusmodus/Media/MIDI/Bach/bach-gv-aria.mid"
@@ -59,8 +61,8 @@ Now you'll find you have the whole Bach aria in OMN script.
 ;;; pprint-last-score
 
 ;; Any Score can be formatted with pprint-last-score 
-;; containinng bar numbers
-;; Menu-shortcut: PPrint Last Score: alt-cmd-tab (opt-cmd-tab)
+;; containinng bar numbers from the Menu or with the
+;; following command:
 
 (pprint-last-score)
 
