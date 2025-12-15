@@ -135,20 +135,22 @@ with the equation (+/- value (* value (/ variance 2)))
 ;;; Tendency with envelopes
 
 ;; the lower limit of the tendency
-;; creates separate lists for x and y and select the second
-(setf lowlim (second (envelope-samples 
-               '(0 0 1 -1 2 1 3 -2 4 3 5 -1 6 0) 50 nil)))
+;; creates a new envelope with 50 values, return y-values
+(setf lowlim (envelope-y (envelope-samples 
+               '(0 0 1 -1 2 1 3 -2 4 3 5 -1 6 0) 50)))
 
 ;; the upper limit of the tendency
-(setf uplim (second (envelope-samples 
-               '(0 1 1 4 2 2 3 4 6 4) 50 nil)))
+(setf uplim (envelope-y (envelope-samples 
+               '(0 1 1 4 2 2 3 4 6 4) 50)))
 
 ;; random between upper and lower limits
-(list-plot (list lowlim uplim
-            (loop for i in uplim
+(list-plot 
+ (list lowlim uplim
+       (loop for i in uplim
+             with seed = (init-seed 123)
              for j in lowlim
              collect (rndn j i)))
-           :join-points t)
+ :join-points t)
 
 ;;; ---------------------------------------------------------
 
@@ -176,7 +178,7 @@ which helps to preserve the original shape of the data.
 ;; length of data (128)
 (setf len (length data))
 
-;; envelope consists of x/y pairs
+;; envelope of 128 x/y pairs
 ;; envelope for the lower limit of the tendency
 (setf l-limit (envelope-samples 
                '(0 0 1 -1 2 1 3 -2 4 3 5 -1 6 0) len))
@@ -199,11 +201,11 @@ which helps to preserve the original shape of the data.
 ;; 1. making pairs of x/y values
 ;; 2. separate first and second values
 ;; 3. take only the second values (= y-values)
-(setf xll (second (matrix-transpose (pair-up l-limit)))
-      xul (second (matrix-transpose (pair-up u-limit)))
+(setf xll (envelope-y l-limit))
+(setf xul (envelope-y u-limit))
       ;; adjusting the data within the envelopes
-      adj (gen-envelope-tendency data l-limit u-limit 
-                                 :seed 12))
+(setf adj (gen-envelope-tendency 
+           data l-limit u-limit :seed 12))
 
 ;; display all
 (list-plot

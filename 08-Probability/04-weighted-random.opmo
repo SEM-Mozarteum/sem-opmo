@@ -8,7 +8,7 @@
 ;;; WEIGHTED RANDOM
 
 #|
-Weighted random is a method of selecting an item from a list 
+Weighted random is a method of selecting items from a list 
 where each item has a different probability of being chosen. 
 Unlike a standard random selection where all items have an 
 equal chance, weighted randomness allows certain items to be 
@@ -109,3 +109,63 @@ values in relation to a sequence lengths.
  (list '(q c4 d4 e4 f4 g4 a4 b4)))
 ;; ((-q - e4 f4 - a4 b4) (-q - e4 f4 - - b4)
 
+;;; ---------------------------------------------------------
+
+;;; Using envelope for changing weights
+
+;; envelope of probabilities
+(setf weight-env
+      (xy-plot ; needs lists of x/y values
+       ; y-values are the probabilities
+       '(0 1 1 2 2 3 3 5 5 10 6 30 7 50 10 80 13 90)
+       :join-points t :point-radius 2))
+
+;; taking 32 values from the envelope
+(setf gliss-prob-env
+      (xy-plot 
+       (envelope-samples weight-env 32)
+       :join-points t :point-radius 2))
+
+;; rounding probabilities (y-values) from envelope
+;; for gen-weight (needs integers)
+(setf gliss-prob
+  (list-plot
+   (loop for i in (envelope-y gliss-prob-env)
+           ; only the y values are taken
+           collect (round i)) ; round to integer
+   :join-points t :point-radius 2 :style :axis))
+
+;; weighted pitches
+(setf weight-pitch
+      (pitch-list-plot
+   (loop for i in gliss-prob
+     initially (rnd-seed 123)   
+     append
+           ;; create this form for each evaluation:
+           ;; (gen-weight 1 '((f4 1) (c4 40)))
+     (gen-weight 1 (list 
+                    (list 'f4 i) 
+                    (list 'c4 40))
+                 ; c4 with fixed probability
+                 :seed (seed)))
+   :join-points t :point-radius 2 :style :fill))
+
+;; weighted articulations
+(setf weight-articulation
+   (loop for i in gliss-prob
+     initially (rnd-seed 2358)   
+     append
+     (gen-weight 1 (list 
+                    (list 'stacc i) 
+                    (list '- 40))
+                 ; fixed probability ord
+                 :seed (seed))))
+
+;; preview score
+(ps 'gm
+    :multi (make-omn
+            :length '(s)
+            :pitch weight-pitch
+            :articulation weight-articulation
+            :span :pitch)
+    :time-signature '(4 4))
