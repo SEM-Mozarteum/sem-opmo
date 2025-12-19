@@ -98,7 +98,7 @@ with the equation (+/- value (* value (/ variance 2)))
 ;; Make some pitches and durations with a tendency
 (progn
   (setf values '(.1 .4 .2 .6 .45 .16 .75 .8 0.5 .1))
-  (setf tendency (gen-tendency 20 values :variance 0.3))
+  (setf tendency tend-0.3)
   (setf pitches (vector-to-pitch '(c3 c7) tendency))
   (setf durs (vector-to-length '1/16 1 4 tendency))
   (setf mat1 (make-omn
