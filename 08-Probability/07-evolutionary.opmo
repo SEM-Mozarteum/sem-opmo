@@ -65,7 +65,6 @@ theory.
           :pitch (chordize mutation1)
           :span :pitch)))
 
-
 ;;; ---------------------------------------------------------
 
 ;;; gen-population

@@ -19,7 +19,7 @@
 
 ;; Imports "20190217-diary.xml" and creates a score file 
 ;; named "my-diary" and add a note to the score
-(musicxml-to-score island :name "my-diary" 
+(musicxml-to-score island :name "diary" 
                    :note "First Draft")
 
 ;;; ---------------------------------------------------------

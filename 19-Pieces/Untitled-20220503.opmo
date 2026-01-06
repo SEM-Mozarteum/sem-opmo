@@ -29,6 +29,8 @@
     ; 14 semitones collect the notes
     collect (nth x pitches)))
 
+;; (length selected-chords)
+
 ;; Calculate the intervals of the selected chords.
 (setf selected-intervals 
   (loop for i in selected-chords

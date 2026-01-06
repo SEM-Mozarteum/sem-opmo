@@ -40,6 +40,7 @@ The Score is opened in the default editor, see above.
 (musicxml-to-editor)
 
 ;; To open the 2nd instrument from the last compiled score 
-;; (DEF-SCORE, PS or snippet) in the notation editor:
+;; (DEF-SCORE, PS or snippet) in the notation editor
+;; (voices start from 0)
 
 (musicxml-to-editor :instrument 1)

@@ -46,7 +46,7 @@ stacc gs4 stacc e5 stacc f5 stacc)
 ;; same as the dynamics
 '(p< < < < mf pp< < ff)
 
-;; An example with articulationa, 4 measures
+;; An example with articulations, 4 measures
 (setf pitches 
       '((e4 b5 e5) 
         (fs4 bb4 e5 b5) 

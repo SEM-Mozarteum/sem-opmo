@@ -172,10 +172,11 @@ using the loop macro (see chapter 05-iteration)
 ;;; max-of-seq
 
 ;; get the longest voice in 4/4 measures
-(setf length-max-voice (max-of-seq length-all-voices))
+(setf length-max-voice (find-max length-all-voices))
 
 ;;; fit-to-span
 
+;; display as one voice (cmd-1) or as many (cmd-2)
 (setf trans-fit
       (loop with span-val = length-max-voice
             for i in trans

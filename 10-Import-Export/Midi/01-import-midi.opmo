@@ -25,6 +25,8 @@ the given quantisation compile-score writes this file with
 a given name andoptionally only a specific part between 
 start and end to disk. The output can directly be found in 
 the utilities panel under "S" (Scores).
+
+compile-score is converting the midi file to def-score
 |#
 
 (compile-score
@@ -126,19 +128,16 @@ Now you'll find you have the whole Bach aria in OMN script.
   "~/Documents/Opusmodus/Media/MIDI/Bach/bach-gv-aria.mid")
 
 ;; Import the 1. instrument
-
 (midi-to-omn gv-aria-bar-1-4 
              :instrument 1 
              :quantize '(1 2 4 8))
 
 ;; The function returns only the pitches of the 2nd 
 ;; midi instrument
-
 (flatten (midi-to-omn gv-aria-bar-1-4 :type :pitch :instrument 2))
 
 ;; The function returns only the lengths of the 3nd 
 ;; midi instrument
-
 (midi-to-omn gv-aria-bar-1-4 :type :length :instrument 3)
 
 ;; Only bars 2 and 3 from the midi file        
