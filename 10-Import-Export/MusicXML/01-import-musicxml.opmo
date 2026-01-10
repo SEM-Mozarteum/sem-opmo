@@ -51,7 +51,7 @@ into Opusmodus notation.
                  :inst 2
                  :start 2
                  :end 3
-                 :type :pitch)
+                 :type :pitch))
 
 ;;; ---------------------------------------------------------
 

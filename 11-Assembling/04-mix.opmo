@@ -46,6 +46,7 @@ This is often useful when distributing chords to voices.
 (setf mat2 '(db4ab4 f4g4 bb4a4 eb4b4 e4d4 gb4c4))
 
 (gen-combine mat1 mat2)
+;; same as (matrix-transpose (list mat1 mat2))
 
 ;; With the :rest keyword the process is continued until the
 ;; longest list is finished.
@@ -61,8 +62,8 @@ This is often useful when distributing chords to voices.
 
 ;;; gen-divide
 
-;; gen-divide can be used to divide a list of items into sublists 
-;; of a given size. 	
+;; gen-divide can be used to divide a list of items into 
+;; sublists of a given size. 	
 (integer-to-pitch (gen-divide 2 '(0 1 2 3 4 5 6 7 8 9)))
 ;; => ((0 1) (2 3) (4 5) (6 7) (8 9))
 
