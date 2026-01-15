@@ -12,21 +12,23 @@
 ;;; distribute-stream
 
 #|
-The function distribute-stream returns a new sequence of items
-distributed against lists of lengths sequentially.
+The function distribute-stream returns a new sequence of 
+items distributed against lists of lengths sequentially.
 It takes (usually) a single pitch stream and distributes 
 its content amongst to a series of voices or parts. 
-Other parameters like dynamics could distributed in a similar way.
+Other parameters like dynamics could distributed 
+in a similar way.
 |#
 
 ;; single pitch stream
 (setf scale '(c4 cs4 d4 ds4 e4 f4 fs4 g4 gs4 a4 as4 b4))
 
 ;; and 4 lists of durations
-(setf v1 '(1/8 1/8 -1/8 2/8 -1/8 5/8))
-(setf v2 '(1/8 1/8 1/8 -1/8 2/8 1/8))
-(setf va '(-2/8 1/8 1/8 -5/8 1/8))
-(setf vc '(-1/8 3/8 3/8 1/8 1/8))
+
+(setf v1 '(1/8 1/8 -1/8 2/8 -1/8 5/8)
+      v2 '(1/8 1/8 1/8 -1/8 2/8 1/8)
+      va '(-2/8 1/8 1/8 -5/8 1/8)
+      vc '(-1/8 3/8 3/8 1/8 1/8))
 
 (setf inst (distribute-stream scale (list v1 v2 va vc)))
 ;; The output produces a consecutive list of pitch lists 
@@ -51,7 +53,9 @@ Other parameters like dynamics could distributed in a similar way.
 
 (setf pitches (distribute-stream scale durations))
 
+;; since make-omn accepts lists of lists, its possible to apply
+;; several voices to one make-omn
 ;; display with cmd-2
 (make-omn :pitch pitches
-          :length durations))
+          :length durations)
 

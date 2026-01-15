@@ -99,25 +99,32 @@
 ;; REPLACE-BAR can be used to replace n bar or bars 
 ;; in a sequence, with another bar or bars.
 
+;; a sequence of 4 measures
 (setf mat
      '((s c4 db4 ab4 f4 g4 bb4) (s a4 eb4 b4 e4 d4 gb4)
        (s db4 ab4 f4 g4 bb4 a4) (s eb4 b4 e4 d4 gb4 c4)))
 
 ;; The third bar is replaced with a different bar
-(replace-bar 3 '((e a4 eb4 b4)) mat)
+;; display with cmd-2
+(list mat
+(replace-bar 3 '((e a4 eb4 b4)) mat))
 
 ;; The third bar is replaced with an empty bar
-(replace-bar 3 '(-q.) mat)
+(list mat
+(replace-bar 3 '(-q.) mat))
 
 ;;; ---------------------------------------------------------
 
 ;;; INSERT-BAR
 
 ;; insert a chord in a sequence of measures
-(insert-bar 3 '((c4cs4ds4)) mat)
+(setf insbar (insert-bar 3 '((e c4cs4ds4)) mat))
 
 ;; insert an empty bar in a sequence of measures
-(insert-bar 3 '((-s)) mat)
+(setf insempt (insert-bar 3 '((-e)) mat))
+
+;; display both sequences with cmd-2
+(list insbar insempt)
 
 
 

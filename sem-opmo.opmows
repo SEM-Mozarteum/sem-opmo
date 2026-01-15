@@ -1,5 +1,5 @@
 ("workspace-view/current"
- "12-Editing/01-editing.opmo"
+ "11-Assembling/02-filter.opmo"
 )
 
 ("workspace-view/history"
@@ -7,6 +7,6 @@
 )
 
 ("workspace-view/layout-ratios"
- (1 (OM-CAPI::MAIN 247 NIL 1146) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 462 NIL 389))
+ (1 (OM-CAPI::MAIN 247 NIL 751) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 787 NIL 97))
 )
 

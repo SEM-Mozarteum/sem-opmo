@@ -21,6 +21,8 @@ score. Dictum arguments are applied in consecutive order
 to all or selected bars or events.
 |#
 
+;;; ---------------------------------------------------------
+
 (setf omn '(e g4 f leg gs4 fs4 mf leg a4 s f4 p bb4 e4 b4 eb4 c5 d4 cs5))
 
 ;; remove all velocities
@@ -67,6 +69,8 @@ to all or selected bars or events.
           (:remove mf)
           (:if s :do leg+tasto)) omn))
 
+;;; ---------------------------------------------------------
+
 (setf omn2 
       '((5q fs4 p - bb3 f3 e4 -3q g4 c5 s eb5 mf a5 cs6 gs6)
              (5q gs6 f cs6 a5 eb5 - -s c5 g4 e4)))
@@ -105,3 +109,16 @@ to all or selected bars or events.
           (:do < :bar 1 :event (8 9 10 11))
           (:do f :bar 1 :event 12)
           (:do leg :event (7..11) :bar 1)) omn2)
+
+;;; ---------------------------------------------------------
+
+(setf omn5 '(q b3eb4gs4 a3d4fs4 e bb3cs4f4 gs3b3e4
+             s g3c4eb4 gs3b3e4 bb3d4f4 a3cs4fs4))
+
+(list omn5
+(dictum '(:within (t s) :do (dechord x)) omn5))
+
+(list omn5
+(dictum '(:within (b3 f4) :do (pitch-transpose 7 x)) omn5))
+
+

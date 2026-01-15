@@ -9,6 +9,19 @@
 
 ;;; ---------------------------------------------------------
 
+;;; ambitus
+
+(setf mat '(q c4 d4 e4 f4 g4 a4 b4))
+
+;; display with cmd-2
+(list mat
+(ambitus '(g3 g4) mat))
+
+(list mat
+(ambitus '(g3 g4) mat :type :invert))
+
+;;; ---------------------------------------------------------
+
 ;;; ambitus-instrument / ambitus-filter
 
 (defparameter pitches
@@ -26,6 +39,7 @@
 
 ;; Use this function to get the amitus of instruments.
 (integer-to-pitch (ambitus-instrument 'vibraphone))
+(integer-to-pitch (ambitus-instrument 'violin))
 
 #|
 This function filters pitches, velocities and articulations
@@ -34,14 +48,18 @@ The length of the removed pitches will be converted to
 rest lengths. The span of the sequence therefore stays
 unaltered.
 |#
-(ambitus-filter 'vibraphone pitches)
+
+;; display with cmd-2
+(list pitches
+(ambitus-filter 'vibraphone pitches))
 
 ;;; ---------------------------------------------------------
 
 ;;; length-legato
 
-;; length-legato inverts length-rests to a length-note and adds
-;; the sum of the rests in sequence to the previous length-note.
+;; length-legato inverts length-rests to a length-note and 
+;; adds the sum of the rests in sequence to the previous 
+;; length-note.
 
 (length-legato (ambitus-filter 'violoncello pitches))
 
@@ -53,15 +71,15 @@ unaltered.
            (:key-signature 'chromatic
                            :time-signature '(4 4)
                            :tempo 80
-                           :layout (piano-layout 'pno-rh 'pno-lh))
+                           :layout 
+                           (piano-layout 'pno-rh 'pno-lh))
   (pno-rh
    :omn rh
    :sound 'gm :program 0)
   
   (pno-lh
    :omn lh
-   :sound 'gm :program 0)
-  ) 
+   :sound 'gm :program 0)) 
 
 ;;; ---------------------------------------------------------
 
@@ -103,7 +121,7 @@ The option remain will invert the process.
 
 (list mat1 (filter-events 'd4 mat1))
 
-;; remain from material, everythin except chosen pitch
+;; remain from material, everything except chosen pitch
 (list mat1 (filter-events 'd4 mat1 :remain t))
 
 (setf mat2 '(e c4 mp -e fermata+stacc e. d4 -h e. c4 e e4))

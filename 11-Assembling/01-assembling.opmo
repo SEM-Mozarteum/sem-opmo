@@ -114,6 +114,7 @@
 (loop repeat 10
       initially (init-seed 13)
       for measure = (rndn 1 (length seq1))
+        ;;; nth (- 3 1)? korrigieren 
       for max-event = (length (nth (- 3 1) seq1))
       collect
         (get-events (list

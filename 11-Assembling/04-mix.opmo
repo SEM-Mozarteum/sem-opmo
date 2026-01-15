@@ -54,7 +54,7 @@ This is often useful when distributing chords to voices.
 ;; => ((a b c) (a b c) (a b) (a))
 
 ;; The keyword :revolving, when followed by t (true) makes 
-;; GEN-COMBINE continue when the shortest list is exhausted.
+;; GEN-COMBINE continue longest list is exhausted.
 (gen-combine '(a a a a) '(b b b) '(c c) :revolving t)
 ;; => ((a b c) (a b c) (a b c) (a b c))
 
@@ -77,33 +77,21 @@ This is often useful when distributing chords to voices.
 
 ;; gen-fragment returns a fragment of a sequence from an existing 
 ;; list or lists.
-(gen-fragment 1 '(3) '(c4 d4 e4 f4 g4 a4))
+(gen-fragment 3 '(c4 d4 e4 f4 g4 a4))
 ;; => (c4 d4 e4)
 
-;; Two consecutive fragments
-(gen-fragment 2 '(3) '(c4 d4 e4 f4 g4 a4))
-;; => (c4 d4 e4 f4 g4 a4)
-
 ;; Two consecutive fragments in lists (similar to gen-divide)
-(gen-fragment 2 '(3) '(c4 d4 e4 f4 g4 a4) :lists t)
+(gen-fragment '(3 3) '(c4 d4 e4 f4 g4 a4))
 ;; => ((c4 d4 e4) (f4 g4 a4))
 
+(gen-fragment '(3 3) '(c4 d4 e4 f4 g4 a4) :flatten t)
+;; => (c4 d4 e4 f4 g4 a4)
+
+(setf frag '((c4 cs4 d4 fs4 g4 gs4) (c4 cs4 e4 f4 fs4 g4 bb4 b4)))
 ;; Lists are interpreted as random ranges:
-;; 2 fragments of length between 2 and 3 plus 4 fragments  
-;; of length between 2 and 3.
-(chordize-list (gen-fragment '(2 4) '(2 3) 
-              '((c4 d4 e4 f4 g4 a4) (cs4 ds4 fs4 gs5 as4)) :lists t))
-
-;; => ((f4 g4) (d4 e4) (cs4 ds4) (ds4 fs4 gs5) (cs4 ds4 fs4) (ds4 fs4))
-;;      2       2       2         3             3             2
-
-;; An example with pitches.
-(gen-fragment '(3 2) '((2 3) (1 2))
-              '((q c4 stacc cs4 d4 c4db4 ten d4)
-                (q e4 stacc f4 e4 e4f4 ten fs4))
-              :seed 5 :lists t)
-;; ((q cs4 stacc d4) (q cs4 d4 c4db4 ten) (q c4 ten cs4) (q fs4) (q e4f4))
-;;   2                3                    2              1       1
+;; 2 fragments of lengths between 2 and 3 plus 4 fragments  
+;; of lengths between 2 and 3.
+(chordize-list (gen-fragment '((2 4 3) (2 3 3)) frag))
 
 ;;; ---------------------------------------------------------
 
