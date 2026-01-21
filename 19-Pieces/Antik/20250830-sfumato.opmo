@@ -1,0 +1,486 @@
+;;; ---------------------------------------------------------------------
+;;;
+;;; Sfumato
+;;; Achim Bornhoeft (c) 2025-2026
+;;; 2025-08-20
+;;; 2026-01-20
+;;;
+;;; ---------------------------------------------------------------------
+
+
+#|
+sfumato
+
+(deutsch verraucht, verschwommen) bezeichnet eine Technik in der 
+Ölmalerei, die Konturen nicht mit scharfen zeichnerischen Umrissen 
+darzustellen, sondern sie mit rein malerischen Mitteln weich 
+verschwimmen zu lassen und alles mit Weichheit zu umgeben.
+https://de.wikipedia.org/wiki/Sfumato
+
+Sfumato (smoky, blurred) refers to a technique in oil painting 
+in which contours are not depicted with sharp graphic outlines, 
+but are softly blurred using purely painterly means, surrounding 
+everything with softness. 
+|#
+
+;; Take the complete voice and scan it with the following procedure
+;; to filter out only one voice at a time:
+(setf mat '((q c4 e c4 c1 q d5 g7)
+            (q c4 e d6 d6 d6 d6 c8 q d5 g7)))
+
+;; see result with cmd-2
+(loop for i in '(c4 d5 g7)
+      collect
+        ;; fill the gaps between similar pitch onsets
+        ;; by extending the durations over the rests
+        (length-legato
+         ;; filter individual pitches from each voice
+         (ambitus-filter (list i i) (flatten mat))))
+
+;; ---------------------------------------------------------
+;; Filter score
+;; ---------------------------------------------------------
+
+;;; Franz Schubert, String Quartet No. 14 in D minor, D. 810
+;;; Second movement, Andante con moto, "Death and the Maiden"
+;;; Measures 1 to 32
+
+;; import of the score
+;; Preview with cmd-2
+(setf 
+ material
+ (musicxml-to-omn
+  ;; musicxml file of the score
+  "~/Documents/code/github/sem-opmo/19-Pieces/Antik/schubert-D810-2.musicxml"))
+
+;; string quartet instruments
+(setf instruments '(violin violin viola violoncello))
+
+;; all pitches in ambitus ‚of each instrument
+(setf all-pitches-voices
+      (loop for i in instruments
+            for amb = (ambitus-instrument i)
+            collect
+              (loop for j from (first amb) to (second amb)
+                    collect (integer-to-pitch j))))
+
+#|
+scan each voice with all the pitches of the according instrument 
+(ambitus-filter)
+
+collect all equal pitches, remove the rests between them and fill 
+the gaps by lengthen the durations (length-legato)
+|#
+
+(setf new-material
+      (loop for m in material ; original list of voices
+            for k in all-pitches-voices ; all pitches of each instrument
+            collect
+              (loop for j in
+                      (loop for i in (reverse k) ; high to low
+                            collect
+                              (length-legato ; extend durs over rests
+                               (ambitus-filter ; filter
+                                (list i i) ; only one pitch
+                                (flatten m)))) ; from the flattend voice
+                    when (not (equal (length j) 1))
+                        ;; collect only when its not a list of one
+                        ;; element (-32): one 32 measure rest
+                      collect j)))
+
+;; number of instruments (= different pitches) per voice
+;; to prepare the def-score with the correct number of instruments
+(setf lengths (loop for i in new-material
+                    collect (length i)))
+;; (9 9 7 11) means 9 vn1, 9 vn2, 7 va, 11 vc
+
+;; remove the parentheses around the voices per
+;; instrument (make all individual voices)
+(setf new-mat-voices
+      (loop for i in new-material
+              append i))
+
+;; fit each voice in a 4/4 measure
+(setf new-mat-voc-time-sig
+      (loop for i in new-mat-voices
+            collect (omn-to-time-signature i '(4 4))))
+
+;; bars in which voices start
+(setf bars '(31 2 2 27 1 3 23 25 20 18 31 29 1 1 22 1 4 20 2 1 31 
+     1 1 4 20 1 27 30 17 3 29 19 18 8 23 22))
+
+;; add pp dynamic at the beginning of each voice
+(setf voc-dyn (loop for i in new-mat-voc-time-sig
+            for j in bars
+            collect (dictum (list :bar j :do 'pp) i)))
+
+;; assign a variable to all voices
+(assign-variable 'voc voc-dyn)
+
+;; ---------------------------------------------------------
+;; Score and Layout
+;; ---------------------------------------------------------
+
+(def-score sfumato
+    (:title "Sfumato"
+     :composer "Achim Bornhoeft"
+     :copyright "Copyright © 2025"
+     :key-signature 'chromatic
+     :time-signature '((1 1 1 1) 4)
+     :tempo 6
+     :layout (list
+              (bracket-group
+               (violin1-layout 'voc1 :name "Violin 1" :abbr "Vn 1")
+               (violin1-layout 'voc2 :name "Violin 2" :abbr "Vn 2")
+               (violin1-layout 'voc3 :name "Violin 3" :abbr "Vn 3")
+               (violin1-layout 'voc4 :name "Violin 4" :abbr "Vn 4")
+               (violin1-layout 'voc5 :name "Violin 5" :abbr "Vn 5")
+               (violin1-layout 'voc6 :name "Violin 6" :abbr "Vn 6")
+               (violin1-layout 'voc7 :name "Violin 7" :abbr "Vn 7")
+               (violin1-layout 'voc8 :name "Violin 8" :abbr "Vn 8")
+               (violin1-layout 'voc9 :name "Violin 9" :abbr "Vn 9")
+               )
+              (bracket-group
+               (violin1-layout 'voc10 :name "Violin 10" :abbr "Vn 10")
+               (violin1-layout 'voc11 :name "Violin 11" :abbr "Vn 11")
+               (violin1-layout 'voc12 :name "Violin 12" :abbr "Vn 12")
+               (violin1-layout 'voc13 :name "Violin 13" :abbr "Vn 13")
+               (violin1-layout 'voc14 :name "Violin 14" :abbr "Vn 14")
+               (violin1-layout 'voc15 :name "Violin 15" :abbr "Vn 15")
+               (violin1-layout 'voc16 :name "Violin 16" :abbr "Vn 16")
+               (violin1-layout 'voc17 :name "Violin 17" :abbr "Vn 17")
+               (violin1-layout 'voc18 :name "Violin 18" :abbr "Vn 18")
+               )
+              (bracket-group
+               (viola-layout 'voc19 :name "Viola 1" :abbr "Va 1")
+               (viola-layout 'voc20 :name "Viola 2" :abbr "Va 2")
+               (viola-layout 'voc21 :name "Viola 3" :abbr "Va 3")
+               (viola-layout 'voc22 :name "Viola 4" :abbr "Va 4")
+               (viola-layout 'voc23 :name "Viola 5" :abbr "Va 5")
+               (viola-layout 'voc24 :name "Viola 6" :abbr "Va 6")
+               (viola-layout 'voc25 :name "Viola 7" :abbr "Va 7")
+               )               
+              (bracket-group
+               (violoncello-layout 'voc26 
+                                   :name "Violoncello 1" :abbr "Vc 1")
+               (violoncello-layout 'voc27 
+                                   :name "Violoncello 2" :abbr "Vc 2")
+               (violoncello-layout 'voc28 
+                                   :name "Violoncello 3" :abbr "Vc 3")
+               (violoncello-layout 'voc29 
+                                   :name "Violoncello 4" :abbr "Vc 4")
+               (violoncello-layout 'voc30 
+                                   :name "Violoncello 5" :abbr "Vc 5")
+               (violoncello-layout 'voc31 
+                                   :name "Violoncello 6" :abbr "Vc 6")
+               (violoncello-layout 'voc32 
+                                   :name "Violoncello 7" :abbr "Vc 7")
+               (violoncello-layout 'voc33 
+                                   :name "Violoncello 8" :abbr "Vc 8")
+               (violoncello-layout 'voc34 
+                                   :name "Violoncello 9" :abbr "Vc 9")
+               (violoncello-layout 'voc35 
+                                   :name "Violoncello 10" :abbr "Vc 10")
+               (violoncello-layout 'voc36 
+                                   :name "Violoncello 11" :abbr "Vc 11")
+               )))
+  
+  (voc1
+   :omn voc1
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 44
+   )
+  (voc2
+   :omn voc2
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 44
+   )
+  (voc3
+   :omn voc3
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 44
+   )
+  (voc4
+   :omn voc4
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 44
+   )
+  (voc5
+   :omn voc5
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 44
+   )
+  (voc6
+   :omn voc6
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 44
+   )
+  (voc7
+   :omn voc7
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 44
+   )
+  (voc8
+   :omn voc8
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 44
+   )
+  (voc9
+   :omn voc9
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 44
+   )
+  (voc10
+   :omn voc1
+   :channel 10
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 54
+   )
+  (voc11
+   :omn voc11
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 54
+   )
+  (voc12
+   :omn voc12
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 54
+   )
+  (voc13
+   :omn voc13
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 54
+   )
+  (voc14
+   :omn voc14
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 54
+   )
+  (voc15
+   :omn voc15
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 54
+   )
+  (voc16
+   :omn voc16
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 54
+   )
+  (voc17
+   :omn voc17
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 54
+   )
+  (voc18
+   :omn voc18
+   :channel 1
+   :sound 'gm
+   :program 'violin
+   :volume 95
+   :pan 54
+   )
+  (voc19
+   :omn voc19
+   :channel 1
+   :sound 'gm
+   :program 'viola
+   :volume 95
+   :pan 74
+   )
+  (voc20
+   :omn voc20
+   :channel 1
+   :sound 'gm
+   :program 'viola
+   :volume 95
+   :pan 74
+   )
+  (voc21
+   :omn voc21
+   :channel 1
+   :sound 'gm
+   :program 'viola
+   :volume 95
+   :pan 74
+   )
+  (voc22
+   :omn voc22
+   :channel 1
+   :sound 'gm
+   :program 'viola
+   :volume 95
+   :pan 74
+   )
+  (voc23
+   :omn voc23
+   :channel 1
+   :sound 'gm
+   :program 'viola
+   :volume 95
+   :pan 74
+   )
+  (voc24
+   :omn voc24
+   :channel 1
+   :sound 'gm
+   :program 'viola
+   :volume 95
+   :pan 74
+   )
+  (voc25
+   :omn voc25
+   :channel 1
+   :sound 'gm
+   :program 'viola
+   :volume 95
+   :pan 74
+   )
+  (voc26
+   :omn voc26
+   :channel 1
+   :sound 'gm
+   :program 'cello
+   :volume 95
+   :pan 84
+   )
+  (voc27
+   :omn voc27
+   :channel 1
+   :sound 'gm
+   :program 'cello
+   :volume 95
+   :pan 84
+   )
+  (voc28
+   :omn voc28
+   :channel 1
+   :sound 'gm
+   :program 'cello
+   :volume 95
+   :pan 84
+   )
+  (voc29
+   :omn voc29
+   :channel 1
+   :sound 'gm
+   :program 'cello
+   :volume 95
+   :pan 84
+   )
+  (voc30
+   :omn voc30
+   :channel 1
+   :sound 'gm
+   :program 'cello
+   :volume 95
+   :pan 84
+   )
+  (voc31
+   :omn voc31
+   :channel 1
+   :sound 'gm
+   :program 'cello
+   :volume 95
+   :pan 84
+   )
+  (voc32
+   :omn voc32
+   :channel 1
+   :sound 'gm
+   :program 'cello
+   :volume 95
+   :pan 84
+   )
+  (voc33
+   :omn voc33
+   :channel 1
+   :sound 'gm
+   :program 'cello
+   :volume 95
+   :pan 84
+   )
+  (voc34
+   :omn voc34
+   :channel 1
+   :sound 'gm
+   :program 'cello
+   :volume 95
+   :pan 84
+   )
+  (voc35
+   :omn voc35
+   :channel 1
+   :sound 'gm
+   :program 'cello
+   :volume 95
+   :pan 84
+   )
+  (voc36
+   :omn voc36
+   :channel 1
+   :sound 'gm
+   :program 'cello
+   :volume 95
+   :pan 84
+   )
+  )
+
+;; display the score
+(display-musicxml *last-score*)
+
+;; (defparameter *default-notation-editor* "MuseScore 4.app")
+(defparameter *default-notation-editor* "Sibelius.app")
+
+;; open in default external editor
+(musicxml-to-editor)
+

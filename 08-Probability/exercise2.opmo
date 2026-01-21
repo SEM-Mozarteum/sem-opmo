@@ -16,3 +16,5 @@ Filter the output in a score for flute and bass-clarinet.
 Use ambitus-filter and filter-length.
 Integrate other functions if necessary.
 |#
+
+;;; ---------------------------------------------------------

@@ -8,6 +8,12 @@
 
 ;;; EXERCISE
 
-;; Play around with the parameters in 01-score.opmo:
-;; Change pitches, duration, names of variables, etc.
-;; Make a new score with 2-4 parts.
+#|
+Play around with the parameters in 01-score.opmo:
+Change pitches, duration, names of variables, etc.
+Make a new score with 2-4 parts.
+|#
+
+;;; ---------------------------------------------------------
+
+

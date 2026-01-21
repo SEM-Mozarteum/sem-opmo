@@ -167,46 +167,10 @@
    :pitch (flatten (first 2voices2))
    :length lengths2
    :velocity (second dynamics2)
-   :articulation '(ped)))
-
-;;; ------------------------------------
-
-;;; Violin
-
-(defparameter vl
-  (dechord 
-  (ambitus-filter 'violin rh2)
-  :pitch '? :seed  123))
-
-(setf violin
-      (dictum '((:remove :velocity)
-                (:apply 'p)
-                (:range (g3 g4) :apply (pp tasto))
-                (:range (gs4 a7) :apply ord))
-                vl))
-
-;;; ------------------------------------
-
-;;; Vibraphone
-
-(defparameter vi
-  (length-staccato
-   (dechord 
-    (ambitus-filter 'glockenspiel rh1)
-    :pitch '? :seed 123)
-   :value 1/8))
-
-(setf vibr
-      (dictum '((:remove :velocity)
-                (:apply 'p)
-                (:apply ped))
-                vi))
-      
-;;; ------------------------------------
+   :articulation '(ped))) 
 
 ;;; Score
 
-#|
 (ps 'gm
     :p (list rh1 lh1 rh2 lh2)
     :key-signature 'chromatic
@@ -214,45 +178,22 @@
     :flexible-clef t
     :tempo 80
     :title "Untitled 20220510")
-|#
 
-(def-score Untitled-20220518
-           (:title "Untitled 20220518"
+(def-score Untitled-20220510
+           (:title "Untitled 20220503"
                    :composer "Achim  Bornhoeft"
                    :copyright "Copyright © 2022"
                    :key-signature 'chromatic
                    :time-signature time-sigs
                    :flexible-clef t
                    :tempo 80
-                   :layout (list
-                            (violin-layout 'violin)
-                            (vibraphone-single-layout 'vibra)
+                   :layout (list  
                             (piano-layout 'piano-rh1 'piano-lh1)
                             (piano-layout 'piano-rh2 'piano-lh2)))
   
-  (violin
-   :omn violin
-   :channel 1
-   :sound 'gm
-   :program 'violin
-   :volume 100
-   :pan 64
-   :controllers (91 '(48))
-   )
-  
-  (vibra
-   :omn vibr
-   :channel 2
-   :sound 'gm
-   :program 'vibraphone
-   :volume 100
-   :pan 64
-   :controllers (91 '(48))
-   )
-  
   (piano-rh1
    :omn rh1
-   :channel 3
+   :channel 1
    :sound 'gm
    :program 'acoustic-grand-piano
    :volume 100
@@ -262,13 +203,13 @@
   
   (piano-lh1
    :omn lh1
-   :channel 4
+   :channel 2
    :controllers (91 '(48))
    )
   
   (piano-rh2
    :omn rh2
-   :channel 5
+   :channel 1
    :sound 'gm 
    :program 'acoustic-grand-piano
    :volume 100
@@ -278,7 +219,7 @@
   
   (piano-lh2
    :omn lh2
-   :channel 6
+   :channel 2
    :controllers (91 '(48))
    )
   )

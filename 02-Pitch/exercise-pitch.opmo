@@ -8,9 +8,7 @@
 
 ;;; EXERCISE
 
-#|
-Create a chord with 4 pitches or frequencies and transpose 
-it a fifth lower, a quartertone and a tritone higher
-|#
+;; Create a chord with 4 pitches or frequencies and transpose 
+;; it a fifth lower, a quartertone and a tritone higher
 
 ;;; ---------------------------------------------------------

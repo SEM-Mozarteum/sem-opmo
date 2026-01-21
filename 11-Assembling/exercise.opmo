@@ -7,7 +7,11 @@
 
 ;;; EXERCISE
 
-;; Make 2 musical phrases which are opposite in terms of pitch, 
-;; length (durations), articulation and velocity e.g. very high fast
-;; staccato notes in pp and very low tenuto notes in f with long 
-;; durations. Assemble them in different ways.
+#|
+Make 2 musical phrases which are opposite in terms of pitch, 
+length (durations), articulation and velocity e.g. very high fast
+staccato notes in pp and very low tenuto notes in f with long 
+durations. Assemble them in different ways.
+|#
+
+;;; ---------------------------------------------------------

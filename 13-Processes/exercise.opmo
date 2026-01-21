@@ -7,6 +7,10 @@
 
 ;;; EXERCISE
 
-;; Make a short sketch for flute and violoncello using permutations 
-;; of pitch and duration. Look under def-score how to layout them. 
-;; Use different time-signatures and tempos.
+#|
+Make a short sketch for flute and violoncello using 
+permutations of pitch and duration. Look under def-score how 
+to layout them. Use different time-signatures and tempos.
+|#
+
+;;; ---------------------------------------------------------

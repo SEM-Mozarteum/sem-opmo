@@ -58,4 +58,9 @@ in a similar way.
 ;; display with cmd-2
 (make-omn :pitch pitches
           :length durations)
+(list
+'((e c4 mf - q e4 -e he gs4) (e cs4 mf d4 - q fs4 e a4) (-q e f4 mf -he e b4) (-e q. ds4 mf e g4 as4))
+'((e c4 mf - q e4 -e he gs4) (e cs4 mf d4 - q fs4 e a4) (-q e f4 mf -he e b4) (-e q. ds4 mf e g4 as4))
+'((e c4 mf - q e4 -e he gs4) (e cs4 mf d4 - q fs4 e a4) (-q e f4 mf -he e b4) (-e q. ds4 mf e g4 as4))
+'((e c4 mf - q e4 -e he gs4) (e cs4 mf d4 - q fs4 e a4) (-q e f4 mf -he e b4) (-e q. ds4 mf e g4 as4)))
 

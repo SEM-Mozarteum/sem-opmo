@@ -8,10 +8,7 @@
 
 ;;; EXERCISE
 
- 
-#|
-create a short musical phrase with pitches and durations
-convert it to omn and set it to a variable.
-|#
+;; Create a short musical phrase with pitches and durations
+;; Convert it to omn and set it to a variable.
 
 ;;; ---------------------------------------------------------

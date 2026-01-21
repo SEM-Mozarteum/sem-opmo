@@ -19,3 +19,5 @@ You may control the pitch range with "ambitus-instrument".
 See under "Score-Layout" how to layout the score,
 (:layout is a key variable for "def-score").
 |#
+
+;;; ---------------------------------------------------------

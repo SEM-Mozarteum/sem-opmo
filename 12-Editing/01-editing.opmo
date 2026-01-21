@@ -84,13 +84,13 @@
 ;; POSITION-INSERT can be used to insert certain items 
 ;; into a list, or series of lists.
 
+(setf mat '(c4 c4 c4 c4 c4))
+
 ;; insert a gs4 at the third position
-(position-insert 2 'gs4 '(c4 c4 c4 c4 c4))
-;; => (c4 c4 gs4 c4 c4 c4)
+(position-insert 2 'gs4 mat))
 
 ;; insert gs4 at the first and the third position
-(position-insert '(0 2) 'gs4 '(c4 c4 c4 c4 c4))
-;; => (gs4 c4 gs4 c4 g4 c4 c4 c4)
+(position-insert '(0 2) 'gs4 mat)
 
 ;;; ---------------------------------------------------------
 

@@ -8,12 +8,11 @@
 ;;; EXERCISE
 
 #|
-1. 
-Import the Midi File dido.mid and import it to Opusmodus.
+1. Import the Midi File dido.mid and import it to Opusmodus.
 
-2. 
-Correct the file in OMN to 4 parts only directly in OMN.
+2. Correct the file in OMN to 4 parts only.
 
-3. 
-Export the score either via MusicXML to any notation program.
+3. Export the score via MusicXML to any notation program.
 |#
+
+;;; ---------------------------------------------------------
