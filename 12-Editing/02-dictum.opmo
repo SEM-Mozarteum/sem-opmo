@@ -73,7 +73,7 @@ to all or selected bars or events.
 
 (setf omn2 
       '((5q fs4 p - bb3 f3 e4 -3q g4 c5 s eb5 mf a5 cs6 gs6)
-             (5q gs6 f cs6 a5 eb5 - -s c5 g4 e4)))
+             (5q gs6 f cs6 a5 eb5 - -t c5 g4 e4)))
 
 ;; transpose all sixteenth and thirty-second notes by 
 ;; 7 semitones down add tenuto to all eight note triplets
@@ -97,6 +97,9 @@ to all or selected bars or events.
 (list omn2
 (dictum '((:remove :event :bar 1 :event 3)
           (:remove :event :bar 2 :event 1)) omn2))
+
+
+;;;; NEXT WEEK 29.1.2026
 
 ;; first remove all dynamic signs
 ;; then add new ones with crescendo

@@ -21,7 +21,7 @@
 (position-item 'fs4 '(c4 cs4 fs4 g4 b4 c5 fs4 b4))
 ;;=> (2 6)
 
-(position-item 1 '(1 0 0 1 1 0 1 1 1 0)))
+(position-item 1 '(1 0 0 1 1 0 1 1 1 0))
 ;; => (0 3 4 6 7 8)
 
 ;; The position function in plain LISP only returns the first found value
@@ -69,12 +69,12 @@
 ;; => (a b c 4 5 4 5 c b c)
 
 ;; the same but all other items are replaced with d
-(replace-map '((1 a) (2 b) (3 c)) '(1 2 3 4 5 4 5 3 2 3)
-             :otherwise 'd)
+(replace-map '((1 a3) (2 b4) (3 c3)) '(1 2 3 4 5 4 5 3 2 3)
+             :otherwise 'd3)
 ;; => (a b c d d d d c b c)
 
 ;; all 1 and 2 are replaced with a, 3,4,5 with b
-(replace-map '(((1 2) a) ((3 4 5) b)) '(1 2 3 4 5 4 5 3 2 3))
+(replace-map '(((1 2) a4) ((3 4 5) b3)) '(1 2 3 4 5 4 5 3 2 3))
 ;;=> (a a b b b b b b a b)
 
 ;;; ---------------------------------------------------------
@@ -87,10 +87,17 @@
 (setf mat '(c4 c4 c4 c4 c4))
 
 ;; insert a gs4 at the third position
-(position-insert 2 'gs4 mat))
+(position-insert 2 'gs4 mat)
 
 ;; insert gs4 at the first and the third position
-(position-insert '(0 2) 'gs4 mat)
+(position-insert '(0 2) '(gs4 f3) mat)
+
+;;; TODO!!!
+;; position 0 is replaced with gs4, position 2 with f3
+(position-insert '(0 2) '(gs4 f3) mat)
+
+;; positions 0 and 2 are replaced with gs4 AND f3 
+(position-insert '(0 2) '((gs4 f3)) mat)
 
 ;;; ---------------------------------------------------------
 
@@ -125,6 +132,3 @@
 
 ;; display both sequences with cmd-2
 (list insbar insempt)
-
-
-

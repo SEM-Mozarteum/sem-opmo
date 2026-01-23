@@ -30,11 +30,11 @@
 (setf cart (cartesian '((e s) (c4 d4 eb4 a4) (mp mf f))))
 
 ;; display with cmd-2
-(gen-loop 10 ; make 10 voices
-          (flatten ; flatten the result, remove measures
-           (rnd-sample 20 ; take 20 samples randomly
-                       cart))
-          :seed 123)
+(mcflatten ; remove inner lists (measures)
+ (loop repeat 10 ; make 10 voices
+       collect
+         (rnd-order ; reorder list randomly
+          cart :list t)))
 
 ;;; ---------------------------------------------------------
 
