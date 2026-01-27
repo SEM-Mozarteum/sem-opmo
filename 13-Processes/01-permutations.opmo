@@ -9,126 +9,16 @@
 
 ;;; ---------------------------------------------------------
 
-;;; CARTESIAN
-
-;; The CARTESIAN function will return all the combinatory 
-;; possibilities drawn from two or more sets.
-
-(cartesian '((a b c d) (1 2 3 4)))
-#|
-((a 1) (a 2) (a 3) (a 4)
- (b 1) (b 2) (b 3) (b 4)
- (c 1) (c 2) (c 3) (c 4)
- (d 1) (d 2) (d 3) (d 4))
-|#
-
-;; All combination of three sets.
-
-(cartesian '((1 2 3) (1 2 3) (1 2 3)))
-
-;; Generate OMN fragments with CARTESIAN sets.
-(setf cart (cartesian '((e s) (c4 d4 eb4 a4) (mp mf f))))
-
-;; display with cmd-2
-(mcflatten ; remove inner lists (measures)
- (loop repeat 10 ; make 10 voices
-       collect
-         (rnd-order ; reorder list randomly
-          cart :list t)))
-
-;;; ---------------------------------------------------------
-
-;;; PERMUTE-N / PERMUTE
-
-;; PERMUTE-N will return a list of all the permutations 
-;; of the integers 1 to N.
-
-(permute-n 3) ; ((1 2 3) (1 3 2) (3 1 2) (2 1 3) (2 3 1) (3 2 1))
-
-;; The function PERMUTE will generate multiple lists of all 
-;; the permutations from a list of items.
-
-(permute '(1 2 3 4))
-
-;; Sublists are handled as single items
-
-(permute '((c4 d4) (e4 f4) (g4 a4)))
-
-;;; ---------------------------------------------------------
-
-;;; GEN-ROTATE
-
-;; A single rotation, default left:
-;; The list is rotated to the left
-(gen-rotate 1 '(c4 d4 e4 g4 a4))
-;; => (a4 c4 d4 e4 g4)
-
-;; All rotations of a list
-(gen-rotate :right '(1 2 3 4) :type 'list)
-;; => ((1 2 3 4) (2 3 4 1) (3 4 1 2) (4 1 2 3))
-
-;; Two rotations of a list
-(gen-rotate 2 '(1 2 3 4 5) :type 'list)
-;; => ((1 2 3 4 5) (5 1 2 3 4) (4 5 1 2 3))
-
-;;; ---------------------------------------------------------
-
-;;; POWER-SET
-
-;; The function POWER-SET will generate not only all permutations 
-;; of a set (as in the permute function), but also all possible 
-;; sub-permutations.
-
-(power-set '(1 2 3 4))
-
-;; For example a solo for conga drums playing through a 
-;; POWER-SET permutation.
-
-;; A list of variables
-(setf 
- c-1 '(c4 cs4)
- c-2 '(cs4 c4 d4)
- c-3 '(cs4 c4 cs4 d4)
- b-1 '(ds4 e4)
- b-2 '(ds4 e4 ds4)
- b-3 '(e4 ds4 e4)
- )
-
-;; Here only the variables are permutated
-(setf perc-pat (power-set '(c-1 c-2 c-3 b-1 b-2 b-3)))	
-
-;; The permutated variables are evaluated with apply-eval
-(setf perc-solo (apply-eval perc-pat))
-(setf durs (span perc-solo '(1/16)))
-(setf mat1 (make-omn :pitch perc-solo :length durs))
-(setf time-sig (get-time-signature mat1))
-
-(def-score perc
-           (:key-signature 'chromatic
-            :time-signature time-sig
-            :tempo '(100)
-            :layout (percussion-layout 'percussion)
-            ; this layout creates a percussion clef for the
-            ; instrument "percussion"
-            )
-  
-(percussion
- :omn mat1
- :channel 10
-   :sound 'gm))
-
-;;; ---------------------------------------------------------
-
 ;;; COMBINATION / COMBINATION2       
 
 ;; COMBINATION will return a list of all the combinations 
-;; N elements in length from a list.
-
+;; N consecutive (!) elements in length from a list.
 (combination 2 '(1 2 3))
-;; ((1 2) (1 3) (2 3) (3 1) (3 2) (2 1))
+;; ((1 2) (1 3) (2 3))
 
+;; Therefore
 (combination 3 '(1 2 3))
-;; ((1 2 3) (1 3 2) (2 1 3) (2 3 1) (3 1 2) (3 2 1))
+;; returns only ((1 2 3))
 
 ;; Generate all note combinations of 3
 (setf pitches (combination 3 '(c4 d4 f4 g4 a4)))
@@ -148,3 +38,113 @@
  :pitch (integer-to-pitch combs)
  :length '(1/16)
  :span :pitch)
+
+;;; ---------------------------------------------------------
+
+;;; CARTESIAN
+
+;; The CARTESIAN function will return all the combinatory 
+;; possibilities drawn from two or more sets.
+
+(cartesian '((a b c d) (1 2 3 4)))
+#|
+((a 1) (a 2) (a 3) (a 4)
+ (b 1) (b 2) (b 3) (b 4)
+ (c 1) (c 2) (c 3) (c 4)
+ (d 1) (d 2) (d 3) (d 4))
+|#
+
+;; All combination of three sets.
+(cartesian '((1 2 3) (1 2 3) (1 2 3)))
+
+;; Generate OMN fragments with CARTESIAN sets.
+(setf cart (cartesian '((e s) (c4 d4 eb4 a4) (mp mf f))))
+
+;; display with cmd-2
+(mcflatten ; remove inner lists (measures)
+ (loop repeat 10 ; make 10 voices
+       collect
+         (rnd-order ; reorder list randomly
+          cart :list t)))
+
+;;; ---------------------------------------------------------
+
+;;; PERMUTE-N / PERMUTE
+
+;; PERMUTE-N will return a list of all the permutations 
+;; of the integers 1 to N.
+(permute-n 3) ; ((1 2 3) (1 3 2) (3 1 2) (2 1 3) (2 3 1) (3 2 1))
+
+;; The function PERMUTE will generate multiple lists of all 
+;; the permutations from a list of items.
+(permute '(1 2 3 4))
+
+;; Sublists are handled as single items
+(permute '((c4 d4) (e4 f4) (g4 a4)))
+
+;;; ---------------------------------------------------------
+
+;;; GEN-ROTATE
+
+;; A rotations is a specific type of permutation
+
+;; A single rotation, default left:
+;; The list is rotated from right to the left
+(gen-rotate 1 '(c4 d4 e4 g4 a4))
+;; => (a4 c4 d4 e4 g4)
+
+;; All rotations of a list from left to right
+(gen-rotate :right '(1 2 3 4) :type 'list)
+;; => ((1 2 3 4) (2 3 4 1) (3 4 1 2) (4 1 2 3))
+
+;; Only two rotations (left) of a list
+(gen-rotate 2 '(1 2 3 4 5) :type 'list)
+;; => ((1 2 3 4 5) (5 1 2 3 4) (4 5 1 2 3))
+
+;;; ---------------------------------------------------------
+
+;;; POWER-SET
+
+;; The function POWER-SET will generate all combinations of
+;; consecutive elements including also all possible 
+;; sub-combinations.
+(power-set '(1 2 3 4))
+
+;; For example a solo for conga drums playing through a 
+;; POWER-SET.
+
+;; A list of variables
+(setf 
+ c-1 '(c4 cs4)
+ c-2 '(cs4 c4 d4)
+ c-3 '(cs4 c4 cs4 d4)
+ b-1 '(ds4 e4)
+ b-2 '(ds4 e4 ds4)
+ b-3 '(e4 ds4 e4)
+ )
+
+;; A power-set of the variables
+(setf perc-pat (power-set '(c-1 c-2 c-3 b-1 b-2 b-3)))	
+
+;; The permutated variables are evaluated with apply-eval.
+;; When 'applied' to a list of variables or arguments apply-eval
+;; evaluates their content. Otherwise it would be only a
+;; list containing several symbols.
+(setf perc-solo (apply-eval perc-pat))
+(setf durs (span perc-solo '(1/16)))
+(setf mat1 (make-omn :pitch perc-solo :length durs))
+(setf time-sig (get-time-signature mat1))
+
+(def-score perc
+           (:key-signature 'chromatic
+            :time-signature time-sig
+            :tempo '(100)
+            :layout (percussion-layout 'percussion)
+            ; this layout creates a percussion clef for the
+            ; instrument "percussion"
+            )
+  
+(percussion
+ :omn mat1
+ :channel 10
+   :sound 'gm))

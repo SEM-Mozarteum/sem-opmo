@@ -1,5 +1,5 @@
 ("workspace-view/current"
- "12-Editing/01-editing.opmo"
+ "13-Processes/03-envelopes.opmo"
 )
 
 ("workspace-view/history"
@@ -7,6 +7,6 @@
 )
 
 ("workspace-view/layout-ratios"
- (1 (OM-CAPI::MAIN 236 NIL 896) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 770 NIL 112))
+ (1 (OM-CAPI::MAIN 247 NIL 934) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 712 NIL 172))
 )
 
