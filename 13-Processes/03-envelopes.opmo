@@ -52,6 +52,10 @@
 (xy-plot (list env '(2.5 1.25)) 
          :join-points t :point-radius 2 :style :axis)
 
+;;;
+;;; Next lesson on 5.3.2026
+;;;
+
 ;;; envelope-samples
 
 ;; Take 20 aequidistant samples from envelope
@@ -110,3 +114,43 @@
         ;; extract the y-values from the envelope
         (envelope-y env-samp))
        :point-radius 1.5 :join-points t :style :fill))
+
+;;; ---------------------------------------------------------
+
+;;; gen-ramp
+
+;; gen-ramp provides functionalities for 1 to N consecutive
+;; ramps
+
+;; oneramp from 0 to 1 in 20 steps, linear (1)
+(list-plot
+(gen-ramp 0.0 '(1.0 20 1))
+:point-radius 1.5 :join-points t :style :fill)
+
+;; ramp with exponential growth
+(list-plot
+(setf exp-ramp
+(gen-ramp 0.0 '(1.0 40 2)))
+:point-radius 1.5 :join-points t :style :fill)
+
+;; inverted exponential ramp
+(list-plot
+(list exp-ramp
+(gen-ramp 0.0 '(1.0 40 2 :invert)))
+:point-radius 1.5 :join-points t :style :fill)
+
+;; concave ramp
+(list-plot
+(gen-ramp 0.0 '(1.0 80 0.7))
+:point-radius 1.5 :join-points t :style :fill)
+
+;; A complex ramp eeries with consecutive end points
+;; and different numbers of steps, all linear
+(list-plot
+(gen-ramp 0.0 '((23 23 1.0) 
+                (8 8 1.0)
+                (79 36 1.0) 
+                (13 12 1.0)
+                (40 2 1.0)
+                (0 15 1.0)))
+:point-radius 1.5 :join-points t :style :fill)

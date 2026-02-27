@@ -9,6 +9,38 @@
 
 ;;; ---------------------------------------------------------
 
+;;; COMBINATION / COMBINATION2       
+
+;; COMBINATION will return a list of all the combinations 
+;; N consecutive (!) elements in length from a list.
+(combination 2 '(1 2 3))
+;; ((1 2) (1 3) (2 3))
+
+;; Therefore
+(combination 3 '(1 2 3))
+;; returns only ((1 2 3))
+
+;; Generate all note combinations of 3
+(setf pitches (combination 3 '(c4 d4 f4 g4 a4)))
+
+(make-omn
+ :pitch pitches
+:length (span pitches '(1/16)))
+
+;; combination returns a list of all combinations 
+;; of length N of the elements of list INCLUDING 
+;; REPETITIONS OF ELEMENTS.  N must be greater than 0.
+
+;; all combinations of 3 from 4 elements
+(setf combs (combination2 3 '(1 0 11 8)))
+
+(make-omn
+ :pitch (integer-to-pitch combs)
+ :length '(1/16)
+ :span :pitch)
+
+;;; ---------------------------------------------------------
+
 ;;; CARTESIAN
 
 ;; The CARTESIAN function will return all the combinatory 
@@ -23,7 +55,6 @@
 |#
 
 ;; All combination of three sets.
-
 (cartesian '((1 2 3) (1 2 3) (1 2 3)))
 
 ;; Generate OMN fragments with CARTESIAN sets.
@@ -42,47 +73,45 @@
 
 ;; PERMUTE-N will return a list of all the permutations 
 ;; of the integers 1 to N.
-
 (permute-n 3) ; ((1 2 3) (1 3 2) (3 1 2) (2 1 3) (2 3 1) (3 2 1))
 
 ;; The function PERMUTE will generate multiple lists of all 
 ;; the permutations from a list of items.
-
 (permute '(1 2 3 4))
 
 ;; Sublists are handled as single items
-
 (permute '((c4 d4) (e4 f4) (g4 a4)))
 
 ;;; ---------------------------------------------------------
 
 ;;; GEN-ROTATE
 
+;; A rotations is a specific type of permutation
+
 ;; A single rotation, default left:
-;; The list is rotated to the left
-(gen-rotate 1 '(c4 d4 e4 g4 a4))
+;; The list is rotated from right to the left
+(gen-rotate 10 '(c4 d4 e4 g4 a4))
 ;; => (a4 c4 d4 e4 g4)
 
-;; All rotations of a list
+;; All rotations of a list from left to right
 (gen-rotate :right '(1 2 3 4) :type 'list)
 ;; => ((1 2 3 4) (2 3 4 1) (3 4 1 2) (4 1 2 3))
 
-;; Two rotations of a list
-(gen-rotate 2 '(1 2 3 4 5) :type 'list)
+;; Only two rotations (left) of a list
+(gen-rotate 20 '(1 2 3 4 5) :type 'list)
 ;; => ((1 2 3 4 5) (5 1 2 3 4) (4 5 1 2 3))
 
 ;;; ---------------------------------------------------------
 
 ;;; POWER-SET
 
-;; The function POWER-SET will generate not only all permutations 
-;; of a set (as in the permute function), but also all possible 
-;; sub-permutations.
-
+;; The function POWER-SET will generate all combinations of
+;; consecutive elements including also all possible 
+;; sub-combinations.
 (power-set '(1 2 3 4))
 
 ;; For example a solo for conga drums playing through a 
-;; POWER-SET permutation.
+;; POWER-SET.
 
 ;; A list of variables
 (setf 
@@ -94,10 +123,13 @@
  b-3 '(e4 ds4 e4)
  )
 
-;; Here only the variables are permutated
+;; A power-set of the variables
 (setf perc-pat (power-set '(c-1 c-2 c-3 b-1 b-2 b-3)))	
 
-;; The permutated variables are evaluated with apply-eval
+;; The permutated variables are evaluated with apply-eval.
+;; When 'applied' to a list of variables or arguments apply-eval
+;; evaluates their content. Otherwise it would be only a
+;; list containing several symbols.
 (setf perc-solo (apply-eval perc-pat))
 (setf durs (span perc-solo '(1/16)))
 (setf mat1 (make-omn :pitch perc-solo :length durs))
@@ -116,35 +148,3 @@
  :omn mat1
  :channel 10
    :sound 'gm))
-
-;;; ---------------------------------------------------------
-
-;;; COMBINATION / COMBINATION2       
-
-;; COMBINATION will return a list of all the combinations 
-;; N elements in length from a list.
-
-(combination 2 '(1 2 3))
-;; ((1 2) (1 3) (2 3) (3 1) (3 2) (2 1))
-
-(combination 3 '(1 2 3))
-;; ((1 2 3) (1 3 2) (2 1 3) (2 3 1) (3 1 2) (3 2 1))
-
-;; Generate all note combinations of 3
-(setf pitches (combination 3 '(c4 d4 f4 g4 a4)))
-
-(make-omn
- :pitch pitches
-:length (span pitches '(1/16)))
-
-;; combination1 returns a list of all combinations 
-;; of length N of the elements of list INCLUDING 
-;; REPETITIONS OF ELEMENTS.  N must be greater than 0.
-
-;; all combinations of 3 from 4 elements
-(setf combs (combination2 3 '(1 0 11 8)))
-
-(make-omn
- :pitch (integer-to-pitch combs)
- :length '(1/16)
- :span :pitch)

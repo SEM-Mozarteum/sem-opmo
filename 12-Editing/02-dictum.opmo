@@ -78,6 +78,8 @@ to all or selected bars or events.
 ;; transpose all sixteenth and thirty-second notes by 
 ;; 7 semitones down add tenuto to all eight note triplets
 (list omn2
+;; when using a function inside dictum an "x" has to be
+;; applied as input argument
 (dictum '((:within (t s) :do (pitch-transpose -7 x))
           (:if 3q :do ten)) omn2))
 
@@ -98,30 +100,27 @@ to all or selected bars or events.
 (dictum '((:remove :event :bar 1 :event 3)
           (:remove :event :bar 2 :event 1)) omn2))
 
-
-;;;; NEXT WEEK 29.1.2026
-
 ;; first remove all dynamic signs
 ;; then add new ones with crescendo
-;; NOTE: mf as default dynamic is entered 
-;; automatically on the first note
 ;; add legato to the crescendo
 (list omn2
 (dictum '((:remove :velocity)
           (:do p :bar 1 :event 7)
           (:do < :bar 1 :event (8 9 10 11))
           (:do f :bar 1 :event 12)
-          (:do leg :event (7..11) :bar 1)) omn2)
+          (:do leg :event (7..11) :bar 1)) omn2))
 
 ;;; ---------------------------------------------------------
 
 (setf omn5 '(q b3eb4gs4 a3d4fs4 e bb3cs4f4 gs3b3e4
              s g3c4eb4 gs3b3e4 bb3d4f4 a3cs4fs4))
 
+;; by default dechord is extracting the lowest note 
+;; of each chord, all notes within 1/32 and 1/16 duration
+;; display with cmd-2
 (list omn5
 (dictum '(:within (t s) :do (dechord x)) omn5))
 
+;; transpose all notes between b3 and f4 by 7 semitones
 (list omn5
 (dictum '(:within (b3 f4) :do (pitch-transpose 7 x)) omn5))
-
-

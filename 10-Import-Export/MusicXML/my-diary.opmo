@@ -1,0 +1,50 @@
+(in-package :Opusmodus)
+;;; -----------------------------------------------------------
+;;; MusicXML Import to Def-Score 
+;;; Opusmodus Version 4.0.30479
+;;; 2025-12-02 17:40:24
+;;; -----------------------------------------------------------
+
+#|
+First Draft
+|#
+
+(def-score 20190217-diary
+    (:title "20190217 [42]"
+     :composer nil
+     :copyright "Copyright ©"
+     :key-signature '((c major 4))
+     :time-signature '((3 4 4))
+     :tempo '((q 70 4))
+     :octave-shift '(c2 c7)
+     :flexible-clef t
+     :accidentals :natural
+     :rewrite-lengths 't
+     :layout '(:bracket
+               (:flexible-treble inst1 :name "Violine" :abbr "Vln.")
+               (:alto inst2 :name "Viola" :abbr "Vla.")
+               (:flexible-bass inst3 :name "Violoncello" :abbr "Vc.")))
+  (inst1
+   :omn '(
+          )
+   :channel 1
+   :sound 'gm
+   :program 41
+   :volume 100
+   :pan 64)
+  (inst2
+   :omn '(
+          )
+   :channel 4
+   :sound 'gm
+   :program 42
+   :volume 100
+   :pan 64)
+  (inst3
+   :omn '(
+          )
+   :channel 7
+   :sound 'gm
+   :program 43
+   :volume 100
+   :pan 64))

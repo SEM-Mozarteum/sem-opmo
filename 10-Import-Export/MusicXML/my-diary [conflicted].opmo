@@ -1,0 +1,123 @@
+(in-package :Opusmodus)
+;;; -----------------------------------------------------------
+;;; MusicXML Import to Def-Score 
+;;; Opusmodus Version 4.0.30479
+;;; 2025-12-02 17:52:57
+;;; -----------------------------------------------------------
+
+#|
+First Draft
+|#
+
+(def-score island
+    (:title "Untitled score [51]"
+     :composer "Composer / arranger"
+     :copyright nil
+     :key-signature '((c major 7))
+     :time-signature '((4 4 7))
+     :tempo '((q 60 7))
+     :octave-shift '(c2 c7)
+     :flexible-clef t
+     :accidentals :natural
+     :rewrite-lengths 't
+     :layout '(:bracket
+               (:flexible-treble inst1 :name "Violins 1" :abbr "Vlns. 1")
+               (:flexible-treble inst2 :name "Violins 2" :abbr "Vlns. 2")
+               (:alto inst3 :name "Violas" :abbr "Vlas.")
+               (:flexible-bass inst4 :name "Violoncellos" :abbr "Vcs.")
+               (:flexible-bass inst5 :name "Contrabasses" :abbr "Cbs.")))
+  (inst1
+   :omn '(
+          (repeat
+          #|1|# (h. eb4db4 q f4eb4 tie)
+          #|2|# (h. f4eb4 -q)
+          )
+          (repeat
+          #|3|# (h. eb4db4 q f4eb4 tie)
+          #|4|# (q f4eb4 h gb4eb4 -q)
+          #|5|# (h. eb4db4 q ab4eb4 tie)
+          #|6|# (h ab4eb4 ab4eb4 tie)
+          #|7|# (h. ab4eb4 -q)
+          )
+          )
+   :channel 1
+   :sound 'gm
+   :program 49
+   :volume 100
+   :pan 64)
+  (inst2
+   :omn '(
+          (repeat
+          #|1|# (h. c4bb3 q db4ab3 tie)
+          #|2|# (h. db4ab3 -q)
+          )
+          (repeat
+          #|3|# (h. c4bb3 q db4ab3 tie)
+          #|4|# (q db4ab3 h -q)
+          #|5|# (h. c4bb3 q db4ab3 tie)
+          #|6|# (h db4ab3 db4ab3 tie)
+          #|7|# (h. db4ab3 -q)
+          )
+          )
+   :channel 4
+   :sound 'gm
+   :program 49
+   :volume 100
+   :pan 64)
+  (inst3
+   :omn '(
+          (repeat
+          #|1|# (h. ab3 q tie)
+          #|2|# (h. ab3 -q)
+          )
+          (repeat
+          #|3|# (h. ab3 q tie)
+          #|4|# (q ab3 h -q)
+          #|5|# (h. ab3 q tie)
+          #|6|# (h ab3 ab3 tie)
+          #|7|# (h. ab3 -q)
+          )
+          )
+   :channel 7
+   :sound 'gm
+   :program 49
+   :volume 100
+   :pan 64)
+  (inst4
+   :omn '(
+          (repeat
+          #|1|# (h. eb3 q tie)
+          #|2|# (h. eb3 -q)
+          )
+          (repeat
+          #|3|# (h. eb3 q tie)
+          #|4|# (q eb3 h -q)
+          #|5|# (h. eb3 q tie)
+          #|6|# (h eb3 eb3 tie)
+          #|7|# (h. eb3 -q)
+          )
+          )
+   :channel 11
+   :sound 'gm
+   :program 49
+   :volume 100
+   :pan 64)
+  (inst5
+   :omn '(
+          (repeat
+          #|1|# (h. ab3 q gb3 tie)
+          #|2|# (h. gb3 -q)
+          )
+          (repeat
+          #|3|# (h. ab3 q gb3 tie)
+          #|4|# (q gb3 h f3 -q)
+          #|5|# (h. ab3 q f3 tie)
+          #|6|# (h f3 gb3 tie)
+          #|7|# (h. gb3 -q)
+          )
+          )
+   :channel 14
+   :sound 'gm
+   :program 49
+   :volume 100
+   :pan 64))

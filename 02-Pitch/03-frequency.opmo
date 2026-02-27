@@ -55,6 +55,7 @@ attributes.
 (hertz-to-pitch frequencies)
 
 ;; A list of remaining cents from frequency list
+;; in eigth tones
 (hertz-to-pitch frequencies :remain t)
 
 ;; A set of random pitches quantised to quarter tones
@@ -62,9 +63,8 @@ attributes.
 
 ;; The function quarter-tone-closest convert pitches with 
 ;; 3 quarter-tone alteration to 1 quarter-tone alteration.
+;; You can overwrite a variable (pitches) with the same name!
 (setf pitches (quarter-tone-closest pitches))
-
-;;; You can overwrite a variable with the same name!
 
 ;; A list of remaining cents from the quantised list
 (setf cents (hertz-to-pitch frequencies 

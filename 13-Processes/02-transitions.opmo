@@ -5,7 +5,7 @@
 ;;; (c) 2015 - 2021, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
-;;; PROCESSES
+;;; TRANSITIONS
 
 ;;; ---------------------------------------------------------
 
@@ -32,6 +32,7 @@
 (list-plot
  (list
   (gen-transition 0 10 50 0.7)
+  (gen-transition 0 10 50 1)
   (gen-transition 0 10 50 1.5))
  :zero-based t :point-radius 1.5 :join-points t)
 
