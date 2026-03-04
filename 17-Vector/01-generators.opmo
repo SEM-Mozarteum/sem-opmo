@@ -1,0 +1,132 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2023, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; GENERATORS
+
+;;; ---------------------------------------------------------
+
+;;; GEN-WHITE-NOISE / LIST-PLOT
+
+#|
+The function GEN-WHITE-NOISE generate N samples of white 
+noise specified by the keyword :type.
+Types are: :normal :binary :cauchy :chi-square-2 :exponential 
+:extreme :gaussian :logistic :lognormal :triangular 
+:low-pass :high-pass.
+
+To demonstrate the different :type of the GEN-WHITE-NOISE 
+function we use LIST-PLOT with a :seed number.
+
+List-plot generates a graph from the data provided in 
+sequences. Sequences may be either a single sequence of real 
+numbers, or a series of such sequences.  Each number in a 
+sequence represents a y-coordinate. 
+Numbers are positioned along the x axis according to their 
+position in the sequence.
+By default points are plotted starting at x = 1. If 
+:zero-based is T, points will start being plotted at the 
+x coordinate of 0. The points are drawn as circles. 
+:point-radius lets you control the size of the circles. 
+If 0, the points will not be drawn. If :join-points is T, 
+the points (whether visible or not) will be connected with 
+line segments. The :style keyword argument may be either 
+:axis or :fill.
+|#
+
+;; normal
+(list-plot (gen-white-noise 1000)
+ :join-points t :point-radius 1.5)
+
+;; binary
+(list-plot (gen-white-noise 100 :type :binary :seed 23)
+ :join-points t :point-radius 1.5 :style :fill)
+
+;; exponential
+(list-plot (gen-white-noise 100 :type :exponential)
+ :join-points t :point-radius 1.5 :style :axis)
+
+;; gaussian
+(list-plot (gen-white-noise 100 :type :gaussian :seed 23)
+ :join-points t :point-radius 1.5)
+
+;; There is another function only for gaussian noise:
+(list-plot (gen-gaussian-noise 500)
+ :join-points nil :point-radius 1)
+
+;; high-pass
+(list-plot (gen-white-noise 100 :type :high-pass :seed 23)
+ :join-points t :point-radius 1.5)
+
+;; low-pass
+(list-plot (gen-white-noise 100 :type :low-pass)
+ :join-points t :point-radius 1.5)
+
+;;; ---------------------------------------------------------
+
+;;; GEN-SINE / HALF-SINE
+
+#|
+The GEN-SINE function generates a sequence with the 
+characteristics of a sine wave.
+With control over frequency and amplitude (and additional 
+control over :phase and :modulation) this function can used 
+for creating gestural forms in pitch, rhythm, dynamics 
+and structure.
+|#
+
+(list-plot (gen-sine 32 1 0.5) :join-points t :point-radius 1.5)
+
+;; Starting 90 degrees out of phase
+
+(list-plot (gen-sine 32 1 0.5 :phase 90) :join-points t)
+
+;; Sine frequency modulated by another sine
+(list-plot
+ (gen-sine 120 3 0.5 
+           :modulation (gen-sine 120 1 0.5))
+ :join-points t)
+
+;; With three amplitudes (list) three sines are created
+(list-plot
+ (gen-sine 120 1 '(0.5 0.2 0.1) 
+           :modulation (gen-sine 120 1 0.3))
+ :point-radius 2)
+
+;;; ---------------------------------------------------------
+
+;;; GEN-SQUARE / GEN-SAWTOOTH
+
+(list-plot (gen-square 120 3 0.5)
+       :join-points t)  
+
+;; Square frequency modulated by another square
+(list-plot
+ (gen-square 120 3 0.5 
+             :modulation (gen-square 120 1 0.2))
+ :join-points t)
+
+;; Half a square
+(list-plot (half-square 120 1.0 :phase 45) :join-points t) 
+
+(list-plot (gen-sawtooth 120 3 0.5)
+       :join-points t)  
+
+;; Sawtooth frequency modulated by another sawtooth
+(list-plot
+ (gen-sawtooth 120 4 0.5 
+             :modulation (gen-sawtooth 120 1 0.7))
+ :join-points t)
+
+;; Half sawtooth
+(list-plot (half-sawtooth 120 1 :phase 90) :join-points t)
+
+
+
+
+
+
+

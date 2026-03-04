@@ -1,0 +1,103 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; Steve Reich, Piano Phase (1967)
+;;; Section 1 to 15
+
+;; list of pitches
+(setf pitches '(e4 fs4 b4 cs5 d5 fs4 e4 cs5 b4 fs4 d5 cs5))
+
+;; list of rotated pitches (from section 2 to 14)
+(setf shift-patterns (gen-rotate -12 pitches :type 'list))
+
+;; list of min and max repetitions per section (see score). 
+;; Section 2 until section 14
+(setf rnd-repetitions
+      '((12 18) ;  section 2
+        (16 24) ; section 3
+        (16 24) ; section 4
+        (16 24) ; section 5
+        (16 24) ; section 6
+        (16 24) ; section 7
+        (16 24) ; section 8
+        (12 24) ; section 9
+        (12 24) ; section 10
+        (12 24) ; section 11
+        (12 24) ; section 12
+        (12 24) ; section 13
+        (4 8))) ; section 14
+
+;; random repetitions per section (from section 2)
+(setf repetitions
+      (loop for i in rnd-repetitions
+            collect (rndn (first i) (second i))))
+
+;; collect pitches for right hand (from section 2)
+(setf pitches-rh
+      (loop for i in repetitions
+            ;; for 2 repetitions only:
+            ;; collect (gen-repeat 2 pitches)
+            collect (gen-repeat i pitches)))
+
+;; collect pitches for left hand (from section 2)
+(setf pitches-lh
+      (loop for i in repetitions
+            for j in shift-patterns
+            ;; for 2 repetitions only:
+            ;; collect (gen-repeat 2 j)
+            collect (gen-repeat i j)))
+
+;; Section 2 - 14 right hand
+(setf rh (make-omn 
+          :pitch pitches-rh
+          :length '(s)
+          :velocity '(mf)
+          :span :pitch))
+
+;; Section 2 - 14 left hand
+(setf lh (make-omn 
+          :pitch pitches-lh
+          :length '(s)
+          :velocity '(mf)
+          :span :pitch))
+
+;;; Section 1 (and 15) with 4 measures
+
+;; 4 measures right hand for section 1 and 15
+(setf sec1-rh (make-omn 
+               :pitch (gen-repeat 4 pitches)
+               :length '(s)
+               :velocity '(mf)
+               :span :pitch))
+
+;; 4 empty measures left hand for section 1 and 15
+(setf sec1-lh (length-invert sec1-rh))
+
+(def-score piano-phase
+    (:title "Piano Phase (1967)"
+     :composer "Steve Reich"
+     :copyright "Copyright © 1967"
+     :key-signature 'chromatic
+     :time-signature '(12 16)
+     :flexible-clef t
+     :tempo '(q. 72)
+     :layout (piano-layout 'piano-rh 'piano-lh))
+  
+  (piano-rh
+   :omn rh 
+   ;; :omn (list sec1-rh rh sec1-rh) ; with Section 1 and 15
+   :channel 1
+   :sound 'gm
+   :program 'acoustic-grand-piano)
+  
+  (piano-lh
+   :omn lh
+   ;; :omn (list sec1-lh lh sec1-lh) ; with Section 1 and 15
+   :channel 2))
+
+(display-musicxml 'piano-phase)
+(musicxml-to-editor)

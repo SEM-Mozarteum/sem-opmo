@@ -1,0 +1,52 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; METHODS
+
+;;; ---------------------------------------------------------
+
+
+;;; University Mozarteum, Salzburg
+;;; (c) 2019, Achim Bornhoeft
+
+(def-unfold-set ie
+                :methods
+  (:group transp
+          t7   (:pitch (pitch-transpose 7 x))
+          t-12 (:pitch (pitch-transpose -12 x))
+          :group basic
+          ret  (:all (gen-retrograde x :flatten t))
+          var  (:pitch (pitch-variant x :variant '? :seed (seed)))
+          gf   (nil (gen-fragment '(3 3) x :seed (seed)))
+          ld   (nil (length-divide '(2 2) x))
+          lrq  (:length (length-rational-quantize x))
+          dn  (:velocity (velocity-to-dynamic x))
+          ls   (nil (length-span '(6/4 6/4) x))
+          :group ambitus
+          ob   (:pitch (ambitus 'oboe x))
+          bn   (:pitch (ambitus 'bassoon x))
+          hn   (:pitch (ambitus 'french-horn x))
+          ))
+
+;; Two bars of omn notation:
+(setf mat '((q d4 pp s eb4 < leg g4 < leg bb4 < leg a4 q. cs5 mf
+             -e 3q gs5 > leg fs5 > leg c5 > b4 > leg f4 leg e4)
+            (t d4 < leg eb4 < leg g4 < leg bb4 q. a4 marc
+             t fs4 mf leg gs4 leg e. c5 e b4 t f5 leg e5 leg d5 leg eb5
+             3q bb5 > a4 > bb5 > e a4 pp stacc -e)))
+
+
+(setf
+ t1 (unfold 'ie 't7 mat)
+ t2 (unfold 'ie '(t-12 var ob) mat)
+ t3 (unfold 'ie 'var mat)
+ t4 (unfold 'ie '(t-12 gf lrq ls dn ret var hn) t3)
+ t5 (unfold 'ie '(gf lrq ls dn bn) t2)
+ )
+
+;; preview score (preview snippet)
+(ps 'gm :w5 (list t1 t2 t3 t4 t5))

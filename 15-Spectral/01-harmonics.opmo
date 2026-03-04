@@ -1,0 +1,123 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; HARMONICS
+
+;;; ---------------------------------------------------------
+
+(progn
+;; 16 pure harmonics on c3
+(setf harm-hz 
+      (loop for i from 1 to 16
+              collect (* (pitch-to-hertz 'a2) i)))
+
+;; use the harmonics function to get this row 
+;; quantized to frequencies in semitones
+(setf harm-semi
+(hertz-to-pitch harm-hz :quantize 1/2))
+
+;; decimal ratios between pure harmonic row and 
+;; a quantized version in semitones
+(setf ratio-hz-semi 
+      (loop for h in harm-hz
+            for s in (pitch-to-hertz harm-semi)
+            collect (/ h s)))
+
+;; deviation of the harmonic scale from the chromatic notation
+;; https://www.oberton.org/obertongesang/die-obertonreihe/
+(setf cent-dev (ratio-to-cent ratio-hz-semi))
+      
+(make-omn
+ :length '(w)
+ :pitch harm-semi
+ :articulation (cent-to-attribute cent-dev)
+ :span :pitch)
+)
+
+;;; ---------------------------------------------------------
+
+;;; harmonic vs. distorted spectra
+
+;; see Joshua Fineberg, Guide to the Basic Concepts and 
+;; Techniques of Spectral Music, p. 93-94
+
+;; harmonic scale linear
+(harmonics 'c2 10 :quantize 1/4)
+
+;; creating non-harmonic scales with distortion coefficiants
+;; non-harmonic scale with exponential coefficiant
+(harmonics 'c2 10 :quantize 1/4 :coeff 0.9)
+
+;; non-harmonic scale with logarithmic coefficiant
+(harmonics 'c2 16 :quantize 1/4 :coeff 1.1)
+
+;; (shorter coded version)
+(pitch-list-plot
+ (harmonics '(c2 c2 c2) '(16 16 16) :coeff '(0.8 1 1.3))
+ :join-points t)
+
+;; distorted spectra
+;; (the fifth chord is the harmonic spectra)
+(loop for i from 0.6 to 2.1 by 0.1
+      collect
+        (chordize
+         (harmonics 'a2 8 :quantize 1/8 :coeff i)))
+
+;;; ---------------------------------------------------------
+
+;;; Linear Subdivision (Arithmetic Division)
+
+#|
+Dividing the octave (e.g., 440Hz to 880Hz) into 8 equal 
+Hertz increments, this creates a series based on the harmonic 
+series 8:9:10:11:12:13:14:15:16 on the fundamental 55 hz.
+|#
+
+(setf fundamental (pitch-to-hertz 'a1))
+;; 8th overtone as starting point
+(setf start-freq (* fundamental 8))
+(setf octave-division 8.0)
+
+(list-plot
+(setf equal-hz-scale
+      (loop for i from 0 to octave-division ; 8 steps
+              ;; divide the octave in 8 steps and add 
+              ;; these consecutively to the start frequency
+       collect (+ start-freq 
+                  (* (/ start-freq octave-division) i))))
+:zero-based t :point-radius 2 :join-points t)
+
+;; convert to notation (pitch)
+(hertz-to-pitch equal-hz-scale)
+
+;; aequidistant increase of 55 hz per step
+(difference equal-hz-scale)
+
+#|
+Increasing the division of the octave e.g. into 12 steps
+only the even overtones (8,10,12,14,16) exist in this scale
+the others are fractional harmonics
+|#
+(setf equal-hz-scale12
+      (loop for i from 0 to 12  
+       collect (+ start-freq 
+                  (* (/ start-freq 12.0) i))))
+
+;; convert to notation (pitch)
+(hertz-to-pitch equal-hz-scale12)
+
+;; decreasing number of divisions
+(loop for i from 12 downto 2
+      collect
+        (chordize
+      (hertz-to-pitch
+       (loop for j from 0 to i  
+       collect (+ start-freq 
+                  (* (/ start-freq i) j))))))
+
+;;; ---------------------------------------------------------
+

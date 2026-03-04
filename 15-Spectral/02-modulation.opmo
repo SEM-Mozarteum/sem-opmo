@@ -1,0 +1,26 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; MODULATION
+
+;;; ---------------------------------------------------------
+
+;;; FREQUENCY MODULATION
+
+#|
+The spectrum produced with this technique is expressed with the following equatio n: frequency = carrier + and - (index-modulator); where index equals 0, then 1, then 2, etc. until the maximum index value has
+been reached.
+|#
+
+(defun fm-mod (carrier modulator index)
+  (loop for i from 1 to index
+    for x = (abs (- carrier (* i modulator)))
+    for y = (+ carrier (* i modulator))
+    when (not (zerop x)) collect x
+    when (not (zerop y)) collect y))
+
+;; (fm-mod 200 300 2)

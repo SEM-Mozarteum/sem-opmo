@@ -1,0 +1,120 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf400
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\froman\fcharset0 Palatino-Roman;\f2\froman\fcharset0 Times-Roman;
+\f3\fmodern\fcharset0 Courier;\f4\fnil\fcharset128 HiraKakuProN-W3;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li574\fi13\pardirnatural
+
+\f0\fs48 \cf0 Introduction to Common Lisp\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13\qj
+
+\fs28 \cf0 \'a9
+\f1  2016 , Studio for Electronic Music, University Mozarteum Salzburg\
+\pard\pardeftab720\fi558
+
+\f2\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li574\fi13\pardirnatural
+
+\f0\fs36 \cf0 Iteration\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\li574\fi13\qj
+
+\f1\fs24 \cf0 Common Lisp also has several forms (functions and macros)  for operating on \
+the contents of lists. mapcar can be used to process each element of a list one at \
+a time to build up a new list:\
+\pard\pardeftab720\fi558
+\cf0 \
+\pard\pardeftab720\fi558
+
+\f3 \cf0   (defun add2 (n)\
+    (+ 2 n))\
+  (mapcar #'add2 '(1 2 3))  
+\f4 \'81\'cb
+\f3  (3 4 5)\
+\
+\pard\pardeftab720\fi558
+
+\f1 \cf0 In that example, we were mapping over a single list so we used a unary function \
+(a function of one argument). \
+The #' is a special way to pass a function as an argument into a function. \
+We will talk more about it in the next chapter.\
+It is also possible to map over more than one list - the function must then take \
+the same number of arguments as there are lists:\
+\
+\pard\pardeftab720\fi558
+
+\f3 \cf0 (mapcar #'+ '(1 2 3) '(4 5 6)) 
+\f4 \'81\'cb
+\f3  (5 7 9)\
+\
+\pard\pardeftab720\fi558
+
+\f1 \cf0 There is an iteration macro in Lisp called LOOP:
+\f3 \
+\
+(loop for integers from 0 to 12 collect integers) \
+=> (0 1 2 3 4 5 6 7 8 9 10 11 12)\
+\
+(loop for midi from 60 to 72 collect midi)  \
+=> (60 61 62 63 64 65 66 67 68 69 70 71 72)\
+\
+
+\f1 There a many keywords available for LOOP, which most of them are identical:\
+\pard\pardeftab720\fi558
+
+\f3 \cf0 \
+(loop for pc from 60 to 84 by 2 collect pc)  \
+=> (60 62 64 66 68 70 72 74 76 78 80 82 84)\
+\
+(loop for pc from 84 downto 60 by 4 collect pc)  \
+=> (84 80 76 72 68 64 60)\
+\
+(loop for freq = 40  
+\f1 freq is the loop variable which starts with c1
+\f3 \
+  then (* freq 1.1)  
+\f1 and continue by duplicating the last result
+\f3 \
+  repeat 8  
+\f1 repeat this 8 times  
+\f3                                                                                                                                                 \
+  collect freq)  
+\f1 and collect each value in a list
+\f3 \
+\
+ 
+\f1 Nested loops are created like this:
+\f3 \
+\
+(loop for i from 1 to 5 collect\
+  (loop for j from 0 to 4 collect (+ i j)))\
+ => ((1 2 3 4 5) (2 3 4 5 6) (3 4 5 6 7) (4 5 6 7 8) (5 6 7 8 9))\
+\
+R
+\f1 earrange a list by taking each position in a seperate list (matrix transformation)\
+
+\f3 \
+(loop for i from 0 to 4 \
+  with lists = '((1 2 3 4 5) (3 4 5 6 7)  (5 6 7 8 9))\
+  collect\
+  (loop for j in lists collect (nth i j)))  
+\f1 nth position in list
+\f3 \
+\
+\pard\pardeftab720\fi558
+
+\f1 \cf0  There are two older and therefore less commonly used loop macros in LISP:\
+\
+DOLIST binds a variable to the elements of a list in order and stops in the end of the list.
+\f3 \
+\
+(dolist (x '(60 61 62 63)) (print x))\
+\
+ 
+\f1 Dolist always returns NIL. Note that the value of x in the above example was never NIL: \
+ the NIL below the 63 was the value that dolist returns.\
+\
+DOTIMES is like dolist except that it iterates over integers.
+\f3 \
+\
+(dotimes (i 4) (print (* i i)))\
+}

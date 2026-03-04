@@ -1,0 +1,257 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; TUNING
+
+;;; ---------------------------------------------------------
+
+;;; Pythagorean tuning
+
+#|
+https://en.wikipedia.org/wiki/Pythagorean_tuning
+
+Pythagorean tuning is a system of musical tuning in which the 
+frequency ratios of all intervals are determined by choosing 
+a sequence of fifths with the ratio 3/2.
+The Pythagorean scale is any scale which can be constructed 
+from only pure perfect fifths (3:2) and octaves (2:1).
+
+The Pythagorean tuning is particularly suitable for music in 
+which fifths dominate (Middle Ages).
+|#
+
+#|
+https://microtonal.miraheze.org/wiki/Just_intonation
+
+Pythagorean tuning can produce a twelve-tone scale, but it 
+does so by involving ratios of very large numbers, 
+corresponding to natural harmonics very high in the harmonic 
+series that do not occur widely in physical phenomena. This 
+tuning uses ratios involving only powers of 3 and 2, creating
+a sequence of just fifths or fourths, as follows:
+|#
+
+(setf pythagorean-ratios
+(list
+;; unison
+(* (expt 3 0) (expt 2 0))
+;; minor second
+(* (expt 3 -5) (expt 2 8))
+;; major second
+(* (expt 3 2) (expt 2 -3))
+;; minor third
+(* (expt 3 -3) (expt 2 5))
+;; major third
+(* (expt 3 4) (expt 2 -6))
+;; perfect fourth
+(* (expt 3 -1) (expt 2 2))
+;; diminished fifth
+(* (expt 3 -6) (expt 2 10))
+;; augmented fourth
+;; (* (expt 3 6) (expt 2 -9))
+;; perfect fifth
+(* (expt 3 1) (expt 2 -1))
+;; minor sixth
+(* (expt 3 -4) (expt 2 7))
+;; major sixth
+(* (expt 3 3) (expt 2 -4))
+;; minor seventh
+(* (expt 3 -2) (expt 2 4))
+;; major seventh
+(* (expt 3 5) (expt 2 -7))
+;; octave
+(* (expt 3 0) (expt 2 1))))
+
+(setf pythagorean-scale
+       (loop for i in pythagorean-ratios
+             collect
+               (* (pitch-to-hertz 'c4) i)))
+
+;; see in notation
+(hertz-to-pitch pythagorean-scale)
+
+;; cent deviation from the equal tempered chromatic scale
+(hertz-to-pitch pythagorean-scale :remain t)
+;; (0 -10 4 -6 8 -2 -12 12 2 -8 6 -4 10 0)
+
+;; see difference (in hz) to equal tempered chromatic scale
+(loop for chr in (pitch-to-hertz (chromatic-scale 'c4))
+      for pyt in (sort-asc (butlast pythagorean-scale))
+      collect (- chr pyt))
+
+#|
+Between the enharmonic notes at both ends of this sequence 
+is a difference in pitch of nearly 24 cents, known as the 
+Pythagorean comma.
+|# 
+
+(ratio-to-cent (/ 729/512 1024/729) :round NIL)
+      
+;;; Pythagorean Comma
+
+#|
+In 12-tone Pythagorean temperament, there are eleven justly 
+tuned fifths sharper than 700 cents by about 1.955 cents 
+(or exactly one twelfth of a Pythagorean comma), and hence 
+one fifth will be flatter by twelve times that, which is 
+23.460 cents (one Pythagorean comma) flatter than a just 
+fifth. A fifth this flat is called the "wolf fifth".
+|#
+
+;; 12 pure fifths (~ 7 octaves)
+(expt (/ 3 2) 12)
+;; 531441/4096
+
+;; 7 pure octaves
+(setf 7-octaves (expt 2 7))
+;; converted to the fifths ratio
+(* 4096 7-octaves) ; 524288
+
+;; Pythagorean comma
+(setf pythagorean-comma (* 1.0 (/ 531441 524288)))
+;; The quotient 1.0136433 is the pythagorean comma 
+
+;; This corresponds to about 23.46 cents.
+(ratio-to-cent pythagorean-comma :round nil)
+
+;;; ---------------------------------------------------------
+
+;;; Just intonation
+
+#|
+In music, just intonation or pure intonation is a tuning 
+system in which the space between frequencies is a whole 
+number ratio. Intervals spaced in this way are said to be 
+pure, and are called just intervals. Just intervals 
+(and chords created by combining them) consist of tones 
+from a single harmonic series of an implied fundamental.
+
+Just intonations are categorized by the notion of limits. 
+The limit refers to the highest prime factor included in the 
+intervals of a scale. All the intervals of any 3-limit just 
+intonation will be ratios of powers of 2 and 3. So 6/5 is 
+included in 5-limit, because it has 5 in the denominator. 
+If a scale uses an interval of 21/20, it is a 7-limit just 
+intonation, since 21 is a multiple of 7.
+|#
+
+;;; 5-limit diatonic intonation 
+
+#|
+The phrase "just intonation" is used both to refer to one 
+specific version of a 5-limit diatonic intonation as well 
+to a whole class of tunings which use whole number intervals 
+derived from the harmonic series. Just intonation became 
+more important during the Renaissance (for example in the 
+works of Giovanni Pierluigi da Palestrina, when thirds began 
+to be perceived as consonant. 
+The frequency of any pitch in a particular 5-limit tuning 
+system can be obtained by multiplying the frequency of a 
+fixed reference pitch chosen for the tuning system (
+such as A440, A442, A432, C256, etc.) by some combination 
+of the powers of 3 and 5 to determine the pitch class and 
+some power of 2 to determine the octave.
+|#
+
+;; ratios for one type of 5-limit diatonic intonation
+(defparameter *just-major*
+  '(1/1 9/8 5/4 4/3 3/2 5/3 15/8 2/1))
+
+;; a just intonation major scale from a4 (440 hz)
+(setf just-major-scale (loop for i in *just-major*
+        with start = (pitch-to-hertz 'c4)
+      collect (* start i)))
+
+;; see in notation
+(hertz-to-pitch just-major-scale)
+
+;; the intervals of a just intonation major scale in cents
+(setf just-major-cents 
+      (ratio-to-cent *just-major* :round nil))
+
+;; the intervals of an equal tempered major scale in cents
+(setf major-cents '(0 200 400 500 700 900 1100 1200))
+
+;; the difference between an equal tempered diatonic
+;; scale and the same in just intonation 
+(loop for j in just-major-cents
+      for m in major-cents
+      collect (- j m))
+
+;; ratios for one type of 5-limit diatonic intonation
+(defparameter *just-minor*
+  '(1/1 9/8 6/5 4/3 3/2 8/5 9/5 2/1))
+
+;; a just intonation minor scale from a4 (220 hz)
+(setf just-minor-scale (loop for i in *just-minor*
+        with start = (pitch-to-hertz 'a3)
+      collect (* start i)))
+
+;; view with cmd-1
+(setf minor-scale (hertz-to-pitch just-minor-scale))
+
+;; triads of the just minor scale
+(loop for i from 0 to 3 
+      ;; starting pitch id in scale
+      collect
+        (chordize
+         (loop for j from 0 to 5 by 2 
+               ;; idss in scale for three triad pitches
+               collect (nth (+ i j) minor-scale))))
+
+;;; ---------------------------------------------------------
+
+;;; Equal temperament
+
+#|
+An equal temperament is a musical temperament or tuning 
+system that approximates just intervals by dividing an octave 
+(or other interval) into steps such that the ratio of the 
+frequencies of any adjacent pair of notes is the same. 
+This system yields pitch steps perceived as equal in size, 
+due to the logarithmic changes in pitch frequency.
+
+https://en.wikipedia.org/wiki/Equal_temperament
+
+TET (Tone Equal Temperament) and EDO (Equal Divisions of the 
+Octave) usually mean the same thing in music theory. While 
+TET (Tone Equal Temperament) implies that a pure tuning has 
+been ‘tempered’ (adjusted) to approximate an interval, 
+EDO (Equal Divisions of the Octave) means that the octave 
+is divided into 𝑛 equal steps.#
+
+https://www.youtube.com/watch?v=WOOc6VQkbVg
+|#
+
+;; Chromatic scale of 12 notes starting from 9 (a4) 
+;; display with cmd-5
+(setf octave (gen-integer 9 21))
+
+;; in frequencies (hertz)
+(list-plot 
+(setf chromatic-scale-hz 
+      (integer-to-hertz octave)) ; convert to hz
+:zero-based t :point-radius 2 :join-points t)
+
+;; The gap in Hz between notes gets larger as you go higher
+;; (geometric not arithmetic progression) even though our ears 
+;; perceive the musical gap as 'equal'.
+(difference chromatic-scale-hz)
+
+;; Calculating a chromatic scale with an equation
+(loop for x from 0 to 12
+            collect (* 440 (expt 2 (/ x 12))))
+
+;; display with cmd-1
+(hertz-to-pitch chromatic-scale-hz)
+;; same as (chromatic-scale 'a4)
+
+;; convert ratios to cent (100 cent per semitone)
+(ratio-to-cent
+;; calculate the decimal ratios between the frequencies
+(loop for i in chromatic-scale-hz
+        collect (/ i 440)))

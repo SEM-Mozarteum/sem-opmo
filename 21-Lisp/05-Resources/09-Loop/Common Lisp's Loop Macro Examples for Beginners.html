@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<title>Common Lisp's Loop Macro Examples for Beginners</title>
+</head>
+<body>
+
+<h1>Common Lisp's Loop Macro Examples for Beginners</h1>
+
+<ul>
+<li> <a href="http://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node235.html">CLTL's Loop Reference</a>
+</li><li> <a href="http://www.lispworks.com/documentation/HyperSpec/Body/m_loop.htm">HyperSpec's Loop Reference</a>
+</li><li> <a href="http://www.ai.sri.com/%7Epkarp/loop.html">Peter Karp's Loop Tutorial</a>
+</li></ul>
+
+<hr>
+
+<ul>
+<li> Iteration for each element in a list:
+<blockquote><pre>&gt; (loop for <u>i in '(1 2 3)</u> do (print i))
+1
+2
+3
+</pre></blockquote>
+</li><li> Iteration for each cdr of a list:
+<blockquote><pre>&gt; (loop for <u>i on '(1 2 3)</u> do (print i))
+(1 2 3)
+(2 3)
+(3)
+</pre></blockquote>
+</li><li> Iteration for each element in a vector:
+<blockquote><pre>&gt; (loop for <u>i across #(1 2 3)</u> do (print i))
+1
+2
+3
+</pre></blockquote>
+</li><li> Iteration for each key of a hashtable:
+<blockquote><pre>&gt; (setf h (make-hash-table))
+&gt; (setf (gethash 'a h) 1)
+&gt; (setf (gethash 'b h) 2)
+&gt; (loop for <u>k being the hash-key of h</u> do (print k))
+b
+a
+</pre></blockquote>
+</li><li> Iteration for each value of a hashtable:
+<blockquote><pre>&gt; (loop for <u>v being the hash-value of h</u> do (print v))
+2
+1
+</pre></blockquote>
+</li><li> Iteration for each key-value pair of a hashtable:
+<blockquote><pre>&gt; (loop for <u>k being the hash-key using (hash-value v)</u> of h do (format t "~a ~a~%" k v))
+b 2
+a 1
+</pre></blockquote>
+</li><li> i=1, while i &lt;= 3:
+<blockquote><pre>&gt; (loop for <u>i from 1 to 3</u> do (print i))
+1
+2
+3
+</pre></blockquote>
+</li><li> i=1, while i &lt;= 3: (different step)
+<blockquote><pre>&gt; (loop for <u>i from 1.0 to 3.0 by 0.5</u> do (print i))
+1.0
+1.5 
+2.0 
+2.5 
+3.0 
+</pre></blockquote>
+</li><li> i=3, while i &gt;= 1:
+<blockquote><pre>&gt; (loop for <u>i from 3 downto 1</u> do (print i))
+3
+2
+1
+</pre></blockquote>
+</li><li> i=3, while i &gt;= 1: (different step)
+<blockquote><pre>&gt; (loop for <u>i from 3.0 downto 1.0 by 0.5</u> do (print i))
+3.0 
+2.5 
+2.0 
+1.5 
+1.0 
+</pre></blockquote>
+</li><li> i=1, while i &lt; 3:
+<blockquote><pre>&gt; (loop for <u>i from 1 below 3</u> do (print i))
+1
+2
+</pre></blockquote>
+</li><li> i=3, while i &gt; 1:
+<blockquote><pre>&gt; (loop for <u>i from 3 above 1</u> do (print i))
+3
+2
+</pre></blockquote>
+</li><li> Adding initialization:
+<blockquote><pre>&gt; (loop <u>with a = '(1 2 3)</u> for i in a do (print i))
+1
+2
+3
+</pre></blockquote>
+</li><li> Adding subordinate variables:
+<blockquote><pre>&gt; (loop for i from 1 to 3 <u>for x = (* i i)</u> do (print x))
+1
+4
+9
+</pre></blockquote>
+</li><li> Adding conditional branch for each element:
+<blockquote><pre>&gt; (loop for i from 1 to 3 <u>when (oddp i)</u> do (print i))
+1
+3
+</pre></blockquote>
+</li><li> Adding a termination condition (while):
+<blockquote><pre>&gt; (loop for i from 1 to 3 while (&lt; i 2) do (print i))
+1
+</pre></blockquote>
+</li><li> Adding a termination condition (until):
+<blockquote><pre>&gt; (loop for i from 1 to 3 until (&lt; 2 i) do (print i))
+1
+2
+</pre></blockquote>
+</li><li> Collecting results as an element of a list:
+<blockquote><pre>&gt; (loop for i from 1 to 3 <u>collect (* i i)</u>)
+(1 4 9)
+</pre></blockquote>
+</li><li> Concatenating results as a list:
+<blockquote><pre>&gt; (loop for i from 1 to 3 <u>append (list i i)</u>)
+(1 1 2 2 3 3)
+</pre></blockquote>
+</li><li> Counting:
+<blockquote><pre>&gt; (loop for i from 1 to 3 <u>count (oddp i)</u>)
+2
+</pre></blockquote>
+</li><li> Summation:
+<blockquote><pre>&gt; (loop for i from 1 to 3 <u>sum (* i i)</u>)
+14
+</pre></blockquote>
+</li><li> Taking the maximum value:
+<blockquote><pre>&gt; (loop for i from 1 to 3 <u>maximize (mod i 3)</u>)
+2
+</pre></blockquote>
+</li><li> Taking the minimum value:
+<blockquote><pre>&gt; (loop for i from 1 to 3 <u>minimize (mod i 3)</u>)
+0
+</pre></blockquote>
+</li></ul>
+
+<hr>
+<address>Yusuke Shinyama</address>
+
+
+
+</body></html>

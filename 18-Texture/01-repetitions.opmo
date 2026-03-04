@@ -1,0 +1,46 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; SPECTRAL REPETITIONS
+
+;;; ---------------------------------------------------------
+
+(setf divs (gen-integer 2 16)) ; division of 4/4
+(setf quarters 4) ; number of quarters
+
+;; display with cmd-2
+(loop for i in divs ; repetitions
+      collect
+      (loop repeat quarters ; how many quarters
+            collect
+            (loop repeat i ; repetitions per measure
+                  collect (/ 1 i)))) ; lenghts
+
+;; selected n-tuplets
+(setf divs-list '(12 16 20 28))
+
+;; make the lengths
+(setf repetitions
+      (mcflatten
+      (loop for i in divs-list
+      collect
+      (loop repeat quarters
+            collect
+            (loop repeat i
+                  collect (/ 1 i))))))
+
+;; make pitches from lengths
+(setf pitches
+      (loop for i in repetitions
+              for j in '(c4 f4 bb4 eb5)
+              collect (gen-repeat (length i) j)))
+
+;; display with cmd-2
+(make-omn
+ :length repetitions
+ :pitch pitches)
+            
