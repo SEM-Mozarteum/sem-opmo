@@ -12,7 +12,7 @@
 (progn
 ;; 16 pure harmonics on c3
 (setf harm-hz 
-      (loop for i from 1 to 16
+      (loop for i from 1 to 17
               collect (* (pitch-to-hertz 'a2) i)))
 
 ;; use the harmonics function to get this row 

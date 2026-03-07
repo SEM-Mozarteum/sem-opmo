@@ -82,6 +82,8 @@ a sequence of just fifths or fourths, as follows:
 (loop for chr in (pitch-to-hertz (chromatic-scale 'c4))
       for pyt in (sort-asc (butlast pythagorean-scale))
       collect (- chr pyt))
+    
+;;; Pythagorean Comma
 
 #|
 Between the enharmonic notes at both ends of this sequence 
@@ -89,9 +91,10 @@ is a difference in pitch of nearly 24 cents, known as the
 Pythagorean comma.
 |# 
 
-(ratio-to-cent (/ 729/512 1024/729) :round NIL)
-      
-;;; Pythagorean Comma
+(setf augmented-fourth (* (expt 3 6) (expt 2 -9)))
+(setf diminished-fifth (* (expt 3 -6) (expt 2 10)))
+
+(ratio-to-cent (/ augmented-fourth diminished-fifth ) :round NIL)
 
 #|
 In 12-tone Pythagorean temperament, there are eleven justly 

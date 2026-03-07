@@ -1,0 +1,579 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+
+;;; 2015 - 2021 (c) Achim Bornhoeft
+;;; 2025 (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; LAYOUT
+
+#|
+Examples of Layouts under File - New - Template
+Search for "layout" in documentation
+The presets for the :layout keyword are found in
+Instrument Layout Presets (layout-presets.pdf)
+|#
+
+;;;---------------------------------------------------------
+
+;;; Pierrot Ensemble
+
+(progn
+(setf size 8)
+(setf bars (gen-repeat size '(3/4)))
+(setf pause (length-span bars '(-q)))
+
+(setf flute pause)
+(setf clarinet pause)
+(setf violin pause)
+(setf violoncello pause)
+(setf piano-rh pause)
+(setf piano-lh pause)
+
+(def-score pierrot-ensemble
+    (:title "Title"
+     :composer "Composer"
+     :copyright "Copyright ©"
+     :key-signature 'chromatic
+     :time-signature '(3 4)
+     :tempo 100
+     :layout (list
+              (bracket-group
+               ;; group of instruments surrounded by one
+               ;; bracket with common continuous bar line
+               (flute-layout 'flute
+                             :name "Flute" :abbr "Fl")
+               (clarinet-layout 'clarinet
+                                :name "Clarinet" :abbr "Cl")
+               (violin-layout 'violin
+                              :name "Violin" :abbr "Vn")
+               (violoncello-layout 'violoncello
+                                   :name "Violoncello" :abbr "Vc"))
+              (piano-layout 'piano-rh 'piano-lh
+                            :name "Piano" :abbr "Pno")))
+  
+  (flute
+   :omn flute
+   :channel 1
+   :sound 'gm
+   :program 'flute
+   :volume 95
+   :pan 70
+   :controllers (91 '(52))
+   )
+  
+  (clarinet
+   :omn clarinet
+   :channel 3
+   :sound 'gm
+   :program 'clarinet
+   :volume 95
+   :pan 60
+   :controllers (91 '(57))
+   )
+
+  (violin
+   :omn violin
+   :channel 14
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 100
+   :pan 16
+   :controllers (91 '(48))
+   )
+
+  (violoncello
+   :omn violoncello
+   :channel 15
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 90
+   :pan 95
+   :controllers (91 '(60))
+   )
+
+  (piano-rh
+   :omn piano-rh
+   :channel 7
+   :sound 'gm
+   :program 'acoustic-grand-piano
+   :volume 100
+   :pan 64
+   :controllers (91 '(60))
+   )
+
+  (piano-lh
+   :omn piano-lh
+   :channel 8
+   :sound 'gm
+   :program 'acoustic-grand-piano
+   :volume 100
+   :pan 64
+   :controllers (91 '(60))
+   )
+  )
+
+(display-musicxml 'pierrot-ensemble))
+
+;;; ---------------------------------------------------------
+
+;;; Orchestra
+
+(progn
+(setf size 8)
+(setf bars (gen-repeat size '(12/8)))
+(setf pause (length-span bars '(-q)))
+
+(setf flutes pause)
+(setf oboes pause)
+(setf clarinets pause)
+(setf bassoons pause)
+(setf horns pause)
+(setf trumpets pause)
+(setf timpani pause)
+(setf violin1 pause)
+(setf violin2 pause)
+(setf viola pause)
+(setf violoncello pause)
+(setf contrabass pause)
+
+(def-score orchestral-classical
+    (:title "Title"
+     :composer "Composer"
+     :copyright "Copyright ©"
+     :key-signature 'chromatic
+     :time-signature '((3 3 3 3) 8)
+     ;; time signature with beaming on dotted quarter notes
+     :tempo '(q. 100)
+     ;; the duration can be set
+     :layout (list
+              (bracket-group
+               (flute-layout 'flutes :name "Flutes")
+               (oboe-layout 'oboes :name "Oboes")
+               (clarinet-layout 'clarinets :name "Clarinets")
+               (bassoon-layout 'bassoons :name "Bassoons"))
+              (bracket-group
+               (horn-layout 'horns :name "Horns in F")
+               (trumpet-layout 'trumpets 
+                               :name "Trumpets in Bb"))
+              (bracket-group
+               (timpani-layout 'timpani))
+              (bracket-group
+               (violin1-layout 'violin1)
+               (violin2-layout 'violin2)
+               (viola-layout 'viola)
+               (violoncello-layout 'violoncello)
+               (contrabass-layout 'contrabass))))
+  
+  (flutes
+   :omn flutes
+   :channel 1
+   :sound 'gm
+   :program 'flute
+   :volume 95
+   :pan 70
+   :controllers (91 '(52))
+   )
+  
+  (oboes
+   :omn oboes
+   :channel 2
+   :sound 'gm
+   :program 'oboe
+   :volume 95
+   :pan 54
+   :controllers (91 '(55))
+   )
+  
+  (clarinets
+   :omn clarinets
+   :channel 3
+   :sound 'gm
+   :program 'clarinet
+   :volume 95
+   :pan 60
+   :controllers (91 '(57))
+   )
+  
+  (bassoons
+   :omn bassoons
+   :channel 4
+   :sound 'gm
+   :program 'bassoon
+   :volume 95
+   :pan 70
+   :controllers (91 '(57))
+   )
+  
+  (horns
+   :omn horns
+   :channel 5
+   :sound 'gm
+   :program 'french-horn
+   :volume 105
+   :pan 46
+   :controllers (91 '(62))
+   )
+  
+  (trumpets
+   :omn trumpets
+   :channel 6
+   :sound 'gm
+   :program 'trumpet
+   :volume 105
+   :pan 81
+   :controllers (91 '(62))
+   )
+  
+  (timpani
+   :omn timpani
+   :channel 7
+   :sound 'gm
+   :program 'timpani
+   :volume 100
+   :pan 89
+   :controllers (91 '(72))
+   )
+  
+  (violin1
+   :omn violin1
+   :channel 8
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 100
+   :pan 16
+   :controllers (91 '(48))
+   )
+  
+  (violin2
+   :omn violin2
+   :channel 13
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 95
+   :pan 111
+   :controllers (91 '(48))
+   )
+  
+  (viola
+   :omn viola
+   :channel 9
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 90
+   :pan 32
+   :controllers (91 '(60))
+   )
+  
+  (violoncello
+   :omn violoncello
+   :channel 11
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 90
+   :pan 95
+   :controllers (91 '(60))
+   )
+  
+  (contrabass
+   :omn contrabass
+   :channel 12
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 90
+   :pan 95
+   :controllers (91 '(60))
+   )
+  )
+
+(display-musicxml 'orchestral-classical))
+
+;;; ---------------------------------------------------------
+
+;;; Percussion Ensemble
+
+(progn
+(setf size 6)
+(setf bars (gen-repeat size '(4/4)))
+(setf pause (length-span bars '(-q)))
+
+(setf snares pause)
+(setf tenors pause)
+(setf basses pause)
+(setf cymbals pause)
+(setf xylophone pause)
+(setf chimes pause)
+(setf vibraphone1 pause)
+(setf vibraphone2 pause)
+(setf vibraphone3 pause)
+(setf marimba1 pause)
+(setf marimba2 pause)
+(setf marimba3 pause)
+(setf timpani pause)
+
+(def-score percussion-ensemble
+    (:title "Title"
+     :composer "Composer"
+     :copyright "Copyright © "
+     :key-signature 'chromatic
+     :time-signature '((3 4 1) (7 8 1) (4 4 2) (9 8 1) (5 4 1))
+     ;; different time-signatures per measure(s): nominator, 
+     ;; denominator, number of bars
+     :tempo 100
+     :layout (list
+              (bracket-group
+               (snare-drum-layout 'snares)
+               (tenor-drum-layout 'tenors)
+               (bass-drum-layout 'basses)
+               (cymbals-layout 'cymbals))
+              (bracket-group
+               (xylophone-single-layout 'xylophone)
+               (chimes-layout 'chimes)
+               (square-group
+                ;; internal group in bracket-group
+                (vibraphone1-single-layout 'vibraphone1)
+                (vibraphone2-single-layout 'vibraphone2))
+               (square-group
+                (marimba1-single-layout 'marimba1)
+                (marimba2-single-layout 'marimba2))
+               (timpani-layout 'timpani))))
+  
+  (snares
+   :omn snares
+   :channel 10
+   :sound 'gm
+   :program 0
+   :volume 100
+   :pan 64
+   :controllers (91 '(72))
+   )
+  
+  (tenors
+   :omn tenors
+   :channel 10
+   :sound 'gm
+   :program 0
+   :volume 100
+   :pan 64
+   :controllers (91 '(72))
+   )
+  
+  (basses
+   :omn basses
+   :channel 10
+   :sound 'gm
+   :program 0
+   :volume 100
+   :pan 64
+   :controllers (91 '(72))
+   )
+  
+  (cymbals
+   :omn cymbals
+   :channel 10
+   :sound 'gm
+   :program 0
+   :volume 100
+   :pan 64
+   :controllers (91 '(72))
+   )
+  
+  (xylophone
+   :omn xylophone
+   :channel 2
+   :sound 'gm
+   :program 'xylophone
+   :volume 100
+   :pan 77
+   :controllers (91 '(72))
+   )
+  
+  (chimes
+   :omn chimes
+   :channel 2
+   :sound 'gm
+   :program 'tubular-bells
+   :volume 100
+   :pan 37
+   :controllers (91 '(72))
+   )
+  
+  (vibraphone1
+   :omn vibraphone1
+   :channel 2
+   :sound 'gm
+   :program 'vibraphone
+   :volume 100
+   :pan 90
+   :controllers (91 '(72))
+   )
+  
+  (vibraphone2
+   :omn vibraphone2
+   :channel 3
+   :sound 'gm
+   :program 'vibraphone
+   :volume 100
+   :pan 90
+   :controllers (91 '(72))
+   )
+
+  (marimba1
+   :omn marimba1
+   :channel 3
+   :sound 'gm
+   :program 'marimba
+   :volume 100
+   :pan 77
+   :controllers (91 '(72))
+   )
+  
+  (marimba2
+   :omn marimba2
+   :channel 4
+   :sound 'gm
+   :program 'marimba
+   :volume 100
+   :pan 77
+   :controllers (91 '(72))
+   )
+
+  (timpani
+   :omn timpani
+   :channel 14
+   :sound 'gm
+   :program 'timpani
+   :volume 100
+   :pan 89
+   :controllers (91 '(72))
+   )
+  )
+
+(display-musicxml 'percussion-ensemble))
+
+;;; ---------------------------------------------------------
+
+;;; 2 Pianos / 12 hands
+
+(progn
+(setf size 8)
+(setf bars (gen-repeat size '(4/4)))
+(setf pause (length-span bars '(-q)))
+
+(setf 
+ piano1-1-rh pause piano1-1-lh pause
+ piano1-2-rh pause piano1-2-lh pause
+ piano1-3-rh pause piano1-3-lh pause
+ piano2-1-rh pause piano2-1-lh pause
+ piano2-2-rh pause piano2-2-lh pause
+ piano2-3-rh pause piano2-3-lh pause)
+
+(def-score 12-hands
+           (:title "6 Pianos"
+            :composer "M. Mustermann"
+            :copyright "Copyright © 1984"
+            :key-signature 'chromatic
+            :time-signature '((1 1 1 1) 4)
+            :tempo 80
+            :layout (list 
+                     (bracket-group
+                      ;; a bracket-group
+                      ;; with 3 brace-groups for pianos
+                      (brace-group 
+                      (treble-layout 'piano1-1-rh) 
+                       (treble-layout 'piano1-1-lh) 
+                       :name "Piano 1.1" :abbr "Pno 1.1")
+                      (brace-group
+                       (treble-layout 'piano1-2-rh) 
+                       (treble-layout 'piano1-2-lh) 
+                       :name "Piano 1.2" :abbr "Pno 1.2")
+                      (brace-group
+                       (bass-layout 'piano1-3-rh) 
+                       (bass-layout 'piano1-3-lh) 
+                       :name "Piano 1.3" :abbr "Pno 1.3"))
+                     (bracket-group
+                      (brace-group
+                       (treble-layout 'piano2-1-rh)
+                       (treble-layout 'piano2-1-lh) 
+                       :name "Piano 2.1" :abbr "Pno 2.1")
+                      (brace-group
+                       (treble-layout 'piano2-2-rh) 
+                       (bass-layout 'piano2-2-lh) 
+                       :name "Piano 2.2" :abbr "Pno 2.2")
+                      (brace-group
+                       (bass-layout 'piano2-3-rh)
+                       (bass-layout'piano2-3-lh) 
+                       :name "Piano 2.3" :abbr "Pno 2.3"))))
+;;; Piano I
+  
+(piano1-1-rh :omn piano1-1-rh :channel 1 :pan 32)  
+(piano1-1-lh :omn piano1-1-lh :channel 2 :pan 32)
+
+(piano1-2-rh :omn piano1-2-rh :channel 3 :pan 32)
+(piano1-2-lh :omn piano1-2-lh :channel 4 :pan 32)
+
+(piano1-3-rh :omn piano1-3-rh :channel 5 :pan 32)
+(piano1-3-lh :omn piano1-3-lh :channel 6 :pan 32)
+
+;;; Piano II
+
+(piano2-1-rh :omn piano2-1-rh :channel 7 :pan 96)
+(piano2-1-lh :omn piano2-1-lh :channel 8 :pan 96)
+
+(piano2-2-rh :omn piano2-2-rh :channel 9 :pan 96)
+(piano2-2-lh :omn piano2-2-lh :channel 11 :pan 96) 
+;; channel 11 because channel 10 = percussion!
+
+(piano2-3-rh :omn piano2-3-rh :channel 12 :pan 96)
+(piano2-3-lh :omn piano2-3-lh :channel 13 :pan 96))
+
+(display-musicxml '12-hands))
+
+;;;---------------------------------------------------------
+
+;;; Bach Chorale (4 voices) for Piano
+
+(progn
+(setf soprano
+      '((-h. q g4) (q g4 a4 bb4 c5) (h. d5 fermata q d5)
+        (q d5 c5 bb4 c5) (h. a4 fermata q a4)))
+
+(setf alto
+      '((-h. q d4) (q eb4 e e4 gb4 q g4 g4) 
+        (h. gb4 fermata q gb4)(q g4 e g4 gb4 q g4 a4) 
+        (h. gb4 fermata q gb4)))
+
+(setf tenor
+      '((-h. q bb3) (q c4 c4 d4 eb4) (h. a3 fermata q a3)
+        (q bb3 c4 d4 eb4) (h. d4 fermata q d4)))
+
+(setf bass
+      '((-h. q g3) (e c4 bb3 q a3 e g3 f3 q eb3) 
+        (h. d3 fermata q c3) (q bb2 a2 g2 c3) 
+        (h. d3 fermata q d3)))
+
+;; view with cmd-2
+(list soprano alto tenor bass)
+       
+(def-score bach-bwv-0005
+    (:title "Bach, BWV-0005"
+     :composer "J. S. Bach"
+     :key-signature '(g min)
+     :time-signature '(4 4)
+     :tempo 96
+     (brace-group
+     (piano-single-layout (list 'right-hand-1 'right-hand-2))
+     (piano-single-layout (list 'left-hand-1 'left-hand-2))))
+  
+  (right-hand-1 
+   :omn soprano :channel 1 
+   :sound 'gm :program 'acoustic-grand-piano)
+  ;; if the sound is similar in all voices 
+  ;; :program has to be declared only once
+  (right-hand-2 :omn alto :channel 2)
+  (left-hand-1 :omn tenor :channel 3)
+  (left-hand-2 :omn bass :channel 4)
+  ))
+

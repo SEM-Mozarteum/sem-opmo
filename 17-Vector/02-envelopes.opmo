@@ -13,6 +13,21 @@
 
 ;;; ---------------------------------------------------------
 
+;;; envelope as data
+
+(xy-plot 
+(setf env '(0 0  1 2  3 1  4 3  6 0))
+:join-points t :point-radius 2 :style :axis)
+
+(xy-plot
+(setf env-samp
+(envelope-samples env 20))
+:join-points t :point-radius 2 :style :axis)
+
+(vector-map (chromatic-scale 'c4) (envelope-y env-samp))
+
+;;; ---------------------------------------------------------
+
 (progn
 (setf data (gen-brownian-motion 50))
 (setf data-len (length data))

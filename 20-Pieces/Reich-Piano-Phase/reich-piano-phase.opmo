@@ -8,6 +8,9 @@
 ;;; Steve Reich, Piano Phase (1967)
 ;;; Section 1 to 15
 
+
+
+
 ;; list of pitches
 (setf pitches '(e4 fs4 b4 cs5 d5 fs4 e4 cs5 b4 fs4 d5 cs5))
 
@@ -82,7 +85,8 @@
      :composer "Steve Reich"
      :copyright "Copyright © 1967"
      :key-signature 'chromatic
-     :time-signature '(12 16)
+     :time-signature '((6 6) 16)
+     ;; beaming in two times six sixtenth notes
      :flexible-clef t
      :tempo '(q. 72)
      :layout (piano-layout 'piano-rh 'piano-lh))
