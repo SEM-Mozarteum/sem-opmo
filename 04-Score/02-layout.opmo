@@ -456,6 +456,7 @@ Instrument Layout Presets (layout-presets.pdf)
 ;;; ---------------------------------------------------------
 
 ;;; 2 Pianos / 12 hands
+;;; bornhoeft.org/works/waldstein
 
 (progn
 (setf size 8)
@@ -471,9 +472,9 @@ Instrument Layout Presets (layout-presets.pdf)
  piano2-3-rh pause piano2-3-lh pause)
 
 (def-score 12-hands
-           (:title "6 Pianos"
-            :composer "M. Mustermann"
-            :copyright "Copyright © 1984"
+           (:title "Waldstein"
+            :composer "Achim Bornhoeft"
+            :copyright "Copyright © 2018"
             :key-signature 'chromatic
             :time-signature '((1 1 1 1) 4)
             :tempo 80
@@ -533,47 +534,64 @@ Instrument Layout Presets (layout-presets.pdf)
 
 ;;;---------------------------------------------------------
 
-;;; Bach Chorale (4 voices) for Piano
+;;; Four voices piano
+;;; Thanks to Stephane Boussuge
+;;; https://opusmodus.com/forums/topic/4073-bach-chorale/#comment-14134
 
 (progn
-(setf soprano
-      '((-h. q g4) (q g4 a4 bb4 c5) (h. d5 fermata q d5)
-        (q d5 c5 bb4 c5) (h. a4 fermata q a4)))
+(setf voice1 '((q c5 d5 e5 f5)(h g5)))
+(setf voice2 '((q g4 b4 c5 c5)(h c5)))
+(setf voice3 '((q e4 g4 g4 a4)(h g4)))
+(setf voice4 '((q c3 g3 c3 f3)(h e3)))
 
-(setf alto
-      '((-h. q d4) (q eb4 e e4 gb4 q g4 g4) 
-        (h. gb4 fermata q gb4)(q g4 e g4 gb4 q g4 a4) 
-        (h. gb4 fermata q gb4)))
+(setf piano-rh1 voice1)
+(setf piano-rh2 voice2)
+(setf piano-lh1 voice3)
+(setf piano-lh2 voice4)
 
-(setf tenor
-      '((-h. q bb3) (q c4 c4 d4 eb4) (h. a3 fermata q a3)
-        (q bb3 c4 d4 eb4) (h. d4 fermata q d4)))
+(def-score piano
+(:title "Title"
+:composer "Composer Name"
+:copyright "Copyright © "
+:key-signature 'chromatic
+:time-signature '((1 1 1 1) 4)
+:tempo 100
+:layout (piano-solo-layout '(piano-rh1 piano-rh2) 
+                           '(piano-lh1 piano-lh2)
+                           ;; 2 voices per system
+                           :name "Piano" :abbr "Pno"))
 
-(setf bass
-      '((-h. q g3) (e c4 bb3 q a3 e g3 f3 q eb3) 
-        (h. d3 fermata q c3) (q bb2 a2 g2 c3) 
-        (h. d3 fermata q d3)))
+(piano-rh1
+:omn piano-rh1
+:channel 1
+:sound 'gm
+:program 'acoustic-grand-piano
+:volume 100
+:pan 64
+:controllers (91 '(48))
+)
 
-;; view with cmd-2
-(list soprano alto tenor bass)
-       
-(def-score bach-bwv-0005
-    (:title "Bach, BWV-0005"
-     :composer "J. S. Bach"
-     :key-signature '(g min)
-     :time-signature '(4 4)
-     :tempo 96
-     (brace-group
-     (piano-single-layout (list 'right-hand-1 'right-hand-2))
-     (piano-single-layout (list 'left-hand-1 'left-hand-2))))
-  
-  (right-hand-1 
-   :omn soprano :channel 1 
-   :sound 'gm :program 'acoustic-grand-piano)
-  ;; if the sound is similar in all voices 
-  ;; :program has to be declared only once
-  (right-hand-2 :omn alto :channel 2)
-  (left-hand-1 :omn tenor :channel 3)
-  (left-hand-2 :omn bass :channel 4)
-  ))
+(piano-rh2
+:omn piano-rh2
+:channel 1
+:sound 'gm
+:program 'acoustic-grand-piano
+:volume 100
+:pan 64
+:controllers (91 '(48))
+)
+
+(piano-lh1
+:omn piano-lh1
+:channel 2
+:controllers (91 '(48))
+)
+
+(piano-lh2
+:omn piano-lh2
+:channel 2
+:controllers (91 '(48))
+))
+
+(display-musicxml 'piano))
 

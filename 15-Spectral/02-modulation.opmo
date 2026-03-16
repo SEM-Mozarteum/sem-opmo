@@ -9,18 +9,108 @@
 
 ;;; ---------------------------------------------------------
 
-;;; FREQUENCY MODULATION
+;;; Amplitude (Ring) Modulation
 
 #|
-The spectrum produced with this technique is expressed with the following equatio n: frequency = carrier + and - (index-modulator); where index equals 0, then 1, then 2, etc. until the maximum index value has
-been reached.
+Applies ring modulation to input pitches by computing both 
+the frequency-sum and frequency-difference between each input 
+pitch and the modulator(s).
 |#
 
-(defun fm-mod (carrier modulator index)
-  (loop for i from 1 to index
-    for x = (abs (- carrier (* i modulator)))
-    for y = (+ carrier (* i modulator))
-    when (not (zerop x)) collect x
-    when (not (zerop y)) collect y))
+;; Modulator in Hz, quantized to semitones
+(ring-modulation '(a4 c5 e5) 110 :quantize 1/2)
+;; or modulator as pitch, quantized to quartertones
+(ring-modulation '(a4 c5 e5) 'a2 :quantize 1/4)
 
-;; (fm-mod 200 300 2)
+;; Is the same as
+(matrix-transpose
+ (hertz-to-pitch
+  (loop for i in (pitch-to-hertz '(a4 c5 e5))
+        for mod = (pitch-to-hertz 'a2)
+        collect (list (abs (- i mod)) (+ i mod)))
+  :quantize 1/4))
+;; Pitch is converted to hertz to calculate the modulation
+;; in the frequency domain before converted back.
+
+#|
+With the keyword "am" the lists includes the original 
+unmodulated pitches between difference and sum results 
+in the classic amplitude modulation style
+|#
+
+;; Amplitude modulation as chords quantized to eighttones
+(ring-modulation '(a4 c5 e5) 'a2 
+                 :quantize 1/8 :am t :chord t)
+
+;; See: Joshua Fineberg, Guide to the Basic Concepts and 
+;; Techniques of Spectral Music, p. 97 
+
+(setf spect1 '(440 880))
+(setf spect2 '(80 160 240))
+
+(setf rm-hz
+(loop for a in spect1
+      collect
+        (loop for b in spect2
+              collect (+ a b))
+      collect
+        (loop for b in spect2
+              collect (abs (- a b)))))
+
+;; See as pitches
+(hertz-to-pitch rm-hz)
+
+;;; ---------------------------------------------------------
+
+;;; Frequency Modulation
+
+;; See: Joshua Fineberg, Guide to the Basic Concepts and 
+;; Techniques of Spectral Music, p. 96 
+
+#|
+The spectrum produced with this technique is expressed with 
+the following equation: 
+
+frequency = carrier +/- (index * modulator)
+
+where index equals 1, then 2, etc. until the maximum 
+index value has been reached.
+|#
+
+(setf carrier 440)
+(setf modulator 100)
+(setf index 6)
+
+(setf fm-hz 
+      (rest
+       (loop for i from 0 to index
+             for mod = (* i modulator)
+             for x = (+ carrier mod)
+             ;; abs = only positive numbers
+             for y = (abs (- carrier mod))
+             when (not (zerop x)) collect x
+               ;; collect only if not zero
+             when (not (zerop y)) collect y)))
+
+#|
+c: 440 Hz
+c + m: 540 Hz
+c - m: 340 Hz
+c + (2 * m): 640 Hz
+c - (2 * m): 240 Hz
+c + (3 * m): 740 Hz
+c - (3 * m): 140 Hz
+c + (4 * m): 840 Hz
+c - (4 * m): 40 Hz
+c + (5 * m): 940 Hz
+c - (5 * m): 60  Hz
+c + (6 * m): 1040 Hz
+c - (6 * m): 160 Hz
+|#
+
+;; Display as pitches
+(hertz-to-pitch fm-hz)
+
+;;; https://www.sfu.ca/~truax/fmtut.html
+;;; FM as C : M Ratio
+

@@ -15,10 +15,12 @@
       (loop for i from 1 to 17
               collect (* (pitch-to-hertz 'a2) i)))
 
-;; use the harmonics function to get this row 
-;; quantized to frequencies in semitones
+;; quantize the frequencies from hertz to pitch
 (setf harm-semi
 (hertz-to-pitch harm-hz :quantize 1/2))
+
+;; or use the harmonics function to get this row quantized
+(harmonics 'a2 17 :quantize 1/2)
 
 ;; decimal ratios between pure harmonic row and 
 ;; a quantized version in semitones
@@ -45,7 +47,7 @@
 ;; see Joshua Fineberg, Guide to the Basic Concepts and 
 ;; Techniques of Spectral Music, p. 93-94
 
-;; harmonic scale linear
+;; harmonic scale linear quantized to quartertones
 (harmonics 'c2 10 :quantize 1/4)
 
 ;; creating non-harmonic scales with distortion coefficiants
@@ -72,52 +74,68 @@
 ;;; Linear Subdivision (Arithmetic Division)
 
 #|
-Dividing the octave (e.g., 440Hz to 880Hz) into 8 equal 
-Hertz increments, this creates a series based on the harmonic 
-series 8:9:10:11:12:13:14:15:16 on the fundamental 55 hz.
+Since the harmonic series is a multiplication of integer 
+factors, dividing a frequency by any integer defines this 
+frequency the nth (division) overtone to the result 
+as the fundamental.
+
+Dividing this overtone by itself creates the next overtones
+until the next octave above
 |#
 
-(setf fundamental (pitch-to-hertz 'a1))
+(progn
+(setf fundamental (pitch-to-hertz 'a2)) ; 110 Hz
 ;; 8th overtone as starting point
-(setf start-freq (* fundamental 8))
-(setf octave-division 8.0)
+(setf overtone (* fundamental 4)) ; 440 Hz
+(setf octave-division 4) ; steps of 110 Hz
 
 (list-plot
 (setf equal-hz-scale
-      (loop for i from 0 to octave-division ; 8 steps
+      ;; creating overtones 4 to 8
+      (loop for i from 0 to octave-division
               ;; divide the octave in 8 steps and add 
               ;; these consecutively to the start frequency
-       collect (+ start-freq 
-                  (* (/ start-freq octave-division) i))))
-:zero-based t :point-radius 2 :join-points t)
+       collect (+ overtone 
+                  (* (/ overtone octave-division) i))))
+:zero-based t :point-radius 2 :join-points t))
+
+;; aequidistant increase of 110 hz per step
+(difference equal-hz-scale)
 
 ;; convert to notation (pitch)
 (hertz-to-pitch equal-hz-scale)
 
-;; aequidistant increase of 55 hz per step
-(difference equal-hz-scale)
-
 #|
-Increasing the division of the octave e.g. into 12 steps
-only the even overtones (8,10,12,14,16) exist in this scale
-the others are fractional harmonics
+Changing the division of the octave e.g. into 8 steps
+with the same fundamental, the overtones 4 to 8, 
+and four overtones in between are created
 |#
-(setf equal-hz-scale12
-      (loop for i from 0 to 12  
-       collect (+ start-freq 
-                  (* (/ start-freq 12.0) i))))
+
+(setf equal-hz-scale8
+      (loop for i from 0 to 8  
+       collect (+ overtone 
+                  (* (/ overtone 8) i))))
 
 ;; convert to notation (pitch)
-(hertz-to-pitch equal-hz-scale12)
+(hertz-to-pitch equal-hz-scale8)
+
+;; This row corresponds to the 8th to the 16th overtone
+;; on the fundamental of 55 Hz !
+(setf new-fund (/ 440 8))
+
+(loop for i from 8 to 16 ; overtones
+      collect (* new-fund ;fundamental
+                 i))
 
 ;; decreasing number of divisions
-(loop for i from 12 downto 2
+(loop for i from 12 downto 2 ; numbers of division
+        with overtone = 440 ; overtone a4
       collect
-        (chordize
-      (hertz-to-pitch
-       (loop for j from 0 to i  
-       collect (+ start-freq 
-                  (* (/ start-freq i) j))))))
+        (chordize ; make chords
+      (hertz-to-pitch ; convert frequencies to pitch
+       (loop for j from 0 to i ; collect frequencies 
+       collect (+ overtone 
+                  (* (/ overtone i) j))))))
 
 ;;; ---------------------------------------------------------
 

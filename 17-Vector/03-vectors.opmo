@@ -181,7 +181,7 @@ itself a vector array or list comprising of integer values.
 While normal scaling multiplies a value or pattern linearly, 
 vector‑smooth produces a smoother transition between multiple 
 values. This is typically used to avoid abrupt jumps and achieve
- a more “fluid” progression.
+a more “fluid” progression.
 |#
 
 (setf vector (gen-white-noise 200 :seed 345))
@@ -193,7 +193,6 @@ values. This is typically used to avoid abrupt jumps and achieve
        (vector-smooth 0.05 vector))
  :point-radius 1
  :join-points t)
-
 
 ;;; ---------------------------------------------------------
 
@@ -229,6 +228,8 @@ values. This is typically used to avoid abrupt jumps and achieve
  (list-plot 
    (vector-to-envelope2 env1 env2 bw) :join-points t))
 |#
+
+
 
 ;;; ---------------------------------------------------------
 ;;; A vector mapping example by Stephane Boussuge

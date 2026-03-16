@@ -52,10 +52,6 @@
 (xy-plot (list env '(2.5 1.25)) 
          :join-points t :point-radius 2 :style :axis)
 
-;;;
-;;; Next lesson on 5.3.2026
-;;;
-
 ;;; envelope-samples
 
 ;; Take 20 aequidistant samples from envelope

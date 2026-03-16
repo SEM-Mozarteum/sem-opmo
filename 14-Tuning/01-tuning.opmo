@@ -258,3 +258,38 @@ https://www.youtube.com/watch?v=WOOc6VQkbVg
 ;; calculate the decimal ratios between the frequencies
 (loop for i in chromatic-scale-hz
         collect (/ i 440)))
+
+;;; ---------------------------------------------------------
+
+;;; Quarter tone scale
+
+;; Calculating a quarter tone scale
+(setf quartertone-scale-hz
+(loop for x from 0 to 24
+            collect (* 440 (expt 2 (/ x 24)))))
+
+;; display with cmd-1
+(quarter-tone-closest ; simplify the accidentals
+(hertz-to-pitch quartertone-scale-hz :quantize 1/4))
+
+;;; Different equal divisions of the octave
+
+(setf equal-octave-hz
+(loop for i from 1 to 12
+        ;; 1 to 12 divisions
+      collect
+      (loop for j from 0 to i
+              ;; intervals from a3 = 220 hz
+        collect (* 220 (expt 2 (/ j i))))))
+
+;; see in eight tones
+(hertz-to-pitch equal-octave-hz)
+
+;; quantized to semitones different modi 
+;; (e.g. diminished chord, wholetone scale) are created:
+(setf equal-octave-semi
+      (hertz-to-pitch equal-octave-hz :quantize 1/2))
+
+;; see the intervals in number of semitones
+(loop for i in equal-octave-semi
+      collect (difference (pitch-to-integer i)))
