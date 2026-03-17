@@ -9,6 +9,12 @@
 
 ;;; ---------------------------------------------------------
 
+#|
+The harmonic series (also overtone series) is the sequence of 
+harmonics, musical tones, or pure tones whose frequency is an 
+integer multiple of a fundamental frequency.
+|#
+
 (progn
 ;; 16 pure harmonics on c3
 (setf harm-hz 
@@ -17,10 +23,10 @@
 
 ;; quantize the frequencies from hertz to pitch
 (setf harm-semi
-(hertz-to-pitch harm-hz :quantize 1/2))
+      (hertz-to-pitch harm-hz :quantize 1/2))
 
-;; or use the harmonics function to get this row quantized
-(harmonics 'a2 17 :quantize 1/2)
+;; or use the harmonics function
+(harmonics 'a2 17 :quantize 1/8)
 
 ;; decimal ratios between pure harmonic row and 
 ;; a quantized version in semitones
@@ -42,7 +48,7 @@
 
 ;;; ---------------------------------------------------------
 
-;;; harmonic vs. distorted spectra
+;;; Harmonic vs. distorted spectra
 
 ;; see Joshua Fineberg, Guide to the Basic Concepts and 
 ;; Techniques of Spectral Music, p. 93-94
@@ -68,6 +74,28 @@
       collect
         (chordize
          (harmonics 'a2 8 :quantize 1/8 :coeff i)))
+
+;;; ---------------------------------------------------------
+
+;;; Frequency shifted spectra
+
+;; see Joshua Fineberg, Guide to the Basic Concepts and 
+;; Techniques of Spectral Music, p. 94-95
+
+(setf harm-c2
+(loop for i from 1 to 10
+              collect (* (pitch-to-hertz 'c2) i)))
+
+(setf harm-quarter
+(hertz-to-pitch harm-c2-10 :quantize 1/4))
+
+(setf harm-quart+100 (integer-transpose 100 harm-c2))
+
+(hertz-to-pitch harm-quart+100 :quantize 1/4)
+
+(setf harm-transp-10 (integer-transpose -10 harm-c2))
+
+(hertz-to-pitch harm-transp-10 :quantize 1/4)
 
 ;;; ---------------------------------------------------------
 
@@ -134,7 +162,7 @@ and four overtones in between are created
         (chordize ; make chords
       (hertz-to-pitch ; convert frequencies to pitch
        (loop for j from 0 to i ; collect frequencies 
-       collect (+ overtone 
+       collect (+ overtone ; starting overtone 
                   (* (/ overtone i) j))))))
 
 ;;; ---------------------------------------------------------

@@ -31,8 +31,8 @@ Pythagorean tuning can produce a twelve-tone scale, but it
 does so by involving ratios of very large numbers, 
 corresponding to natural harmonics very high in the harmonic 
 series that do not occur widely in physical phenomena. This 
-tuning uses ratios involving only powers of 3 and 2, creating
-a sequence of just fifths or fourths, as follows:
+tuning uses ratios involving only powers of 3 and 2, 
+creating a sequence of just fifths or fourths, as follows:
 |#
 
 (setf pythagorean-ratios
@@ -94,28 +94,27 @@ Pythagorean comma.
 (setf augmented-fourth (* (expt 3 6) (expt 2 -9)))
 (setf diminished-fifth (* (expt 3 -6) (expt 2 10)))
 
-(ratio-to-cent (/ augmented-fourth diminished-fifth ) :round NIL)
+(ratio-to-cent 
+ (/ augmented-fourth diminished-fifth ) :round NIL)
 
 #|
 In 12-tone Pythagorean temperament, there are eleven justly 
 tuned fifths sharper than 700 cents by about 1.955 cents 
 (or exactly one twelfth of a Pythagorean comma), and hence 
 one fifth will be flatter by twelve times that, which is 
-23.460 cents (one Pythagorean comma) flatter than a just 
+23.46 cents (one Pythagorean comma) flatter than a just 
 fifth. A fifth this flat is called the "wolf fifth".
 |#
 
 ;; 12 pure fifths (~ 7 octaves)
-(expt (/ 3 2) 12)
-;; 531441/4096
+(setf pure-fifths (expt (/ 3 2) 12)) 
+;; 531441/4096 
 
-;; 7 pure octaves
-(setf 7-octaves (expt 2 7))
-;; converted to the fifths ratio
-(* 4096 7-octaves) ; 524288
+;; 7 pure octaves converted to the fifths ratio
+(setf pure-octaces (expt 2 7))
 
 ;; Pythagorean comma
-(setf pythagorean-comma (* 1.0 (/ 531441 524288)))
+(setf pythagorean-comma (* 1.0 (/ pure-fifths pure-octaces)))
 ;; The quotient 1.0136433 is the pythagorean comma 
 
 ;; This corresponds to about 23.46 cents.
@@ -277,8 +276,7 @@ https://www.youtube.com/watch?v=WOOc6VQkbVg
 (setf equal-octave-hz
 (loop for i from 1 to 12
         ;; 1 to 12 divisions
-      collect
-      (loop for j from 0 to i
+      collect (loop for j from 0 to i
               ;; intervals from a3 = 220 hz
         collect (* 220 (expt 2 (/ j i))))))
 

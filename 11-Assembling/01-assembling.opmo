@@ -177,9 +177,12 @@
 ;; loop through all voices and collect the same sections from
 ;; the original score, display with cmd-2
 (loop for i in material
-      collect
-        (select-measure '(((3.3) (4.2)) (3.2 4.1) (6.3 7.4) (3.4 5.1)) i
-                        :ratio 1/4 :time-signature '(4 4)))
+      collect (select-measure '((3.3 4.2) 
+                                (3.2 4.1) 
+                                (6.3 7.4) 
+                                (3.4 5.1)) i 
+                              :ratio 1/4 
+                              :time-signature '(4 4)))
 
 ;;; ---------------------------------------------------------
 

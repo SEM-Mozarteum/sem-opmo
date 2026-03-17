@@ -45,6 +45,7 @@ in the classic amplitude modulation style
 ;; See: Joshua Fineberg, Guide to the Basic Concepts and 
 ;; Techniques of Spectral Music, p. 97 
 
+(progn
 (setf spect1 '(440 880))
 (setf spect2 '(80 160 240))
 
@@ -58,7 +59,7 @@ in the classic amplitude modulation style
               collect (abs (- a b)))))
 
 ;; See as pitches
-(hertz-to-pitch rm-hz)
+(hertz-to-pitch rm-hz))
 
 ;;; ---------------------------------------------------------
 
@@ -77,22 +78,23 @@ where index equals 1, then 2, etc. until the maximum
 index value has been reached.
 |#
 
-(setf carrier 440)
-(setf modulator 100)
-(setf index 6)
+(progn
+  (setf carrier1 440)
+  (setf modulator1 100)
+  (setf index1 6)
 
-(setf fm-hz 
-      (rest
-       (loop for i from 0 to index
-             for mod = (* i modulator)
-             for x = (+ carrier mod)
-             ;; abs = only positive numbers
-             for y = (abs (- carrier mod))
-             when (not (zerop x)) collect x
-               ;; collect only if not zero
-             when (not (zerop y)) collect y)))
+  (setf fm-hz 
+        (rest
+         (loop for i from 0 to index1
+               for mod = (* i modulator1)
+               for x = (+ carrier1 mod)
+               ;; abs = only positive numbers
+               for y = (abs (- carrier1 mod))
+               when (not (zerop x)) collect x
+                 ;; collect only if not zero
+               when (not (zerop y)) collect y)))
 
-#|
+  #|
 c: 440 Hz
 c + m: 540 Hz
 c - m: 340 Hz
@@ -108,9 +110,68 @@ c + (6 * m): 1040 Hz
 c - (6 * m): 160 Hz
 |#
 
-;; Display as pitches
-(hertz-to-pitch fm-hz)
+  ;; Display as pitches
+  (chordize (hertz-to-pitch (remove-duplicates fm-hz))))
 
 ;;; https://www.sfu.ca/~truax/fmtut.html
 ;;; FM as C : M Ratio
+
+(progn
+  (setf carrier2 110)
+  (setf mod-id 3)
+  (setf index2 6)
+
+  (setf fm-hz 
+        (rest
+         (loop for i from 0 to index2
+               for mod = (* i (* carrier2 mod-id))
+               for x = (+ carrier2 mod)
+               for y = (abs (- carrier2 mod))
+               when (not (zerop x)) collect x
+               when (not (zerop y)) collect y)))
+
+  (chordize 
+   (hertz-to-pitch 
+    (remove-duplicates fm-hz)
+    :quantize 1/4)))
+
+ #|
+c: 110 Hz
+c + m: 330 Hz
+c - m: 110 Hz
+c + (2 * m): 550 Hz
+c - (2 * m): 330 Hz
+c + (3 * m): 770 Hz
+c - (3 * m): 550 Hz
+c + (4 * m): 990 Hz
+c - (4 * m): 770 Hz
+c + (5 * m): 1210 Hz
+c - (5 * m): 990  Hz
+c + (6 * m): 1430 Hz
+c - (6 * m): 1210 Hz
+|#
+
+;;; fm chord progression with in increasing id
+;;; and modulator factor
+
+(progn
+  (setf carrier2 110)
+
+  (setf fm-chords
+        (loop for id from 1 to 10
+              for mo from 1.5 to 2.5 by 0.1
+              collect
+                (remove-duplicates
+                 (rest
+                  (loop for i from 1 to id
+                        for mod = (* i (* carrier2 mo))
+                        for x = (+ carrier2 mod)
+                        for y = (abs (- carrier2 mod))
+                        when (not (zerop x)) collect x
+                        when (not (zerop y)) collect y)))))
+
+  (chordize 
+   (hertz-to-pitch 
+    (remove-duplicates fm-chords)
+    :quantize 1/4)))
 
