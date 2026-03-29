@@ -224,7 +224,7 @@ Octave) usually mean the same thing in music theory. While
 TET (Tone Equal Temperament) implies that a pure tuning has 
 been ‘tempered’ (adjusted) to approximate an interval, 
 EDO (Equal Divisions of the Octave) means that the octave 
-is divided into 𝑛 equal steps.#
+is divided into 𝑛 equal steps.
 
 https://www.youtube.com/watch?v=WOOc6VQkbVg
 |#
@@ -286,7 +286,7 @@ https://www.youtube.com/watch?v=WOOc6VQkbVg
 ;; quantized to semitones different modi 
 ;; (e.g. diminished chord, wholetone scale) are created:
 (setf equal-octave-semi
-      (hertz-to-pitch equal-octave-hz :quantize 1/2))
+      (hertz-to-pitch equal-octave-hz :quantize 1/8))
 
 ;; see the intervals in number of semitones
 (loop for i in equal-octave-semi

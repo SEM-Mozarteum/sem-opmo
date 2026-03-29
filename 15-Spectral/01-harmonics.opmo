@@ -58,7 +58,8 @@ integer multiple of a fundamental frequency.
 
 ;; creating non-harmonic scales with distortion coefficiants
 ;; non-harmonic scale with exponential coefficiant
-(harmonics 'c2 10 :quantize 1/4 :coeff 0.9)
+(chordize
+(harmonics 'c2 10 :quantize 1/4 :coeff 0.9))
 
 ;; non-harmonic scale with logarithmic coefficiant
 (harmonics 'c2 16 :quantize 1/4 :coeff 1.1)
@@ -82,7 +83,7 @@ integer multiple of a fundamental frequency.
 ;; see Joshua Fineberg, Guide to the Basic Concepts and 
 ;; Techniques of Spectral Music, p. 94-95
 
-(setf harm-c2
+(setf harm-c2-10
 (loop for i from 1 to 10
               collect (* (pitch-to-hertz 'c2) i)))
 
@@ -113,7 +114,7 @@ until the next octave above
 
 (progn
 (setf fundamental (pitch-to-hertz 'a2)) ; 110 Hz
-;; 8th overtone as starting point
+;; 4th overtone as starting point
 (setf overtone (* fundamental 4)) ; 440 Hz
 (setf octave-division 4) ; steps of 110 Hz
 
@@ -141,8 +142,8 @@ and four overtones in between are created
 
 (setf equal-hz-scale8
       (loop for i from 0 to 8  
-       collect (+ overtone 
-                  (* (/ overtone 8) i))))
+            collect (+ overtone 
+                       (* (/ overtone 8) i))))
 
 ;; convert to notation (pitch)
 (hertz-to-pitch equal-hz-scale8)
@@ -157,13 +158,12 @@ and four overtones in between are created
 
 ;; decreasing number of divisions
 (loop for i from 12 downto 2 ; numbers of division
-        with overtone = 440 ; overtone a4
+      with overtone = 440 ; overtone a4
       collect
         (chordize ; make chords
-      (hertz-to-pitch ; convert frequencies to pitch
-       (loop for j from 0 to i ; collect frequencies 
-       collect (+ overtone ; starting overtone 
-                  (* (/ overtone i) j))))))
+         (hertz-to-pitch ; convert frequencies to pitch
+          (loop for j from 0 to i ; collect frequencies 
+                collect (+ overtone ; starting overtone 
+                           (* (/ overtone i) j))))))
 
 ;;; ---------------------------------------------------------
-

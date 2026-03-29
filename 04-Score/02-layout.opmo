@@ -539,59 +539,60 @@ Instrument Layout Presets (layout-presets.pdf)
 ;;; https://opusmodus.com/forums/topic/4073-bach-chorale/#comment-14134
 
 (progn
-(setf voice1 '((q c5 d5 e5 f5)(h g5)))
-(setf voice2 '((q g4 b4 c5 c5)(h c5)))
-(setf voice3 '((q e4 g4 g4 a4)(h g4)))
-(setf voice4 '((q c3 g3 c3 f3)(h e3)))
+  (setf voice1 '((q c5 d5 e5 f5)(h g5)))
+  (setf voice2 '((q g4 b4 c5 c5)(h c5)))
+  (setf voice3 '((q e4 g4 g4 a4)(h g4)))
+  (setf voice4 '((q c3 g3 c3 f3)(h e3)))
 
-(setf piano-rh1 voice1)
-(setf piano-rh2 voice2)
-(setf piano-lh1 voice3)
-(setf piano-lh2 voice4)
+  (setf piano-rh1 voice1)
+  (setf piano-rh2 voice2)
+  (setf piano-lh1 voice3)
+  (setf piano-lh2 voice4)
 
-(def-score piano
-(:title "Title"
-:composer "Composer Name"
-:copyright "Copyright © "
-:key-signature 'chromatic
-:time-signature '((1 1 1 1) 4)
-:tempo 100
-:layout (piano-solo-layout '(piano-rh1 piano-rh2) 
-                           '(piano-lh1 piano-lh2)
-                           ;; 2 voices per system
-                           :name "Piano" :abbr "Pno"))
+  (def-score piano
+      (:title "Title"
+       :composer "Composer Name"
+       :copyright "Copyright © "
+       :key-signature 'chromatic
+       :time-signature '((1 1 1 1) 4)
+       :tempo 100
+       :layout (piano-solo-layout 
+                '(piano-rh1 piano-rh2) 
+                '(piano-lh1 piano-lh2)
+                ;; 2 voices per system
+                :name "Piano" :abbr "Pno"))
 
-(piano-rh1
-:omn piano-rh1
-:channel 1
-:sound 'gm
-:program 'acoustic-grand-piano
-:volume 100
-:pan 64
-:controllers (91 '(48))
-)
+    (piano-rh1
+     :omn piano-rh1
+     :channel 1
+     :sound 'gm
+     :program 'acoustic-grand-piano
+     :volume 100
+     :pan 64
+     :controllers (91 '(48))
+     )
 
-(piano-rh2
-:omn piano-rh2
-:channel 1
-:sound 'gm
-:program 'acoustic-grand-piano
-:volume 100
-:pan 64
-:controllers (91 '(48))
-)
+    (piano-rh2
+     :omn piano-rh2
+     :channel 1
+     :sound 'gm
+     :program 'acoustic-grand-piano
+     :volume 100
+     :pan 64
+     :controllers (91 '(48))
+     )
 
-(piano-lh1
-:omn piano-lh1
-:channel 2
-:controllers (91 '(48))
-)
+    (piano-lh1
+     :omn piano-lh1
+     :channel 2
+     :controllers (91 '(48))
+     )
 
-(piano-lh2
-:omn piano-lh2
-:channel 2
-:controllers (91 '(48))
-))
+    (piano-lh2
+     :omn piano-lh2
+     :channel 2
+     :controllers (91 '(48))
+     ))
 
-(display-musicxml 'piano))
+  (display-musicxml 'piano))
 
