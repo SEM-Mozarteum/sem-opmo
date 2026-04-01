@@ -1,0 +1,16 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015, (c) 2021, (c) 2026 by Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+Compose a short homophonic sketch (5 bars) 
+for choir (S, A, T, B) in just intonation.
+Quantize the pitches to quarter tones.
+|#
+
+;;; ---------------------------------------------------------

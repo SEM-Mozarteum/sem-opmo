@@ -14,17 +14,18 @@
 (setf quarters 4) ; number of quarters
 
 ;; display with cmd-2
-(loop for i in divs ; repetitions
+(loop for i in divs
       collect
-      (loop repeat quarters ; how many quarters
+      (loop repeat quarters
             collect
-            (loop repeat i ; repetitions per measure
-                  collect (/ 1 i)))) ; lenghts
+            (loop repeat i
+                  collect (/ 1 i))))
 
 ;; selected n-tuplets
 (setf divs-list '(12 16 20 28))
 
-;; make the lengths
+;; display with cmd-2
+
 (setf repetitions
       (mcflatten
       (loop for i in divs-list
@@ -32,16 +33,13 @@
       (loop repeat quarters
             collect
             (loop repeat i
-                  collect (/ 1 i))))))
+                  collect (/ 1 i)))))
 
-;; make pitches from lengths
 (setf pitches
-      (loop for i in repetitions
-              for j in '(c4 f4 bb4 eb5)
-              collect (gen-repeat (length i) j)))
+      (loop for i in rep
 
-;; display with cmd-2
 (make-omn
  :length repetitions
- :pitch pitches)
+ :pitch '((c4) (d4) (e4) (f4))
+ :span :length)
             

@@ -1,0 +1,20 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015, (c) 2021, (c) 2026 by Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+1. Create a list of weighted stacc and leg articulations.
+
+2. Make the same number of pitches, lengths and dynamics.
+
+3. Create some additional rests.
+
+4. Put everything together in a voice for flute.
+|#
+
+;;; ---------------------------------------------------------

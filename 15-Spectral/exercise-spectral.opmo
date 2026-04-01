@@ -1,0 +1,22 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015, (c) 2021, (c) 2026 by Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+Make a short sketch of min. 5 measures for 2 cellos:
+First cello with random harmonics (between the 3rd and 
+9th overtone) on the C string (c2).
+Second cello random harmonics (between the 2nd and 
+8th overtone) on the G string (g2).
+Use any durations and dynamics.
+Pitch notation chromatic with cent deviations.
+Use ratio-to-cent and cent-to-attribute for it.
+(See also James Tenney, Harmonium #1 under "Pieces")
+|#
+
+;;; ---------------------------------------------------------
