@@ -20,7 +20,7 @@ for increasing or decreasing the size of the fluctuations
 |#
 
 (list-plot
- (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1)
+ (gen-tendency 9 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1)
                :variance 0.5)
  :join-points t  :point-radius 2)
 
@@ -194,9 +194,9 @@ which helps to preserve the original shape of the data.
 (setf u-limit (envelope-samples 
                '(0 1 1 4 2 2 3 4 6 4) len))
 
-;; compare envelope and sampled envelope#
+;; compare envelope and sampled envelope
 (xy-plot
-;; xy-plot display of a list of x/y-values
+ ;; xy-plot display of a list of x/y-values
  (list '(0 0 1 -1 2 1 3 -2 4 3 5 -1 6 0)
        l-limit)
  :join-points t :point-radius 2)

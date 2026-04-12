@@ -15,21 +15,27 @@
 
 ;;; envelope as data
 
+;; envelope with 5 breakpoints
 (xy-plot 
 (setf env '(0 0  1 2  3 1  4 3  6 0))
 :join-points t :point-radius 2 :style :axis)
 
+;; 20 samples from this envelope
 (xy-plot
 (setf env-samp
 (envelope-samples env 20))
 :join-points t :point-radius 2 :style :axis)
 
-(vector-map (chromatic-scale 'c4) (envelope-y env-samp))
+;; map these 20 values to pitches
+(vector-map 
+ (integer-to-pitch 
+  (gen-integer 0 24)) 
+ (envelope-y env-samp))
 
 ;;; ---------------------------------------------------------
 
 (progn
-(setf data (gen-brownian-motion 50))
+(setf data (gen-brownian-motion 50 :amp 20 :seed 123))
 (setf data-len (length data))
 
 (setf l-limit 

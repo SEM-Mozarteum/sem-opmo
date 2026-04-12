@@ -9,7 +9,7 @@
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-WHITE-NOISE / LIST-PLOT
+;;; gen-white-noise / (list-plot)
 
 #|
 The function GEN-WHITE-NOISE generate N samples of white 
@@ -39,35 +39,35 @@ line segments. The :style keyword argument may be either
 
 ;; normal
 (list-plot (gen-white-noise 1000)
- :join-points t :point-radius 1.5)
+           :point-radius 2)
 
 ;; binary
 (list-plot (gen-white-noise 100 :type :binary :seed 23)
- :join-points t :point-radius 1.5 :style :fill)
+           :join-points t :point-radius 1.5 :style :fill)
 
 ;; exponential
 (list-plot (gen-white-noise 100 :type :exponential)
- :join-points t :point-radius 1.5 :style :axis)
+           :join-points t :point-radius 1.5 :style :axis)
 
 ;; gaussian
 (list-plot (gen-white-noise 100 :type :gaussian :seed 23)
- :join-points t :point-radius 1.5)
+           :join-points nil :point-radius 2.5)
 
 ;; There is another function only for gaussian noise:
 (list-plot (gen-gaussian-noise 500)
- :join-points nil :point-radius 1)
+           :join-points nil :point-radius 2)
 
 ;; high-pass
 (list-plot (gen-white-noise 100 :type :high-pass :seed 23)
- :join-points t :point-radius 1.5)
+           :join-points t :point-radius 2)
 
 ;; low-pass
 (list-plot (gen-white-noise 100 :type :low-pass)
- :join-points t :point-radius 1.5)
+           :join-points t :point-radius 2)
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-SINE / HALF-SINE
+;;; gen-sine
 
 #|
 The GEN-SINE function generates a sequence with the 
@@ -86,9 +86,13 @@ and structure.
 
 ;; Sine frequency modulated by another sine
 (list-plot
- (gen-sine 120 3 0.5 
-           :modulation (gen-sine 120 1 0.5))
+ (gen-sine 120 10 1 
+           :modulation (gen-sine 120 2 1))
  :join-points t)
+
+;;; Check this
+(list-plot (gen-sine 240 10 0.5 :modulation (gen-sine 120 119 0.5)) 
+             :zero-based t :point-radius 0 :join-points t)
 
 ;; With three amplitudes (list) three sines are created
 (list-plot
@@ -98,7 +102,31 @@ and structure.
 
 ;;; ---------------------------------------------------------
 
-;;; GEN-SQUARE / GEN-SAWTOOTH
+;;; half-sine
+
+(list-plot (half-sine 32 0.5) :join-points t)
+
+(list-plot (half-sine 120 1.0 :phase 90) :join-points t)
+
+;;; Maybe adding a function including the last value
+(defun half-triang (res amp &key (freq 1) phase mod zero)
+  "(list-plot (half-triang 20 1) :join-points t)
+   (list-plot (half-triang 20 1 :zero t) :join-points t)"
+  (if zero
+  (append (half-triangle (- res 1) amp 
+                         :freq freq 
+                         :phase phase 
+                         :modulation mod)
+          (list 0))
+    (half-triangle res amp 
+                         :freq freq 
+                         :phase phase 
+                         :modulation mod)))
+
+
+;;; ---------------------------------------------------------
+
+;;; gen-square / half-square
 
 (list-plot (gen-square 120 3 0.5)
        :join-points t)  
@@ -112,6 +140,10 @@ and structure.
 ;; Half a square
 (list-plot (half-square 120 1.0 :phase 45) :join-points t) 
 
+;;; ---------------------------------------------------------
+
+;;; gen-sawtooth / half-sawtooth
+
 (list-plot (gen-sawtooth 120 3 0.5)
        :join-points t)  
 
@@ -124,8 +156,14 @@ and structure.
 ;; Half sawtooth
 (list-plot (half-sawtooth 120 1 :phase 90) :join-points t)
 
+;;; ---------------------------------------------------------
 
+;;; gen-triangle / half-triangle
 
+(list-plot (gen-triangle 32 1 0.5) :join-points t)
+(list-plot (half-triangle 32 0.5) :join-points t)
+
+(list-plot (half-triangle 120 1.0 :phase 45) :join-points t)
 
 
 

@@ -1,0 +1,315 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; György Ligeti, Atmosphères (1961)
+;;; Generalized Structure of the Trill Construction
+
+;; rhythmic acceleration
+(loop for i from 1 to 14
+      collect
+        (loop repeat i         
+              collect (/ (/ 1 i) 4)))
+
+;; stretched accereration with rounded transition
+(loop for i in
+        (gen-transition 1 14 20 1 :rounded t)
+      collect
+        (loop repeat i         
+              collect (/ (/ 1 i) 4)))
+
+;; 7 voices all starting from 1/4 and ending on 1/32 upto 1/56
+;; view with cmd-2
+(setf diff-end 
+      (loop for divisor from 8 to 14
+            collect
+              (loop for i in
+                      (gen-transition 1 divisor 20 1 :rounded t)
+                    append
+                      (loop repeat i         
+                            collect (/ (/ 1 i) 4)))))
+
+;; 8 voices all starting from 1/4 and ending on 1/56
+;; transition with different curves
+;; view with cmd-2
+(setf diff-curve
+      (loop for curve from 0.6 to 1.4 by 0.1
+            collect
+              (loop for i in
+                      (gen-transition 1 14 20 curve :rounded t)
+                    append
+                      (loop repeat i         
+                            collect (/ (/ 1 i) 4)))))
+
+;; 8 voices all starting from 1/4 and ending on 1/32 upto 1/56
+;; and additional transition with different curves
+;; view with cmd-2
+(setf diff-curve-end
+      (loop for curve from 0.6 to 1.4 by 0.06
+              for divisor from 14 to 17 by 0.2
+            collect
+              (loop for i in
+                      (gen-transition 1 divisor 20 curve :rounded t)
+                    append
+                      (loop repeat i         
+                            collect (/ (/ 1 i) 4)))))
+
+;; trill construction with modulo
+(loop for i from 0 to 11
+      collect (mod i 4))
+;; (0 1 2 3 0 1 2 3 0 1 2 3)
+
+(loop for i from 0 to 11 by 2
+      collect (mod i 4))
+;; (0 2 0 2 0 2)
+
+(loop for i from 0 by 2
+      ;; non terminating counter
+      repeat 12
+      ;; terminating loop after 12 repeats
+      collect (mod i 4))
+;; (0 2 0 2 0 2 0 2 0 2 0 2)
+
+;; applying this to the trill construction
+(integer-to-pitch ; convert integers to pitch
+ (loop with factor = 1 ; interval in semitones
+       with transposition = 0 ; transposition in semitones
+       repeat 20 ; number of notes
+       for i from 0 by factor ; counting in steps of 1
+       collect (+ transposition (mod i (* factor 2)))))
+
+;; trill with minor third transposed to e1 (+ 4)
+(integer-to-pitch ; convert integers to pitch
+ (loop with factor = 3 ; interval minor third
+       with transposition = 4 ; major third up
+       repeat 20 ; number of notes
+       for i from 0 by factor ; counting in steps of 3
+       collect (+ transposition (mod i (* factor 2)))))
+
+;; applying to the durations (diff-end)
+(setf trills1
+(loop for i in diff-end 
+      ;; loop in durations list (7 voices, see above)
+      for trans from 0 by 2 
+      ;; transposition increasing by 2 (major second)
+      collect
+        (loop for j in i
+                ;; loop in each voice
+              for i from 0
+                ;; counting from 0 (in steps of 1)
+              collect (integer-to-pitch
+                       (+ trans (mod i 2))))))
+
+;; view with cmd-2
+(make-omn
+ :length diff-end
+ :pitch (reverse trills1))
+
+;; major second trills transposed by minor second
+;; => overlapping trills
+(setf trills2
+(loop for i in diff-curve 
+      ;; loop in different durations list (8 voices, see above)
+      for trans from 0 by 1 
+      ;; transposition increasing by 1 (minor second)
+      collect
+        (loop with factor = 2 
+              ;; interval in semitones (major second)
+              for j in i
+              for i from 0 by factor
+              collect (integer-to-pitch
+                       (+ trans (mod i (* factor 2)))))))
+
+;; view with cmd-2
+(make-omn
+ :length diff-end
+ :pitch (reverse trills2))
+
+;; major second trills transposed by minor second
+;; => overlapping trills
+(setf trills3
+      (loop for i in diff-curve-end 
+            ;; loop in different durations list (8 voices, see above)
+            for trans in (gen-integer 10 23)
+            collect
+              (loop with factor = 3 
+                    ;; interval in semitones (major second)
+                    for j in i
+                    for i from 0 by factor
+                    collect (integer-to-pitch
+                             (+ trans (mod i (* factor 2)))))))
+
+;; assign variables to each voice
+(assign-variable 'voc 
+                 (make-omn
+                  :length (reverse diff-curve-end)
+                  :pitch (reverse trills3)))
+
+(def-score atmospheres
+    (:title "Atmopsheres-bars-23-27"
+     :composer "György Ligeti"
+     :copyright "Copyright © 1961"
+     :key-signature 'chromatic
+     :time-signature '((1 1 1 1) 4) 
+     :tempo 40
+     :layout (bracket-group
+              (violin1-layout 'violin1)
+              (violin1-layout 'violin2)
+              (violin1-layout 'violin3)
+              (violin1-layout 'violin4)
+              (violin1-layout 'violin5)
+              (violin1-layout 'violin6)
+              (violin1-layout 'violin7)
+              (violin1-layout 'violin8)
+              (violin1-layout 'violin9)
+              (violin1-layout 'violin10)
+              (violin1-layout 'violin11)
+              (violin1-layout 'violin12)
+              (violin1-layout 'violin13)
+              (violin1-layout 'violin14)))
+
+  (violin1
+   :omn voc1
+   :channel 1
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 100
+   :pan 16
+   :controllers (91 '(48))
+   )
+
+  (violin2
+   :omn voc2
+   :channel 2
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 95
+   :pan 111
+   :controllers (91 '(48))
+   )
+
+(violin3
+   :omn voc3
+   :channel 3
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 95
+   :pan 111
+   :controllers (91 '(48))
+   )
+
+(violin4
+   :omn voc4
+   :channel 4
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 95
+   :pan 111
+   :controllers (91 '(48))
+   )
+
+(violin5
+   :omn voc5
+   :channel 5
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 95
+   :pan 111
+   :controllers (91 '(48))
+   )
+
+  (violin6
+   :omn voc6
+   :channel 6
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 95
+   :pan 111
+   :controllers (91 '(48))
+   )
+
+(violin7
+   :omn voc7
+   :channel 7
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 95
+   :pan 111
+   :controllers (91 '(48))
+   )
+
+(violin8
+   :omn voc8
+   :channel 8
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 95
+   :pan 111
+   :controllers (91 '(48))
+   )
+
+(violin9
+   :omn voc9
+   :channel 9
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 95
+   :pan 111
+   :controllers (91 '(48))
+   )
+
+(violin10
+   :omn voc10
+   :channel 10
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 95
+   :pan 111
+   :controllers (91 '(48))
+   )
+
+(violin11
+   :omn voc11
+   :channel 11
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 95
+   :pan 111
+   :controllers (91 '(48))
+   )
+
+(violin12
+   :omn voc12
+   :channel 12
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 95
+   :pan 111
+   :controllers (91 '(48))
+   )
+
+(violin13
+   :omn voc13
+   :channel 13
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 95
+   :pan 111
+   :controllers (91 '(48))
+   )
+
+(violin14
+   :omn voc14
+   :channel 14
+   :sound 'gm
+   :program 'string-ensemble-1
+   :volume 95
+   :pan 111
+   :controllers (91 '(48))
+   )
+  )
+
+(display-musicxml 'atmospheres)

@@ -137,7 +137,7 @@ itself a vector array or list comprising of integer values.
 |#
 
 (progn
-(setf num (rnd-number 12 -5 12))
+(setf num (rndn 12 -5 12 :seed 123))
 (setf round (vector-round -0.5 3.5 num))
 
 (list-plot (list num round)
@@ -175,7 +175,7 @@ itself a vector array or list comprising of integer values.
 
 ;;; ---------------------------------------------------------
 
-;;; vector-round
+;;; vector-smooth
 
 #|
 While normal scaling multiplies a value or pattern linearly, 
@@ -196,8 +196,6 @@ a more “fluid” progression.
 
 ;;; ---------------------------------------------------------
 
-        
-
 ;; Map brownian motion between a lower and an upper limit
 ;; and convert to pitch
 
@@ -215,19 +213,22 @@ a more “fluid” progression.
 
 ;; Mapping brownian result to velocity symbols
 (velocity-list-plot
- (vector-to-velocity 'ppp 'mf (gen-brownian-motion 50 ))
- :point-radius 1.5 
- :join-points t)
+ (vector-to-velocity 'ppp 'mf (gen-brownian-motion 50 :seed 123))
+ :point-radius 1.5 :join-points t)
 
-#|
-;; another approach
+#!
+;;; another approach - NOT WORKING
 (progn
  (setf bw (gen-brownian-motion 128 :seed 425))
- (setf env1 '(-5.1 -2.3 1.5 -0.8 4.6 10.6))
- (setf env2 '(1.0 1.2 -1.1 2.1 -0.3 -2.5))
- (list-plot 
-   (vector-to-envelope2 env1 env2 bw) :join-points t))
-|#
+ (setf env1 (envelope-y 
+             (envelope-samples '(0 -2.3 2 -0.8 4.6 8.6) 128)))
+ (setf env2 (envelope-y 
+             (envelope-samples '(0 1.2 5 2.1 7 -2.5) 128)))
+ (list-plot (list env1 env2
+   (vector-to-envelope2 env1 env2 bw)) :join-points t))
+!#
+
+(length env1)
 
 
 
