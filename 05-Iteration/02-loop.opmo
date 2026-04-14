@@ -1,0 +1,161 @@
+;;; -------------------------------------------------------
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+
+;;; 2015 - 2021 (c) Achim Bornhoeft
+;;; 2025 (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; LOOP (macro in LISP)
+
+#|
+The Loop Macro is one of the most valuable, and least 
+documented  of the operations in Common Lisp. 
+It is valuable because it is more powerful, more compact, 
+and more readable than comparable Common Lisp constructs 
+such as mapping operations and recursion. 
+It also uses a programming style that will be familiar to 
+programmers who have worked with other more traditional 
+languages. This short guide provides examples of how to use 
+the Loop Macro.
+
+Think of Loop expressions as having four parts: 
+expressions that set up variables that will be iterated, 
+expressions that conditionally terminate the iteration, 
+expressions that do something on each iteration, 
+expressions that do something right before the Loop exits. 
+
+More information on LOOP:
+https://www.unixuser.org/~euske/doc/cl/loop.html
+https://cl-cookbook.sourceforge.net/loop.html 
+https://gigamonkeys.com/book/loop-for-black-belts.html
+|#
+
+;;; -------------------------------------------------------
+
+;; The loop variable can be named in any way e.g. integers, 
+;; name, var, x, etc.
+(loop for integers from 0 to 12 collect integers) 
+(loop for name from 0 to 12 collect name)
+(loop for x from 0 to 12 collect x)
+
+;; => (0 1 2 3 4 5 6 7 8 9 10 11 12)
+
+(loop for midinote from 60 to 72 collect midinote)
+(midi-to-pitch (loop for m from 60 to 72 collect m))
+
+;; loop in a list
+;; an octave transposition
+(loop for i in '(60 61 62 63 64 65) collect (+ i 12))
+
+(setf midis '(60 61 62 63 64 65 66 67 68 69 70))
+(loop for i in midis collect (midi-to-pitch (+ i 12)))
+
+;; There a many keywords available for LOOP
+;; here each second number is taken
+(loop for pc from 60 to 84 by 2 collect (midi-to-pitch pc))
+
+;; harmonic spectrum (hertz)
+(loop for i from 2 to 14 collect (hertz-to-pitch (* 23 i)))
+
+(loop for pc from 84 downto 60 by 4 
+      collect (midi-to-pitch pc))
+
+(loop repeat 8 ; repeat 8 times
+      for freq = 40 ; starting the variable freq with 40
+        then (* freq 1.1) ; then multiplying each other
+        ; number with 1.1 and collect its value in a list
+      collect (hertz-to-pitch freq))
+
+;; Loop with a termination condition
+(loop for x from 1 ; open loop
+         for y = (* x x) ; calculation
+         until (>= y 729); termination condition
+         finally (return (list x y))) ; x * x = y
+
+;; Loop with until as termination condition
+(loop for x in '(1 2 3 4 5) ; loop with x in list
+      until (> x 3) ; until x is larger than 3
+        collect x) ; collect x into a list
+
+;; the same with while
+(loop for x in '(1 2 3 4 5)
+      while (< x 4) ; while x is smaller than 4
+        collect x)
+
+;; a when conditional statement
+(loop repeat 10 ; do it 10 times
+        for x = (random 100) ; make a random number
+        when (< x 50) ; when x is smaller than 50
+        collect x) ; collect x
+
+;;; Remove all repetitions in a list
+
+;; a list with repetitions
+(setf replst '(1 1 2 3 4 5 5 6 7 7 7 8))
+
+(loop with last = NIL
+      ; the variable 'last' is overwritten after each 
+      ; conditional test
+      for i in replst
+      when (not (equal last i))
+        ; test if the current value is equal to 
+        ; the last (variable 'last, default NIL
+        collect i into reslis
+        ; if not, the value is collected into 'reslis'
+        ; which is a named list of results (could 
+        ; have any name).
+        and do (setf last i)
+        ; and the 'last' variable is set to the 
+        ; current value. (The 'and' is optional).
+        ; At the end the result list 'reslis' is returned:
+      finally (return reslis))
+
+;; if conditional in a loop
+(loop repeat 10 ; repeat it 10 times
+       for x = (random 100) ; random numbers between 0 and 99
+       if (evenp x) ; when x is an even number
+         collect x into evens ; collect it into "evens"
+       else ; if not
+         collect x into odds ; collect it into "odds"
+        ; at the end return a list of even and odd numbers
+       finally (return (list evens odds)))
+
+;; nested loops
+(loop for i from 1 to 4 
+      collect
+        ;; complete list is collected into resuls list
+        ;; creating sublist
+  (loop for j from 0 to 4 
+        collect (+ i j)))
+;; => ((1 2 3 4 5) (2 3 4 5 6) (3 4 5 6 7) (4 5 6 7 8))
+
+;; with append each new list is collected into the
+;; existing list not generating sublists
+(loop for i from 1 to 4 
+      append
+  (loop for j from 0 to 4 
+        collect (+ i j)))
+;; => (1 2 3 4 5 2 3 4 5 6 3 4 5 6 7 4 5 6 7 8)
+
+;; Rearrange a nested list by taking each position in a 
+;; separate list (matrix transformation)
+(setf lists 
+      '((c4 d4 e4 f4) 
+        (d4 e4 f4 g4) 
+        (f4 g4 a4 b4)
+        (g4 a4 b4 c5)))
+
+(loop for i from 0 to (- (length lists) 1) ; indexes in list
+        ; calculated by the length of lists
+      collect 
+        ; collect each nth position of every list
+        ; into a separate list beginning with ID 0
+        ; and ending with ID 3
+        (loop for j in lists collect (nth i j)))
+
+;; OM Version of the same functionality
+;; (Many functions in OM are made with the loop macro)
+(matrix-transpose lists)

@@ -1,0 +1,53 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; MICROPOLYPHONY
+;;; https://en.wikipedia.org/wiki/Micropolyphony
+
+;;; ---------------------------------------------------------
+
+;; view with cmd-2
+(micropolyphony 
+4   ; 4 voices
+8   ; 8 events for every voice 
+1/4 ; 1/4 minimum length
+3   ; 3 maximum length
+)
+
+(setf inst (micropolyphony 4 8 1/4 3))
+
+(ps 'gm
+    :fl (list (1~ inst))
+    :ob (list (2~ inst))
+    :cl (list (3~ inst))
+    :hn (list (pitch-transpose -12 (4~ inst)))
+    :time-signature '(4 4)
+    :tempo 54
+    :start 1 :end 8)
+
+(micropolyphony
+ 8 20 1/4 3
+ :intervals '(-2 -1 1 2 -.5 .5 1.5 -1.5 -.25 .25 1.25 -1.25)
+ :quantize '(1 2 4 5)
+ :start '(0 .5 1 1.5 -.5 -1 -1.5 2)
+ :index 'v)
+
+(def-score micro-2
+           (:key-signature 'chromatic
+            :time-signature '(4 4) :tempo 54
+            :layout (choir-satb-layout
+                     (list 'sop1 'sop2) (list 'alto1 'alto2)
+                     (list 'tenor1 'tenor2) (list 'bass1 'bass2)))
+  (sop1 :omn (ambitus 'soprano v1)
+        :channel 1 :sound 'gm :program 'Choir-Aahs)
+  (sop2 :omn (ambitus 'soprano v1) :channel 2)
+  (alto1 :omn (ambitus 'alto v3) :channel 3)
+  (alto2 :omn (ambitus 'alto v3) :channel 4)
+  (tenor1 :omn (ambitus 'tenor v5) :channel 5)
+  (tenor2 :omn (ambitus 'tenor v5) :channel 6)
+  (bass1 :omn (ambitus 'bass v7) :channel 7)
+  (bass2 :omn (ambitus 'bass v8) :channel 8))

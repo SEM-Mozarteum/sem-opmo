@@ -172,18 +172,18 @@ values in the list are also adjusted by the same amount,
 which helps to preserve the original shape of the data.
 |#
 
+;; length of data (128)
+(setf len 128)
+
 ;; a brownian motion with 128 points
 (setf data 
        (list-plot
         ;; ranges the motion between high and low
         (vector-range -2 5
-                   (gen-brownian-motion 128 :seed 43))
+                   (gen-brownian-motion len :seed 43))
                       :zero-based t 
                       :point-radius 2 
                       :join-points t))
-
-;; length of data (128)
-(setf len (length data))
 
 ;; envelope of 128 x/y pairs
 ;; envelope for the lower limit of the tendency
@@ -218,4 +218,5 @@ which helps to preserve the original shape of the data.
 (list-plot
  (list xll adj xul)
  :join-points t
- :point-radius 2)
+ :point-radius 2
+:zero-based t)

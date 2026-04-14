@@ -78,12 +78,13 @@ for creating gestural forms in pitch, rhythm, dynamics
 and structure.
 |#
 
+;; sine-wave, 1 hz, amplitude 0.5 with 32 points
 (list-plot (gen-sine 32 1 0.5) :join-points t :point-radius 1.5)
 
-;; Starting 90 degrees out of phase
-
+;; Starting the same 90 degrees out of phase
 (list-plot (gen-sine 32 1 0.5 :phase 90) :join-points t)
 
+;;; Why does the amplitude change?
 ;; Sine frequency modulated by another sine
 (list-plot
  (gen-sine 120 10 1 
@@ -94,6 +95,7 @@ and structure.
 (list-plot (gen-sine 240 10 0.5 :modulation (gen-sine 120 119 0.5)) 
              :zero-based t :point-radius 0 :join-points t)
 
+;;; Documentation not sufficient
 ;; With three amplitudes (list) three sines are created
 (list-plot
  (gen-sine 120 1 '(0.5 0.2 0.1) 
@@ -108,28 +110,11 @@ and structure.
 
 (list-plot (half-sine 120 1.0 :phase 90) :join-points t)
 
-;;; Maybe adding a function including the last value
-(defun half-triang (res amp &key (freq 1) phase mod zero)
-  "(list-plot (half-triang 20 1) :join-points t)
-   (list-plot (half-triang 20 1 :zero t) :join-points t)"
-  (if zero
-  (append (half-triangle (- res 1) amp 
-                         :freq freq 
-                         :phase phase 
-                         :modulation mod)
-          (list 0))
-    (half-triangle res amp 
-                         :freq freq 
-                         :phase phase 
-                         :modulation mod)))
-
-
 ;;; ---------------------------------------------------------
 
 ;;; gen-square / half-square
 
-(list-plot (gen-square 120 3 0.5)
-       :join-points t)  
+(list-plot (gen-square 120 3 0.5) :join-points t)  
 
 ;; Square frequency modulated by another square
 (list-plot
@@ -162,9 +147,7 @@ and structure.
 
 (list-plot (gen-triangle 32 1 0.5) :join-points t)
 (list-plot (half-triangle 32 0.5) :join-points t)
+(list-plot (half-triangle 120 1.0 :phase 45) :join-points t :zero-based t)
 
-(list-plot (half-triangle 120 1.0 :phase 45) :join-points t)
-
-
-
-
+;;; Check this:
+(list-plot (half-triangle 19 1) :join-points t :zero-based t)

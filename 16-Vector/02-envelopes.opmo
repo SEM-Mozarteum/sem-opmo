@@ -17,49 +17,51 @@
 
 ;; envelope with 5 breakpoints
 (xy-plot 
-(setf env '(0 0  1 2  3 1  4 3  6 0))
-:join-points t :point-radius 2 :style :axis)
+ (setf env '(0 0  1 2  3 1  4 3  6 0))
+ :join-points t :point-radius 2 :style :axis)
 
 ;; 20 samples from this envelope
 (xy-plot
-(setf env-samp
-(envelope-samples env 20))
-:join-points t :point-radius 2 :style :axis)
+ (setf env-samp
+       (envelope-samples env 20))
+ :join-points t :point-radius 2 :style :axis)
+
+;; view both envelopes
+(xy-plot (list env env-samp)
+ :join-points t :point-radius 2)
 
 ;; map these 20 values to pitches
 (vector-map 
  (integer-to-pitch 
-  (gen-integer 0 24)) 
+  (gen-integer 0 24)) ; 2 chromatic octaves 
  (envelope-y env-samp))
 
 ;;; ---------------------------------------------------------
 
 (progn
-(setf data (gen-brownian-motion 50 :amp 20 :seed 123))
-(setf data-len (length data))
+  (setf data-len 50) ; number of events
+  (setf data (gen-brownian-motion data-len :amp 20 :seed 123))
+  
+  (setf l-limit 
+        (envelope-samples 
+         '(0 0 1 -1 2 -1 3 -2 4 3 5 -1 6 0) data-len))
+  (setf u-limit 
+        (envelope-samples '(0 1 1 4 2 2 3 4 6 4) data-len))
 
-(setf l-limit 
-      (envelope-samples 
-       '(0 0 1 -1 2 -1 3 -2 4 3 5 -1 6 0) data-len))
-(setf u-limit 
-      (envelope-samples '(0 1 1 4 2 2 3 4 6 4) data-len))
+  (setf gen-tend
+        (gen-envelope-tendency data l-limit u-limit :seed 123))
 
-(setf gen-tend
-      (gen-envelope-tendency data l-limit u-limit))
+  ;; map the tendency values to the min-x 
+  ;; and max-x of the limits to get the x-values for
+  ;; the tendency list (gen-tend)
+  (setf x-values
+        (vector-range 0 6 
+                      (gen-integer 0 
+                                   (1- (length gen-tend)))))
+  
+  (setf xy-data
+        (make-xy x-values gen-tend))
 
-(setf x-values 
-      (vector-range 0 6 
-                    (gen-integer 0 
-                                 (1- (length gen-tend)))))
-
-(setf xy-data
-      (flatten
-       (matrix-transpose
-        (list x-values
-              gen-tend))))
-
-(xy-plot
- (list xy-data l-limit u-limit)
- :point-radius 2 :join-points t))
-
-(interval-series 10 '(1 2 3) :seed 42)
+  (xy-plot
+   (list l-limit xy-data u-limit)
+   :point-radius 2 :join-points t))

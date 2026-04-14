@@ -1,0 +1,232 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; (c) Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; György Ligeti, Lux Aeterna (1966)
+;;; https://en.wikipedia.org/wiki/Lux_Aeterna_(Ligeti)
+
+;;; Micropolyphony
+
+#|
+Technically speaking I have always approached musical texture 
+through part-writing. Both Atmosphères and Lontano have a dense 
+canonic structure. But you cannot actually hear the polyphony, 
+the canon. You hear a kind of impenetrable texture, something 
+like a very densely woven cobweb. I have retained melodic lines 
+in the process of composition, they are governed by rules as 
+strict as Palestrina's or those of the Flemish school, but the 
+rules of this polyphony are worked out by me. The polyphonic 
+structure does not come through, you cannot hear it; it remains 
+hidden in a microscopic, underwater world, to us inaudible. 
+I call it micropolyphony (such a beautiful word!). 
+(Ligeti, quoted in Bernard 1994, 238).
+|#
+
+(setf soprano1 NIL
+      soprano2 NIL
+      soprano3 NIL
+      soprano4 NIL
+      alto1 NIL
+      alto2 NIL
+      alto3 NIL
+      alto4 NIL
+      tenor1 NIL
+      tenor2 NIL
+      tenor3 NIL
+      tenor4 NIL
+      bass1 NIL
+      bass2 NIL
+      bass3 NIL
+      bass4 NIL)
+
+(setf quarters '(1 2 3 4 5)) 
+
+(def-score lux-aeterna
+    (:title "Lux Aeterna"
+     :composer "György Ligeti"
+     :copyright "Copyright © 1966"
+     :key-signature 'chromatic
+     :time-signature '((1 1 1 1) 4)
+     :tempo 100
+     :layout (bracket-group
+              (soprano-voice1-layout 'soprano1)
+              (soprano-voice2-layout 'soprano2)
+              (soprano-voice3-layout 'soprano3)
+              (soprano-voice4-layout 'soprano4)
+              (alto-voice1-layout 'alto1)
+              (alto-voice2-layout 'alto2)
+              (alto-voice3-layout 'alto3)
+              (alto-voice4-layout 'alto4)
+              (tenor-voice1-layout 'tenor1)
+              (tenor-voice2-layout 'tenor2)
+              (tenor-voice3-layout 'tenor3)
+              (tenor-voice4-layout 'tenor4)
+              (bass-voice1-layout 'bass1)
+              (bass-voice2-layout 'bass2)
+              (bass-voice3-layout 'bass3)
+              (bass-voice4-layout 'bass4)))
+  
+  (soprano1
+   :omn soprano1
+   :channel 1
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 16
+   :controllers (91 '(48))
+   )
+  
+  (soprano2
+   :omn soprano2
+   :channel 2
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 16
+   :controllers (91 '(48))
+   )
+
+(soprano3
+   :omn soprano3
+   :channel 9
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 16
+   :controllers (91 '(48))
+   )
+  
+  (soprano4
+   :omn soprano4
+   :channel 10
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 16
+   :controllers (91 '(48))
+   )
+  
+  (alto1
+   :omn alto1
+   :channel 3
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 41
+   :controllers (91 '(48))
+   )
+  
+  (alto2
+   :omn alto2
+   :channel 4
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 41
+   :controllers (91 '(48))
+   )
+
+  (alto3
+   :omn alto3
+   :channel 11
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 41
+   :controllers (91 '(48))
+   )
+  
+  (alto4
+   :omn alto4
+   :channel 12
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 41
+   :controllers (91 '(48))
+   )
+  
+  (tenor1
+   :omn tenor1
+   :channel 5
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 86
+   :controllers (91 '(48))
+   )
+  
+  (tenor2
+   :omn tenor2
+   :channel 6
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 86
+   :controllers (91 '(48))
+   )
+
+(tenor3
+   :omn tenor3
+   :channel 13
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 86
+   :controllers (91 '(48))
+   )
+  
+  (tenor4
+   :omn tenor4
+   :channel 14
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 86
+   :controllers (91 '(48))
+   )
+  
+  (bass1
+   :omn bass1
+   :channel 7
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 111
+   :controllers (91 '(48))
+   )
+  
+  (bass2
+   :omn bass2
+   :channel 7
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 111
+   :controllers (91 '(48))
+   )
+  (bass3
+   :omn bass3
+   :channel 15
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 111
+   :controllers (91 '(48))
+   )
+  
+  (bass4
+   :omn bass4
+   :channel 16
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 111
+   :controllers (91 '(48))
+   )
+  )
+
+;; (display-musicxml 'lux-aeterna)

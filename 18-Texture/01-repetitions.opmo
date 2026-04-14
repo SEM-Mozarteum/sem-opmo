@@ -5,43 +5,50 @@
 ;;; (c) 2015 - 2021, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
-;;; SPECTRAL REPETITIONS
+;;; MICROPOLYPHONY
 
 ;;; ---------------------------------------------------------
 
-;; integer divisions of a quarter note
-(setf divs (gen-integer 2 16)) ; division of 4/4
-(setf quarters 4) ; number of quarters
+;; view with cmd-2
+(micropolyphony 
+4 ; 4 voices 
+8 ; 8 events for every voice 
+1/4 ; 1/4 minimum length
+3 ; 3 maximum length
+:seed 123
+)
 
-;; display with cmd-2
-(loop for i in divs ; repetitions
-      collect
-      (loop repeat quarters ; how many quarters
-            collect
-            (loop repeat i ; repetitions per measure
-                  collect (/ 1 i)))) ; lenghts
+(setf inst (micropolyphony 4 8 1/4 3))
 
-;; selected n-tuplets
-(setf divs-list '(12 16 20 28))
+(ps 'gm
+    :fl (list (1~ inst))
+    :ob (list (2~ inst))
+    :cl (list (3~ inst))
+    :hn (list (pitch-transpose -12 (4~ inst)))
+    :time-signature '(4 4)
+    :tempo 54
+    :start 1 :end 8)
 
-;; make the lengths
-(setf repetitions
-      (mcflatten
-      (loop for i in divs-list
-      collect
-      (loop repeat quarters
-            collect
-            (loop repeat i
-                  collect (/ 1 i))))))
 
-;; make pitches from lengths
-(setf pitches
-      (loop for i in repetitions
-              for j in '(c4 f4 bb4 eb5)
-              collect (gen-repeat (length i) j)))
+(micropolyphony
+ 8 20 1/4 3
+ :intervals '(-2 -1 1 2 -.5 .5 1.5 -1.5 -.25 .25 1.25 -1.25)
+ :quantize '(1 2 4 5)
+ :start '(0 .5 1 1.5 -.5 -1 -1.5 2)
+ :index 'v)
 
-;; display with cmd-2
-(make-omn
- :length repetitions
- :pitch pitches)
-            
+(def-score micro-2
+           (:key-signature 'chromatic
+            :time-signature '(4 4) :tempo 54
+            :layout (choir-satb-layout
+                     (list 'sop1 'sop2) (list 'alto1 'alto2)
+                     (list 'tenor1 'tenor2) (list 'bass1 'bass2)))
+  (sop1 :omn (ambitus 'soprano v1)
+        :channel 1 :sound 'gm :program 'Choir-Aahs)
+  (sop2 :omn (ambitus 'soprano v1) :channel 2)
+  (alto1 :omn (ambitus 'alto v3) :channel 3)
+  (alto2 :omn (ambitus 'alto v3) :channel 4)
+  (tenor1 :omn (ambitus 'tenor v5) :channel 5)
+  (tenor2 :omn (ambitus 'tenor v5) :channel 6)
+  (bass1 :omn (ambitus 'bass v7) :channel 7)
+  (bass2 :omn (ambitus 'bass v8) :channel 8))
