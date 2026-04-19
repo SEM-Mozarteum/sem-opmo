@@ -50,8 +50,10 @@ integer multiple of a fundamental frequency.
 
 ;;; Harmonic vs. distorted spectra
 
+;; ----------------------------------------------------------
 ;; see Joshua Fineberg, Guide to the Basic Concepts and 
 ;; Techniques of Spectral Music, p. 93-94
+;; ----------------------------------------------------------
 
 ;; harmonic scale linear quantized to quartertones
 (harmonics 'c2 10 :quantize 1/4)

@@ -137,7 +137,7 @@
 
 ;; select from 1. measure, 3. quarter 
 ;; to 2. measure, 1. quarter
-(setf select (select-measure '(1.3 2.1) omn))
+(setf select (select-measure '((1 3) (2 1)) omn))
 
 ;; view with cmd-2
 (list omn (append '(-q -q) select))
@@ -152,7 +152,7 @@
 ;; and rendered to 4/4 time-signature
 ;; select material from 2. measure, 3. quarter 
 ;; to 3. measure, 4. quarter
-(setf sel1 (select-measure '(2.3 3.4) vn1-mat
+(setf sel1 (select-measure '((2 3) (3 4)) vn1-mat
 :ratio 1/4 :time-signature '(4 4)))
 
 ;; display with cmd-2
@@ -161,7 +161,7 @@
 ;; the material is divided in eight notes 
 ;; select material from 2. measure, 6. eight 
 ;; to 3. measure, 7. eight
-(setf sel2 (select-measure '(2.6 3.7) vn1-mat
+(setf sel2 (select-measure '((2 6) (3 7)) vn1-mat
 :ratio 1/8 :time-signature '(4 4)))
 
 ;; display with cmd-2
@@ -177,12 +177,46 @@
 ;; loop through all voices and collect the same sections from
 ;; the original score, display with cmd-2
 (loop for i in material
-      collect (select-measure '((3.3 4.2) 
-                                (3.2 4.1) 
-                                (6.3 7.4) 
-                                (3.4 5.1)) i 
+      collect (select-measure '(((3 3) (4 2)) 
+                                ((3 2) (4 1)) 
+                                ((6 3) (7 4)) 
+                                ((3 4) (5 1))) i 
                               :ratio 1/4 
                               :time-signature '(4 4)))
+
+;; algorithmic example with window of three quarters 
+;; shifting by one quarter through the score
+
+(setf vn1-mat '((h g4 pp q q) (h g4 q a4 bb4) (h a4 q g4 fs4) (h g4 q q)))
+
+(setf start-points
+      (loop for meas from 1 to 4
+      append
+      (loop for beat from 1 to 4
+            collect (list meas beat))))
+
+;; end-points = start-point + 2 quarters
+(setf end-points (cddr start-points))
+
+;; list start- and end-points
+(setf windows
+      (loop for s in start-points
+            for e in end-points
+            collect (list s e)))
+
+;; cycle through material with the calculated windows
+;; (new time-signature is 3/4)
+;; view with cmd-2
+(setf score
+(loop for mat in material
+      collect
+        (length-legato
+        (loop for i in windows
+              collect (select-measure 
+                       (list i)
+                       mat     
+                       :ratio 1/4 
+                       :time-signature '(4 4)))))
 
 ;;; ---------------------------------------------------------
 

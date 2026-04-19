@@ -8,17 +8,39 @@
 ;;; ENVELOPES
 
 #|
+Envelopes are described by a series of points with x (time) 
+and y (value) coordinates, connected by segments of varying shapes:
 
+Linear — straight lines between points, 
+         producing even, predictable transitions
+Exponential — curved segments that accelerate or decelerate rapidly
+Logarithmic — curved segments that change quickly at first, 
+              then level off
+Sinusoidal — smooth, wave-like transitions between points
+Step — abrupt jumps with no transition between values
+
+In music and audio, envelopes most commonly control amplitude (volume), 
+pitch, or timbre over time — the classic example being the ADSR envelope 
+(Attack, Decay, Sustain, Release). In computer-assisted composition, 
+envelopes can serve as tendency masks, guiding stochastic processes 
+toward or away from certain values across a defined time span.
 |#
-
-;;; ---------------------------------------------------------
-
-;;; envelope as data
 
 ;; envelope with 5 breakpoints
 (xy-plot 
  (setf env '(0 0  1 2  3 1  4 3  6 0))
- :join-points t :point-radius 2 :style :axis)
+ :join-points t :style :axis)
+
+;;; envelope-interp
+
+;; get y-value at specific point (x-value)
+(setf y-val (envelope-interp 2.5 env))
+
+;; see env and y-val at 2.5
+(xy-plot (list env (list 2.5 y-val))
+:join-points t :style :axis)
+
+;;; envelope-samples
 
 ;; 20 samples from this envelope
 (xy-plot
@@ -28,23 +50,118 @@
 
 ;; view both envelopes
 (xy-plot (list env env-samp)
+ :join-points t :point-radius 2 :style :axis)
+
+;;; window-envelope
+
+;; get a specific part of an envelope
+(xy-plot
+ (list env-samp
+       (window-envelope 2 4.3 env-samp))
+ :join-points t :point-radius 2 :style :axis)
+
+;;; envelope-length
+
+;; see the length of the envelope (20)
+(envelope-length env-samp)
+
+;;; envelope-reverse
+
+;; reverse the envelope
+(setf env-samp-rev
+      (envelope-reverse env-samp))
+
+;; compare original and reverse envelope
+(xy-plot (list env-samp env-samp-rev)
  :join-points t :point-radius 2)
+
+;;; envelope-x / envelope-y
+;; get the x-values
+(setf env-x (envelope-x env-samp))
+      
+;; get the y-values
+(list-plot
+ (setf env-y (envelope-y env-samp))
+ :join-points t :point-radius 2)
+
+;;; make-xy
+
+;; make envelope from individual x- and y-lists
+(xy-plot 
+ (setf pitch-env 
+       (make-xy env-x env-y))
+ :join-points t)
+
+;;; max-envelope / min-envelope
+
+;; get the maximum y-value (amplitude) in an envelope
+(max-envelope pitch-env)
+
+;; get the minimum y-value (amplitude) in an envelope
+(min-envelope pitch-env)
+
 
 ;; map these 20 values to pitches
 (vector-map 
- (integer-to-pitch 
-  (gen-integer 0 24)) ; 2 chromatic octaves 
- (envelope-y env-samp))
+ (integer-to-pitch (gen-integer 0 24)) ; 2 chromatic octaves 
+ (envelope-y pitch-env))
+
+;;; normalize-envelope
+
+;; normalize pitch-env between 0 and 1
+(xy-plot 
+ (setf dyn-env (normalize-envelope pitch-env))
+ :join-points t)
+
+;;; vector-to-velocity
+
+;; map the normalized envelope between 0.1 and 0.9 and
+;; convert to dynamics
+(vector-to-velocity 0.1 0.9 (envelope-y dyn-env))
+
+;;; envelope-exp
+
+;; change the linear envelope exponentially curved
+(xy-plot
+ (list env-samp ; linear
+       (envelope-exp env-samp 0.5 20) ; concave
+       (envelope-exp env-samp 2.0 20)) ; convex
+         :point-radius 2 :join-points t)
+
+;;; envelope-increase
+;;; (also envelope-decrease, envelope-divide, envelope-multiply)
+
+(xy-plot
+ (gen-loop 10
+         (envelope-increase env
+                            ;; (0 0  1 2  3 1  4 3  6 0)
+                            (list 0 (rndn 1 0 2.0)
+                                  ;; random additions to the
+                                  ;; y-values between 0 and 2
+                                  1 (rndn 1 0 2.0)
+                                  3 (rndn 1 0 2.0)
+                                  4 (rndn 1 0 2.0)
+                                  6 (rndn 1 0 2.0)))
+         :seed 258) ;; fix the output
+ :join-points t)
 
 ;;; ---------------------------------------------------------
 
+;;; brownian motion inside a tendency with two envelopes
+;;; as lower and upper limit
+
 (progn
   (setf data-len 50) ; number of events
-  (setf data (gen-brownian-motion data-len :amp 20 :seed 123))
+
+  (list-plot
+   ;; brownian motion between -1 and 1 (default)
+   (setf data (gen-brownian-motion data-len :amp 20 :seed 123))
+   :join-points t)
   
   (setf l-limit 
         (envelope-samples 
          '(0 0 1 -1 2 -1 3 -2 4 3 5 -1 6 0) data-len))
+
   (setf u-limit 
         (envelope-samples '(0 1 1 4 2 2 3 4 6 4) data-len))
 
@@ -52,16 +169,20 @@
         (gen-envelope-tendency data l-limit u-limit))
 
   ;; map the tendency values to the min-x 
-  ;; and max-x of the limits to get the x-values for
+  ;; and max-x of the limits to calculate the x-values for
   ;; the tendency list (gen-tend)
   (setf x-values
-        (vector-range 0 6 
-                      (gen-integer 0 
-                                   (1- (length gen-tend)))))
+        (vector-range 
+         0 6 ; new range
+         (gen-integer 
+          0 (1- (length gen-tend))) ; old range
+         ))
   
+  ;; make envelope data with new x-values
   (setf xy-data
         (make-xy x-values gen-tend))
 
+  ;; view brownian motion with upper and lower limits
   (xy-plot
    (list xy-data l-limit u-limit)
    :point-radius 2 :join-points t))

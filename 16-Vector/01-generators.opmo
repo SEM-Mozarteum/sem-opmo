@@ -45,7 +45,7 @@ line segments. The :style keyword argument may be either
 (list-plot (gen-white-noise 100 :type :binary :seed 23)
            :join-points t :point-radius 1.5 :style :fill)
 
-;; exponential
+;; exponential (more lower then higher values)
 (list-plot (gen-white-noise 100 :type :exponential)
            :join-points t :point-radius 1.5 :style :axis)
 
@@ -54,8 +54,8 @@ line segments. The :style keyword argument may be either
            :join-points nil :point-radius 2.5)
 
 ;; There is another function only for gaussian noise:
-(list-plot (gen-gaussian-noise 500)
-           :join-points nil :point-radius 2)
+(list-plot (gen-gaussian-noise 500 :seed 123)
+ :join-points nil :point-radius 2 )
 
 ;; high-pass
 (list-plot (gen-white-noise 100 :type :high-pass :seed 23)
@@ -78,37 +78,85 @@ for creating gestural forms in pitch, rhythm, dynamics
 and structure.
 |#
 
-;; sine-wave, 1 hz, amplitude 0.5 with 32 points
+;; sine-wave, 32 points, 1 hz, amplitude 0.5
 (list-plot (gen-sine 32 1 0.5) :join-points t :point-radius 1.5)
 
+;; sine-wave, 120 points, 4 hz, amplitude 1
+(list-plot (gen-sine 120 4 1) :join-points t :point-radius 1.5)
+
 ;; Starting the same 90 degrees out of phase
-(list-plot (gen-sine 32 1 0.5 :phase 90) :join-points t)
+(list-plot (gen-sine 120 4 1 :phase 90) :join-points t)
 
-;;; Why does the amplitude change?
-;; Sine frequency modulated by another sine
-(list-plot
- (gen-sine 120 10 1 
-           :modulation (gen-sine 120 2 1))
- :join-points t)
+;;; fm: frequency modulation keyword
 
-;;; Check this
-(list-plot (gen-sine 240 10 0.5 :modulation (gen-sine 120 119 0.5)) 
-             :zero-based t :point-radius 0 :join-points t)
+#|
+Carrier 20 Hz: Base frequency – 20 oscillations per second
+Modulator 2 Hz: Input signal – 2 oscillations per second
+Modulation index 9: Strength of the modulator's influence
+Frequency deviation: +/- 9 · 2 = 18 Hz ist the maximum 
+one-sided deviation.
+Note: only the frequency is modulated. The amplitude stays
+always the same.
+|#
 
-;;; Documentation not sufficient
-;; With three amplitudes (list) three sines are created
-(list-plot
- (gen-sine 120 1 '(0.5 0.2 0.1) 
-           :modulation (gen-sine 120 1 0.3))
- :point-radius 2)
+(list-plot 
+ (gen-sine 480 20 0.5 ; carrier
+          :fm (gen-sine 480 2 1.0) ; modulator
+          :fm-index 9) ; index
+ :join-points t :point-radius 1.5)
+
+;;; am: amplitude modulation keyword
+
+#|
+The same settings with an amplitude modulation (am)
+Only the dynamic is modulated. The frequency stays
+always the same.
+|#
+
+(list-plot 
+ (gen-sine 480 20 0.5 ; carrier
+          :am (gen-sine 480 2 1))
+ :join-points t :point-radius 1.5)
+
+;; The amplitude of the modulator determines the strength 
+;; of its effect on the carrier
+(list-plot 
+ (gen-sine 480 20 0.5 ; carrier
+          :am (gen-sine 480 2 0.5))
+ :join-points t :point-radius 1.5)
+
+;; with modulated modulator
+(list-plot 
+ (gen-sine 480 20 0.5 ; carrier
+          :am ;; (list-plot 
+               (gen-sine 480 2 0.5 
+                         ;; modulator is modulated
+                        :am (gen-sine 480 4 4)))
+                 ;; :join-points t :point-radius 1.5))        
+ :join-points t :point-radius 1.5)
 
 ;;; ---------------------------------------------------------
 
 ;;; half-sine
 
+;; first half of the sine wave
 (list-plot (half-sine 32 0.5) :join-points t)
 
-(list-plot (half-sine 120 1.0 :phase 90) :join-points t)
+;; amplitude modulated half sine
+(list-plot
+(half-sine 240 1 ; carrier
+          :am (gen-sine 240 2 0.5)) ; modulator
+:join-points t)
+
+;; modulated half sine with different amplitudes of
+;; the modulator
+(list-plot
+ (loop for i from 0.3 by 0.1
+       repeat 5
+       collect
+         (half-sine 120 1 ; carrier
+                    :am (gen-sine 120 2 i))) ; modulator
+:join-points t)
 
 ;;; ---------------------------------------------------------
 
@@ -118,12 +166,13 @@ and structure.
 
 ;; Square frequency modulated by another square
 (list-plot
- (gen-square 120 3 0.5 
-             :modulation (gen-square 120 1 0.2))
+ (gen-square 240 8 0.5
+             :fm (gen-sine 240 2 1.0)
+             :fm-index 3)
  :join-points t)
 
 ;; Half a square
-(list-plot (half-square 120 1.0 :phase 45) :join-points t) 
+(list-plot (half-square 120 1.0 :phase ) :join-points t) 
 
 ;;; ---------------------------------------------------------
 
@@ -148,6 +197,3 @@ and structure.
 (list-plot (gen-triangle 32 1 0.5) :join-points t)
 (list-plot (half-triangle 32 0.5) :join-points t)
 (list-plot (half-triangle 120 1.0 :phase 45) :join-points t :zero-based t)
-
-;;; Check this:
-(list-plot (half-triangle 19 1) :join-points t :zero-based t)

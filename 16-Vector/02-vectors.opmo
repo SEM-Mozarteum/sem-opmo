@@ -41,6 +41,12 @@ related to a series of items.
 
 (vector-map map new-data)
 
+;; If the vector is smaller than the sequence length 
+;; the result is a selection:
+(hertz-to-pitch 
+ (vector-map  (harmonics 'c2 24) 
+              (rnd-unique 10 (gen-integer 0 10) :seed 123)))  
+
 ;; This map of notes goes up and down
 ;; When the data is a triangle the output of notes is going
 ;; up and down once (start to end) and up and down (end to start)
@@ -78,22 +84,10 @@ related to a series of items.
             (gen-sine 12 1 0.5))
 ;; (fs4 gs4 bb4 b4 bb4 gs4 f4 eb4 cs4 c4 cs4 eb4)
 
-;; If the vector is smaller than the sequence length 
-;;  the result is a selection:
-(setf harm (harmonics 'c2 24))
-
-(list harm (vector-map harm (gen-transition 1 10 10 1)))
-
-;; If the vector is greater than the sequence length
-;; the result is a extension
-(vector-map
- (harmonics 'c2 24)
- (gen-transition 1 10 40 1))  
-
 ;;; ---------------------------------------------------------
 
-;; There are other vector functions available to convert a 
-;; vector to musical parameter
+;;; There are other vector functions available to convert a 
+;;; vector to musical parameter
 
 ;;; vector-to-pitch
 
@@ -101,24 +95,59 @@ related to a series of items.
 ;; converting the output of gen-white-noise to a given 
 ;; pitch range.
 
-(setf pitch
+;; make 16 pitches between g4 and c5
+(setf pitches
       (gen-loop 5 
                 (vector-to-pitch 
                  '(g4 c5)         
                  (gen-white-noise 16))))
 
+;; Map brownian motion between a lower and an upper limit
+;; and convert to pitch
+(setf brown-pitches 
+      (gen-loop 16 
+                (vector-to-pitch 
+                 '(a1 a2) 
+                 (gen-brownian-motion 50))
+                :seed 123))
+
+;; Evaluate with cmd-2 to hear 16 voices
+(make-omn
+ :pitch brown-pitches
+ :length '(1/16)
+ :span :pitch)
+
+#!
+;; Here are the mechanics of this mapping that demonstrate 
+;; how the conversion from vectors to pitches is made:
+(setf mel-data1
+      (vector-round -12 12 (gen-white-noise 12 :seed 89)))
+=> #(-4 7 3 -3 -1 3 7 -5 6 4)
+
+(integer-to-pitch mel-data1)
+=> (d3 c5 e4 e3 gs3 e4 c5 c3 a4 g4 bb3 g4)
+!#
+
 ;;; vector-to-length
 
+;; map vectors between low (-1 * 1/16) and high (4 * 1/16)
 (setf lengths 
       (gen-loop 5
-      (vector-to-length '1/16 -1 4 (gen-white-noise 16))))
+      (vector-to-length '1/16 -1 4 (gen-white-noise 16))
+      :seed 123))
 
 ;;; vector-to-velocity
 
 (setf velocities 
       (gen-loop 5
       (vector-to-velocity 0.2 0.45 
-                          (gen-white-noise 16 :seed 69))))
+                          (gen-white-noise 16)) 
+      :seed 123))
+
+;; Mapping brownian result to velocity symbols
+(velocity-list-plot
+ (vector-to-velocity 'ppp 'mf (gen-brownian-motion 50 :seed 123))
+ :point-radius 1.5 :join-points t)
 
 ;; Combine the parameter
 (make-omn
@@ -140,38 +169,25 @@ itself a vector array or list comprising of integer values.
 (setf num (rndn 12 -5 12 :seed 123))
 (setf round (vector-round -0.5 3.5 num))
 
-(list-plot (list num round)
-           :zero-based t :point-radius 2 :join-points t))
+(list-plot 
+ (list num round)
+ :zero-based t :point-radius 2 :join-points t))
+
+(pitch-plot
+;; 24 random integers rounded to different max values
+(setf pitches-round
+      (loop repeat 5
+            for i downfrom 10 by 2
+              collect
+              (integer-to-pitch
+               (vector-round 0 i 
+                             (gen-noise 24 :seed 123)))))
+:join-points t)
 
 (make-omn
- :pitch
- (gen-loop 10
-           (vector-to-pitch 
-            '(c3 c5)
-            (vector-round 0 12
-                          (gen-accumulate 
-                           (rnd 12 :low -1.0 :high 1.0)))))
- :length '(1/16)
+ :pitch pitches-round
+ :length '(1/8)
  :span :pitch)
-
-(progn
-(setf wnoise (gen-noise 100 :seed 6562))
-
-(pitch-list-plot
- (integer-to-pitch
- (list wnoise (vector-round -5 10 wnoise)))
- :point-radius 1.5 :zero-based t :point-radius 2 :join-points t))
-
-#!
-;; Here are the mechanics of this mapping that demonstrate 
-;; how the conversion from vectors to pitches is made:
-(setf mel-data1
-      (vector-round -12 12 (gen-white-noise 12 :seed 89)))
-=> #(-4 7 3 -3 -1 3 7 -5 6 4)
-
-(integer-to-pitch mel-data1)
-=> (d3 c5 e4 e3 gs3 e4 c5 c3 a4 g4 bb3 g4)
-!#
 
 ;;; ---------------------------------------------------------
 
@@ -186,54 +202,36 @@ a more “fluid” progression.
 
 (setf vector (gen-white-noise 200 :seed 345))
 
-;; compare the output with the smoothen ones:
+;; compare the output with the smoothed ones:
 (list-plot 
  (list vector
        (vector-smooth 0.3 vector)
        (vector-smooth 0.05 vector))
- :point-radius 1
+ :point-radius 2
  :join-points t)
 
-;;; ---------------------------------------------------------
+;; a list of tendencies
+(list-plot
+ (setf tend-list 
+       '(0.1 0.1 0.4 0.2 0.6 0.5 0.5 0.9 0.7 0.7 1 0.9 1.2 
+             0.9 0.9 0.5 0.5 0.6 0.2 0.2 0.1 0.1 0.1))
+ :zero-based t :join-points t)
 
-;; Map brownian motion between a lower and an upper limit
-;; and convert to pitch
-
-(setf pitches
-      (gen-loop 16 
-          (vector-to-pitch '(c2 c3) 
-                         (gen-brownian-motion 50))
-          :seed 123))
-
-;; Evaluate with cmd-2 to hear 16 voices
-(make-omn
- :pitch pitches
- :length '(1/16)
- :span :pitch)
-
-;; Mapping brownian result to velocity symbols
-(velocity-list-plot
- (vector-to-velocity 'ppp 'mf (gen-brownian-motion 50 :seed 123))
- :point-radius 1.5 :join-points t)
-
-#!
-;;; another approach - NOT WORKING
-(progn
- (setf bw (gen-brownian-motion 128 :seed 425))
- (setf env1 (envelope-y 
-             (envelope-samples '(0 -2.3 2 -0.8 4.6 8.6) 128)))
- (setf env2 (envelope-y 
-             (envelope-samples '(0 1.2 5 2.1 7 -2.5) 128)))
- (list-plot (list env1 env2
-   (vector-to-envelope2 env1 env2 bw)) :join-points t))
-!#
-
-(length env1)
-
-
+;; create 10 smoothed tendencies from the tendency list
+(list-plot
+ (setf smooth-tend        
+       (loop with seed = (init-seed 123)
+             for x from 1
+             repeat 10
+             collect
+               (vector-smooth 0.6
+                              (gen-tendency 
+                               24 tend-list :variance 0.6))))
+:zero-based t :join-points t)
 
 ;;; ---------------------------------------------------------
 ;;; A vector mapping example by Stephane Boussuge
+;;; NOT FINISHED
 ;;; ---------------------------------------------------------
 
 ;; Number of values
