@@ -2,9 +2,7 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-
-;;; 2015 - 2021 (c) Achim Bornhoeft
-;;; 2025 (c) Achim Bornhoeft
+;;; Copyright © 2015–2026, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; PITCH (NOTES)
@@ -94,8 +92,13 @@ different types.
 (setf row (rnd-row :seed 34 :type :pitch)) 
 ;; => (c4 g4 eb4 cs4 e4 b4 fs4 a4 gs4 f4 bb4 d4)
 
+#|
+There are several ways to visualize different parametrical
+data, s. Graph Tools in the documentation. 
+|#
+
 ;; visualize the pitches
-(pitch-list-plot row :join-points t)
+(pitch-plot row :join-points t)
 
 ;; reversed row
 (setf retrograde (reverse row))

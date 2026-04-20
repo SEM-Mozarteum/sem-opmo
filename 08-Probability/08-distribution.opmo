@@ -5,14 +5,8 @@
 ;;; Copyright © 2015–2026, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
-;;; EXERCISE
-
-#|
-1. Import the Midi File dido.mid and import it to Opusmodus.
-
-2. Correct the file in OMN to 4 parts only.
-
-3. Export the score via MusicXML to any notation program.
-|#
+;;; DISTRIBUTION
 
 ;;; ---------------------------------------------------------
+
+;; see documentation

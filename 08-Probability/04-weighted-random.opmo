@@ -2,7 +2,7 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; Copyright © 2015–2026, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; WEIGHTED RANDOM
@@ -112,11 +112,19 @@ values in relation to a sequence lengths.
 ;;; ---------------------------------------------------------
 
 ;;; Using envelope for changing weights
+;;; (See more about envelopes in the "Vector" chapter.)
+
+#|
+There are several ways to visualize different parametrical
+data, s. Graph Tools in the documentation. 
+|#
 
 ;; envelope of probabilities
 (setf weight-env
-      (xy-plot ; needs lists of x/y values
-       ; y-values are the probabilities
+      (xy-plot 
+       ;; xy-plot draws one or more x-y data series as a graph.
+       ;; needs lists of x/y values
+       ;; y-values are the probabilities
        '(0 1 1 2 2 3 3 5 5 10 6 30 7 50 10 80 13 90)
        :join-points t :point-radius 2))
 
@@ -131,7 +139,7 @@ values in relation to a sequence lengths.
 (setf gliss-prob
   (list-plot
    (loop for i in (envelope-y gliss-prob-env)
-           ; only the y values are taken
+           ;; only the y values are taken
            collect (round i)) ; round to integer
    :join-points t :point-radius 2 :style :axis))
 

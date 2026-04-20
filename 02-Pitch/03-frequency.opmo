@@ -2,9 +2,7 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-
-;;; 2015 - 2021 (c) Achim Bornhoeft
-;;; 2025 (c) Achim Bornhoeft
+;;; Copyright © 2015–2026, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; FREQUENCY
@@ -25,14 +23,15 @@ of spectral music is calculated in frequencies.
 (hertz-to-pitch '(110 220 330 440 550 660 770 880))
 
 ;; harmonics function
-(harmonics 'a2 8) ;=> (a4 a5 e6 a6 cs7 e7 g7 a7)
+(harmonics 'a2 8 :type :pitch) ;=> (a2 a3 e4 a4 cs5 e5 g5 a5)
 ;; by default pitches are chromatic
 
 ;; quantization in quartertones
-(harmonics 'a2 12 :quantize 1/4)
+(harmonics 'a2 12 :quantize 1/4 :type :pitch)
 
-;; quantization in eignthtones
-(chordize (harmonics 'a2 12 :quantize 1/8))
+;; quantization in eigthtones as chord
+(chordize 
+ (harmonics 'a2 12 :quantize 1/8 :type :pitch))
 
 ;;; ---------------------------------------------------------
 

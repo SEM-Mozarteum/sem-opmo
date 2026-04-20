@@ -2,32 +2,29 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; Copyright © 2015–2026, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
-;;; IMPORT
+;;; IMPORT SPEAR
 
-;;; SPEAR
+;;; --------------------------------------------------------
 
 #|
-SPEAR is free a software and can be found here:
+SPEAR is free a software and can be found here 
 http://www.klingbeil.com/spear/.
 The SPEAR application exports two types of spectral data. 
 A two point data: frequency and amplitude 
 and a three point data: time, frequency and amplitude.
-
-VERY IMPORTANT: 
-German systems export these files with commas instead of 
-decimal points. You have to change your region to English 
-(GB or US) in order to get the right format.
 |#
+
+;;; VERY IMPORTANT: German systems export these files with commas instead of 
+;;; decimal points. You have to change your region to English (GB or US) in
+;;; order to get the right format.
 
 ;; To import the SPEAR frames data: frequency and amplitude:
 ;; (NOTE: analysis and converted file name without extension.)
-(import-spectral-spear :frames "tr-novib-pp-g4-frames" ; 
-                       ;; <- analysis file name
-                       ;; -> converted file name
-                               "tr-novib-pp-g4-frames") 
+(import-spectral-spear :frames "tr-novib-pp-g4-frames" ;<- analysis file name
+                               "tr-novib-pp-g4-frames") ;<- converted file name
 
 ;; To import the SPEAR partials data: time, frequency and amplitude:
 (import-spectral-spear :partials "tr-novib-pp-g4-partials"

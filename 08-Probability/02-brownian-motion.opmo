@@ -2,7 +2,7 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; Copyright © 2015–2026, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; PROBABILITY
@@ -28,16 +28,12 @@ a specific form of red noise.
 (list-plot (gen-brownian-motion 128)
            :zero-based t :point-radius 2 :join-points t)
 
-;;; why the brownian motions start "around" 0.5
 (list-plot (gen-brownian-motion 40 :start 0.5)
            :zero-based t :point-radius 2 :join-points t)
 
 ;; 40 different brownian motions
-;;; why there are 4 groups of motions?
 (list-plot (gen-loop 30 (gen-brownian-motion 128))
             :zero-based t :point-radius 0.1 :join-points t)
-
-;; brownian motion with lower and upper limit
 
 #| 
 Drift is controlling the drift rate for the Brownian 
@@ -46,6 +42,7 @@ pushes the particle in one direction. If drift is positive,
 the particle will tend to move upwards; if it's negative, 
 the particle will tend to move downwards. 
 |#
+
 (list-plot 
  (gen-brownian-motion 128 :drift 0.05 :seed 123)
  :zero-based t :point-radius 2 :join-points t :style :fill)
@@ -85,36 +82,3 @@ in the particle's position.
  (vector-to-pitch '(c3 c5) 
                   (gen-brownian-motion 50 :seed 123))
  :point-radius 2 :join-points t :style :fill)    
-
-;; ----------------------------------------------------------
-
-;;; Example defun for brown noise
-
-(defun brown-noise (num-samples &key (step 0.02))
-  "Generate NUM-SAMPLES of brown noise.
-STEP controls the maximum random step size."
-  (let ((x 0.0))
-    (loop
-       with samples = (make-array num-samples)
-       for i from 0 below num-samples
-       ;; white noise step in [-step, +step]
-       for w = (- (random (* 2 step)) step)
-       ;; value between -step and +step
-       do
-         ;; Integration produces the 1/f² spectrum
-         (setf x (+ x w))
-         ;; soft clipping to limit drift
-         (when (> (abs x) 1.0)
-           (setf x (/ x (abs x))))
-         ;; Store the sample
-         (setf (aref samples i) x)
-       finally (return samples))))
-
-;; Example: show 50 samples
-(list-plot 
-(let ((noise (brown-noise 1000)))
-   (subseq noise 0 50))
- :zero-based t :point-radius 2 :join-points t :style :fill)
-
- 
-

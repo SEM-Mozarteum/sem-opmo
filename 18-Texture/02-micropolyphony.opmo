@@ -2,7 +2,7 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; Copyright © 2015–2026, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; MICROPOLYPHONY
@@ -21,9 +21,10 @@
 (setf inst (micropolyphony 4 8 1/4 3))
 
 (ps 'gm
-    :fl (list (1~ inst))
-    :ob (list (2~ inst))
-    :cl (list (3~ inst))
+    :fl (list (1~ inst)) ; first element in list
+    ;; same as (nth 0 inst)
+    :ob (list (2~ inst)) ; second element in list
+    :cl (list (3~ inst)) ; third element in list
     :hn (list (pitch-transpose -12 (4~ inst)))
     :time-signature '(4 4)
     :tempo 54

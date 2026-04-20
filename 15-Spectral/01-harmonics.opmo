@@ -2,7 +2,7 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; Copyright © 2015–2026, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; HARMONICS
@@ -56,27 +56,24 @@ integer multiple of a fundamental frequency.
 ;; ----------------------------------------------------------
 
 ;; harmonic scale linear quantized to quartertones
-(harmonics 'c2 10 :quantize 1/4)
+(hertz-to-pitch (harmonics 'c2 10 :quantize 1/4))
 
 ;; creating non-harmonic scales with distortion coefficiants
 ;; non-harmonic scale with exponential coefficiant
-(chordize
-(harmonics 'c2 10 :quantize 1/4 :coeff 0.9))
+(hertz-to-pitch (harmonics 'c2 10 :quantize 1/4 :coeff 0.9))
 
 ;; non-harmonic scale with logarithmic coefficiant
-(harmonics 'c2 16 :quantize 1/4 :coeff 1.1)
-
-;; (shorter coded version)
-(pitch-list-plot
- (harmonics '(c2 c2 c2) '(16 16 16) :coeff '(0.8 1 1.3))
- :join-points t)
+(hertz-to-pitch (harmonics 'c2 16 :quantize 1/4 :coeff 1.1))
 
 ;; distorted spectra
 ;; (the fifth chord is the harmonic spectra)
 (loop for i from 0.6 to 2.1 by 0.1
       collect
         (chordize
-         (harmonics 'a2 8 :quantize 1/8 :coeff i)))
+         (harmonics 'a2 8 
+                    :quantize 1/8 
+                    :coeff i 
+                    :type :pitch)))
 
 ;;; ---------------------------------------------------------
 
@@ -85,20 +82,24 @@ integer multiple of a fundamental frequency.
 ;; see Joshua Fineberg, Guide to the Basic Concepts and 
 ;; Techniques of Spectral Music, p. 94-95
 
-(setf harm-c2-10
-(loop for i from 1 to 10
+(progn
+  (setf harm-c2-10
+        (loop for i from 1 to 10
               collect (* (pitch-to-hertz 'c2) i)))
 
-(setf harm-quarter
-(hertz-to-pitch harm-c2-10 :quantize 1/4))
+  (setf harm-quarter
+        (hertz-to-pitch harm-c2-10 :quantize 1/4))
 
-(setf harm-quart+100 (integer-transpose 100 harm-c2))
+  (setf harm-quart+100
+        (hertz-to-pitch (integer-transpose 100 harm-c2-10) 
+                        :quantize 1/4))
 
-(hertz-to-pitch harm-quart+100 :quantize 1/4)
+  (setf harm-transp-10
+        (hertz-to-pitch (integer-transpose -10 harm-c2-10) 
+                        :quantize 1/4))
 
-(setf harm-transp-10 (integer-transpose -10 harm-c2))
-
-(hertz-to-pitch harm-transp-10 :quantize 1/4)
+  ;; cancatenate all three scales
+  (list harm-quarter harm-quart+100 harm-transp-10))
 
 ;;; ---------------------------------------------------------
 

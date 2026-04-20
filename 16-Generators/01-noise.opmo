@@ -1,0 +1,79 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; Copyright © 2015–2026, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; NOISE
+
+#|
+Opus Mode provides various noise generators.
+(See under Probability/Noise in the documentation.)
+
+- White noise (gen-noise)
+- Gaussian noise (gen-gaussian-noise)
+- Pink noise (gen-pink-noise, pink-noise-sample)
+|#
+
+;;; ---------------------------------------------------------
+
+;;; gen-white-noise / (list-plot)
+
+#|
+The function GEN-WHITE-NOISE generate N samples of white 
+noise specified by the keyword :type.
+Types are: :normal :binary :cauchy :chi-square-2 :exponential 
+:extreme :gaussian :logistic :lognormal :triangular 
+:low-pass :high-pass.
+|#
+
+;; normal
+(list-plot (gen-white-noise 1000)
+           :point-radius 2)
+
+;; binary
+(list-plot (gen-white-noise 100 :type :binary :seed 123)
+           :join-points t :point-radius 1.5 :style :fill)
+
+;; exponential (more lower then higher values)
+(list-plot (gen-white-noise 100 :type :exponential)
+           :join-points t :point-radius 1.5 :style :axis)
+
+;; gaussian
+(list-plot (gen-white-noise 100 :type :gaussian :seed 123)
+           :join-points nil :point-radius 2)
+
+;; There is another function only for gaussian noise
+;; producing the similar result.
+(list-plot (gen-gaussian-noise 100 :seed 123)
+ :join-points nil :point-radius 2 )
+
+;; high-pass
+(list-plot (gen-white-noise 100 :type :high-pass :seed 123)
+           :join-points t :point-radius 2)
+
+;; low-pass
+(list-plot (gen-white-noise 100 :type :low-pass)
+           :join-points t :point-radius 2)
+
+;;; ---------------------------------------------------------
+
+;;; gen-pink-noise / pink-noise-sample
+
+;;; ---------------------------------------------------------
+;;; Meaning of numbers unclear
+;;; ---------------------------------------------------------
+
+#|
+In pink noise, low frequencies are emphasized more than high 
+ones. With each octave going up, the energy decreases by half. 
+This sounds so balanced and pleasant to our ears because our 
+auditory system works in a similar way — we do not perceive 
+low and high tones equally. Pink noise appears surprisingly 
+often in nature and everyday life, for example in the sound 
+of wind, rain, or ocean waves.
+The energy of pink noise is inversely proportional to 
+frequency. Twice the frequency means half the energy. 
+This is why pink noise is also called 1/f noise.
+|#

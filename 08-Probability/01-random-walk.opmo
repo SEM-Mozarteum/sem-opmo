@@ -2,7 +2,7 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; Copyright © 2015–2026, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; PROBABILITY
@@ -28,8 +28,32 @@ rest probability, same as being stationary.
 (gen-walk 16)
 ;; => e.g. (1 1 -1 1 -1 1 1 1 1 -1 1 1 1 -1 1)
 
-(list-plot (gen-walk 150 :start 0 :seed 234) 
-           :style :axis :join-points t)
+#|
+There are several ways to visualize different parametrical
+data, s. Graph Tools in the documentation. 
+
+List-plot generates a graph from the data provided in 
+sequences. Sequences may be either a single sequence of real 
+numbers, or a series of such sequences.  Each number in a 
+sequence represents a y-coordinate. 
+Numbers are positioned along the x axis according to their 
+position in the sequence.
+By default points are plotted starting at x = 1. If 
+:zero-based is T, points will start being plotted at the 
+x coordinate of 0. The points are drawn as circles. 
+:point-radius lets you control the size of the circles. 
+If 0, the points will not be drawn. If :join-points is T, 
+the points (whether visible or not) will be connected with 
+line segments. The :style keyword argument may be either 
+:axis or :fill.
+|#
+
+;; plot the result in a coordinate system
+(list-plot 
+ (gen-walk 150 :start 0 :seed 234) 
+ ;; the :axis style adds an axis of each y-point to the
+ ;; x axis. With :join-points t the y-points are connected 
+ :style :axis :join-points t)
 
 ;; also with pitches from a specific start point
 ;; image is saved on disk

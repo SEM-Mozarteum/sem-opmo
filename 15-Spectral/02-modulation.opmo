@@ -2,7 +2,7 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-;;; (c) 2015 - 2021, Achim Bornhoeft
+;;; Copyright © 2015–2026, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; MODULATION
@@ -22,7 +22,7 @@ pitch and the modulator(s).
 ;; or modulator as pitch, quantized to quartertones
 (ring-modulation '(a4 c5 e5) 'a2 :quantize 1/4)
 
-;; Is the same as
+;; is the same as
 (matrix-transpose
  (hertz-to-pitch
   (loop for i in (pitch-to-hertz '(a4 c5 e5))
@@ -38,9 +38,11 @@ unmodulated pitches between difference and sum results
 in the classic amplitude modulation style
 |#
 
-;; Ring modulation as chords quantized to eighttones
-(ring-modulation '(a4 c5 e5) 'a2 
-                 :quantize 1/8 :am t :chord t)
+;; Amplitude modulation as chords quantized to eighttones
+(chordize
+ (matrix-transpose 
+  (ring-modulation '(a4 c5 e5) 'a2 
+                   :quantize 1/8 :am t :chord nil)))
 
 ;; ----------------------------------------------------------
 ;; See: Joshua Fineberg, Guide to the Basic Concepts and 

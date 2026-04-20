@@ -2,9 +2,7 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-
-;;; 2015 - 2021 (c) Achim Bornhoeft
-;;; 2025 (c) Achim Bornhoeft
+;;; Copyright © 2015–2026, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; LENGTH
@@ -45,8 +43,13 @@ rests
 (setf pitches (integer-to-pitch (rnd-row)))
 (setf lengths (span pitches '(1/16)))
 
+#|
+There are several ways to visualize different parametrical
+data, s. Graph Tools in the documentation. 
+|#
+
 ;; visualize pitches and durations
-(length-pitch-list-plot lengths pitches :join-points t)
+(length-pitch-plot lengths pitches :join-points t)
 
 ;; Putting together pitches and durations with make-omn
 
@@ -74,10 +77,15 @@ The length is the master (default) in make-omn
 if you do :span :pitch the the pitch is the MASTER
 |#
 
+#|
+There are several ways to visualize different parametrical
+data, s. Graph Tools in the documentation. 
+|#
+
 ;; to plot the material use omn-list-plot
 
-(omn-list-plot mat1)
-(omn-list-plot mat1 :join-points t)
+(omn-plot mat1)
+(omn-plot mat1 :join-points t)
 
 ;;; ---------------------------------------------------------
 

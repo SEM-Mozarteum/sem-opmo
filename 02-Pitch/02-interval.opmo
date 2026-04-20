@@ -2,9 +2,7 @@
 ;;; Opusmodus Tutorial
 ;;; Studio for Electronic Music (SEM)
 ;;; University Mozarteum, Salzburg
-
-;;; 2015 - 2021 (c) Achim Bornhoeft
-;;; 2025 (c) Achim Bornhoeft
+;;; Copyright © 2015–2026, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
 ;;; INTERVAL
@@ -67,13 +65,16 @@ relative distance.
 
 ;; Create a number of variations from a list of intervals
 ;; By default only the direction is randomized
-;; 3 random variations
+;; 3 random variations are available
 (setf int-rnd (interval-randomize 3 '(2 4 -2) :seed 123))
 ;; ((-2 4 2) (2 4 -2) (-2 -4 2))
 
+;; map these intervals to the starting pitch c4
 (interval-map 'c4 int-rnd)
 
-(interval-scale
+;; scale the intervals by a factor
+(interval-map 'c4 (interval-scale 0.5 int-rnd))
+(interval-map 'c4 (interval-scale 2 int-rnd))
 
 ;; with the keyword :rnd-order set to t (=true)
 ;; the intervals are shuffled randomly
@@ -98,8 +99,7 @@ high-change, and low-repeat and high-repeat arguments.
 
 ;;; ---------------------------------------------------------
 
-;; extended example
-
+;;; Extended example
 
 (cons 't 
       ;; add "t" (1/32 duration) at the beginning 
