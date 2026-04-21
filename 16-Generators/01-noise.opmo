@@ -10,15 +10,11 @@
 #|
 Opus Mode provides various noise generators.
 (See under Probability/Noise in the documentation.)
-
-- White noise (gen-noise)
-- Gaussian noise (gen-gaussian-noise)
-- Pink noise (gen-pink-noise, pink-noise-sample)
 |#
 
 ;;; ---------------------------------------------------------
 
-;;; gen-white-noise / (list-plot)
+;;; gen-white-noise
 
 #|
 The function GEN-WHITE-NOISE generate N samples of white 
@@ -40,7 +36,7 @@ Types are: :normal :binary :cauchy :chi-square-2 :exponential
 (list-plot (gen-white-noise 100 :type :exponential)
            :join-points t :point-radius 1.5 :style :axis)
 
-;; gaussian
+;; gaussian (deviation from a mean (0)
 (list-plot (gen-white-noise 100 :type :gaussian :seed 123)
            :join-points nil :point-radius 2)
 

@@ -25,9 +25,6 @@ integer multiple of a fundamental frequency.
 (setf harm-semi
       (hertz-to-pitch harm-hz :quantize 1/2))
 
-;; or use the harmonics function
-(harmonics 'a2 17 :quantize 1/8)
-
 ;; decimal ratios between pure harmonic row and 
 ;; a quantized version in semitones
 (setf ratio-hz-semi 
@@ -42,9 +39,25 @@ integer multiple of a fundamental frequency.
 (make-omn
  :length '(w)
  :pitch harm-semi
+ ;; make attributes from cent values
  :articulation (cent-to-attribute cent-dev)
  :span :pitch)
 )
+
+
+;;; ---------------------------------------------------------
+
+;;; harmonics 
+
+;; or use the harmonics function
+(harmonics 'a2 14 :type :pitch :quantize 1/2)
+
+;; start from a specified partial
+(harmonics 'a2 14 :start 3 :type :pitch :quantize 1/4)
+
+;; select partials in a specified pattern
+(harmonics 'a2 14 :type :pitch :quantize 1/4 
+           :partial-nth '(1 2))
 
 ;;; ---------------------------------------------------------
 

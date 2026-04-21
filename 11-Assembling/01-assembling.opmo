@@ -53,7 +53,7 @@
 
 ;;; ---------------------------------------------------------
 
-;;; assemble different subsets (measures) of the materials
+;;; assemble different subsets (measures) of the material
 
 (setf mat-select1 (assemble-subseq 
                '((seq-1 :start 1 :end 4)
@@ -113,13 +113,18 @@
 ;; select events randomly 
 (loop repeat 10
       initially (init-seed 13)
-      for measure = (rndn 1 (length seq1))
-        ;;; nth (- 3 1)? korrigieren 
-      for max-event = (length (nth (- 3 1) seq1))
-      collect
+      ;; random measure number
+      for measure-no = (rndn 1 (length seq1))
+      ;; calculate the maximum number of events
+      for max-event = (length 
+                       ;; make individual events (sublist)
+                       ;; from omn form
+                       (single-events 
+                        (nth (- measure-no 1) seq1)))
+      append
         (get-events (list
                      1
-                     measure
+                     measure-no
                      (rndn 0 max-event)) seq1))
 
 ;;; ---------------------------------------------------------
@@ -187,7 +192,8 @@
 ;; algorithmic example with window of three quarters 
 ;; shifting by one quarter through the score
 
-(setf vn1-mat '((h g4 pp q q) (h g4 q a4 bb4) (h a4 q g4 fs4) (h g4 q q)))
+(setf vn1-mat 
+      '((h g4 pp q q) (h g4 q a4 bb4) (h a4 q g4 fs4) (h g4 q q)))
 
 (setf start-points
       (loop for meas from 1 to 4

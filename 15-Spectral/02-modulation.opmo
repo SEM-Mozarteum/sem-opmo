@@ -7,9 +7,15 @@
 
 ;;; MODULATION
 
+#|
+Modulation functions in Opusmodus simulate the output of its
+analog synthesis equivalents.
+|#
+
 ;;; ---------------------------------------------------------
 
 ;;; Amplitude (Ring) Modulation
+;;; https://theproaudiofiles.com/the-fundamentals-of-am-synthesis/
 
 #|
 Applies ring modulation to input pitches by computing both 
@@ -25,12 +31,12 @@ pitch and the modulator(s).
 ;; is the same as
 (matrix-transpose
  (hertz-to-pitch
+  ;; Pitch is converted to hertz to calculate the modulation
+  ;; in the frequency domain before converted back.
   (loop for i in (pitch-to-hertz '(a4 c5 e5))
         for mod = (pitch-to-hertz 'a2)
         collect (list (abs (- i mod)) (+ i mod)))
   :quantize 1/4))
-;; Pitch is converted to hertz to calculate the modulation
-;; in the frequency domain before converted back.
 
 #|
 With the keyword "am" the lists includes the original 
@@ -68,6 +74,7 @@ in the classic amplitude modulation style
 ;;; ---------------------------------------------------------
 
 ;;; Frequency Modulation
+;;; https://theproaudiofiles.com/fm-synthesis/
 
 ;; ----------------------------------------------------------
 ;; See: Joshua Fineberg, Guide to the Basic Concepts and 
@@ -117,7 +124,8 @@ c - (6 * m): 160 Hz
 |#
 
   ;; Display as pitches
-  (chordize (hertz-to-pitch (remove-duplicates fm-hz))))
+  (chordize (hertz-to-pitch (remove-duplicates fm-hz)))
+  ) ; end of progn
 
 ;; ----------------------------------------------------------
 ;; https://www.sfu.ca/~truax/fmtut.html
@@ -141,7 +149,8 @@ c - (6 * m): 160 Hz
   (chordize 
    (hertz-to-pitch 
     (remove-duplicates fm-hz)
-    :quantize 1/4)))
+    :quantize 1/4))
+  ) ; end of progn
 
  #|
 c: 110 Hz
@@ -183,5 +192,5 @@ c - (6 * m): 1210 Hz
   (chordize 
    (hertz-to-pitch 
     (remove-duplicates fm-chords)
-    :quantize 1/4)))
-
+    :quantize 1/4))
+  ) ; end of progn
