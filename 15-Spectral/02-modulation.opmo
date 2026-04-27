@@ -69,7 +69,7 @@ in the classic amplitude modulation style
               collect (abs (- a b)))))
 
 ;; See as pitches
-(hertz-to-pitch rm-hz))
+(chordize (flatten  (hertz-to-pitch rm-hz))))
 
 ;;; ---------------------------------------------------------
 
@@ -134,7 +134,7 @@ c - (6 * m): 160 Hz
 
 (progn
   (setf carrier2 110)
-  (setf mod-id 3)
+  (setf mod-id 3) ; index = partial from carrier
   (setf index2 6)
 
   (setf fm-hz 
@@ -152,7 +152,7 @@ c - (6 * m): 160 Hz
     :quantize 1/4))
   ) ; end of progn
 
- #|
+#|
 c: 110 Hz
 c + m: 330 Hz
 c - m: 110 Hz

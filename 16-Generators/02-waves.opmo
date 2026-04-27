@@ -99,6 +99,34 @@ always the same.
                  ;; :join-points t :point-radius 1.5))        
  :join-points t :point-radius 1.5)
 
+;; with AM and FM togehter
+(list-plot
+(setf shape
+ (gen-sine 240 5 0.5
+            :fm (gen-sine 240 2 1.0)
+            :fm-index 2
+            :am (gen-sine 240 1 1.0)
+            :am-index 0.4))
+ :join-points t)
+
+;; use the shape for movement in pitches
+;; listen to it with cmd-1
+(cons 't (vector-to-pitch '(c1 c5) shape))
+
+;;; ---------------------------------------------------------
+
+;;; Additive synthesis
+
+(list-plot
+ (add-sine-waves 8 240 10 0.5)
+ :join-points t)
+
+(list-plot
+ (add-sine-waves 8 240 7 0.5
+                   :fm (gen-sine 240 2 1.0)
+                   :fm-index 1.5)
+ :join-points t)
+
 ;;; ---------------------------------------------------------
 
 ;;; half-sine
@@ -157,22 +185,28 @@ always the same.
  :join-points t)
 
 ;; Half a square
-(list-plot (half-square 120 1.0 :phase ) :join-points t) 
+(list-plot 
+ (half-square 120 1.0 :phase 90) :join-points t) 
 
 ;;; ---------------------------------------------------------
 
 ;;; gen-sawtooth / half-sawtooth
 
-(list-plot (gen-sawtooth 120 3 0.5) :join-points t)  
+(list-plot (gen-sawtooth 120 2 1) :join-points t)  
 
 ;; Sawtooth frequency modulated by another sawtooth
-(list-plot
- (gen-sawtooth 120 4 0.5 
-               :modulation (gen-sawtooth 120 1 0.7))
- :join-points t)
+(setf saw-shape
+      (list-plot
+       (gen-sawtooth 120 8 0.5 
+                     :am (gen-triangle 120 2 0.7))
+       :join-points t))
+
+(cons 's ; add a sixtenth note
+      (integer-to-pitch
+       (vector-round 0 24 saw-shape)))
 
 ;; Half sawtooth
-(list-plot (half-sawtooth 120 1 :phase 90) :join-points t)
+(list-plot (half-sawtooth 120 1) :join-points t)
 
 ;;; ---------------------------------------------------------
 

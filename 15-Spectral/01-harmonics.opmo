@@ -44,7 +44,6 @@ integer multiple of a fundamental frequency.
  :span :pitch)
 )
 
-
 ;;; ---------------------------------------------------------
 
 ;;; harmonics 
@@ -83,8 +82,8 @@ integer multiple of a fundamental frequency.
 (loop for i from 0.6 to 2.1 by 0.1
       collect
         (chordize
-         (harmonics 'a2 8 
-                    :quantize 1/8 
+         (harmonics 'a2 32 
+                    :quantize 1/4 
                     :coeff i 
                     :type :pitch)))
 
