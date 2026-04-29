@@ -1,0 +1,107 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; Copyright © 2015–2026, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+Make a short sketch of min. 5 measures for 2 cellos:
+
+First cello with random harmonics (between the 3rd and 
+9th overtone) on the C string (c1).
+
+Second cello random harmonics (between the 2nd and 
+8th overtone) on the G string (g1).
+
+Use any durations and dynamics.
+|#
+
+;;; ---------------------------------------------------------
+
+(progn
+
+  ;; Pitches
+
+  (setf pitches1
+        (rnd-order
+         (hertz-to-pitch
+          (harmonics 'c1 9 :start 3) :quantize 1/4)
+         :seed 123))
+
+  (setf pitches2
+        (rnd-order 
+         (hertz-to-pitch
+          (harmonics 'g1 8 :start 2) :quantize 1/4)
+         :seed 123))
+
+  ;; Lengths
+
+  (setf lengths1 
+        (rnd-order 
+         (gen-length (gen-integer 2 8) 4)
+         :seed 234))
+
+  (setf lengths2 
+        (rnd-order
+         (gen-length (gen-integer 2 8) 4)
+         :seed 123))
+
+  ;; Velocities
+
+  (setf velocities1 
+        (rnd-order
+         (get-velocity (gen-transition 0.3 0.6 7 1) :type :symbol) 
+         :seed 123))
+
+  (setf velocities2 
+        (rnd-order
+         (get-velocity (gen-transition 0.3 0.6 7 1) :type :symbol) 
+         :seed 123))
+
+  ;; Voices
+
+  (setf vc1
+        (make-omn
+         :pitch pitches1
+         :length lengths1
+         :velocity velocities1
+         ))
+
+  (setf vc2
+        (make-omn
+         :pitch pitches2
+         :length lengths2
+         :velocity velocities2
+         ))
+
+  ;; Score
+
+  (def-score duet ; name of the score
+      (:title "Duet"
+       :composer "Achim Bornhoeft"
+       :key-signature 'chromatic
+       :time-signature '(4 4)
+       :tempo 50
+       :layout (list
+                (violoncello-layout 'cello1)
+                (violoncello-layout 'cello2))) 
+
+    (cello1 ; name of the system
+     :omn vc1
+     :channel 1
+     :sound 'gm ; midi system
+     :program 'cello) ; instrument
+  
+    (cello2
+     :omn vc2
+     :channel 2
+     :sound 'gm
+     :program 'cello)
+    )
+
+  (display-musicxml 'duet)
+
+  ) ; end of progn

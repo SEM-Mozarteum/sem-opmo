@@ -26,7 +26,7 @@ Types are: :normal :binary :cauchy :chi-square-2 :exponential
 
 ;; normal
 (vector-to-pitch '(c1 c7)
-(list-plot (gen-white-noise 20000)
+(list-plot (gen-white-noise 100)
            :point-radius 2))
 
 ;; binary
