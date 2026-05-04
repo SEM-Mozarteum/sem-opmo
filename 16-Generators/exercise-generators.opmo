@@ -1,0 +1,16 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; Copyright © 2015–2026, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+Use different generators to create 50 events for pitches, 
+lengths and dynamics.
+Combine them in [make-omn].
+|#
+
+;;; ---------------------------------------------------------

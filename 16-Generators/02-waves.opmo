@@ -99,7 +99,13 @@ always the same.
                  ;; :join-points t :point-radius 1.5))        
  :join-points t :point-radius 1.5)
 
-;; with AM and FM togehter
+;; decreasing amplitude of the sine
+(list-plot
+ (gen-sine 240 3 0.5
+           :am (gen-transition 0.5 0.1 240 1))
+ :join-points t)
+
+;; with AM and FM together
 (list-plot
 (setf shape
  (gen-sine 240 5 0.5
@@ -112,6 +118,7 @@ always the same.
 ;; use the shape for movement in pitches
 ;; listen to it with cmd-1
 (cons 't (vector-to-pitch '(c1 c5) shape))
+;; (vector-to-pitch is explained in the vector chapter)
 
 ;;; ---------------------------------------------------------
 
@@ -130,6 +137,11 @@ always the same.
 ;;; ---------------------------------------------------------
 
 ;;; half-sine
+
+#|
+The half-sine function is particularly useful for creating 
+various types of arc shapes
+|#
 
 ;; first half of the sine wave
 (list-plot (half-sine 32 0.5) :join-points t)
@@ -221,3 +233,19 @@ always the same.
           (gen-deviation htrng -0.2 0.2)
           :seed 123)
 :join-points t)
+
+;;; ---------------------------------------------------------
+
+;;; gen-triangle / half-triangle
+
+(list-plot (gen-triangle 32 1 0.5) :join-points t)
+
+(list-plot (setf htrng (half-triangle 32 1)) :join-points t)
+
+(list-plot
+(gen-loop 5
+          (gen-deviation htrng -0.2 0.2)
+          :seed 123)
+:join-points t)
+
+

@@ -37,8 +37,9 @@ toward or away from certain values across a defined time span.
 (setf y-val (envelope-interp 2.5 env))
 
 ;; see env and y-val at 2.5
-(xy-plot (list env (list 2.5 y-val))
-:join-points t :style :axis)
+(xy-plot 
+ (list env (list 2.5 y-val))
+ :join-points t :style :axis)
 
 ;;; envelope-samples
 
@@ -78,7 +79,7 @@ toward or away from certain values across a defined time span.
 ;;; envelope-x / envelope-y
 ;; get the x-values
 (setf env-x (envelope-x env-samp))
-      
+  
 ;; get the y-values
 (list-plot
  (setf env-y (envelope-y env-samp))
@@ -100,8 +101,7 @@ toward or away from certain values across a defined time span.
 ;; get the minimum y-value (amplitude) in an envelope
 (min-envelope pitch-env)
 
-
-;; map these 20 values to pitches
+;; map these 20 y-values to pitches
 (vector-map 
  (integer-to-pitch (gen-integer 0 24)) ; 2 chromatic octaves 
  (envelope-y pitch-env))
@@ -113,11 +113,11 @@ toward or away from certain values across a defined time span.
  (setf dyn-env (normalize-envelope pitch-env))
  :join-points t)
 
-;;; vector-to-velocity
-
 ;; map the normalized envelope between 0.1 and 0.9 and
 ;; convert to dynamics
+(velocity-plot
 (vector-to-velocity 0.1 0.9 (envelope-y dyn-env))
+:join-points t :style :axis :zero-based t)
 
 ;;; envelope-exp
 
@@ -131,18 +131,22 @@ toward or away from certain values across a defined time span.
 ;;; envelope-increase
 ;;; (also envelope-decrease, envelope-divide, envelope-multiply)
 
+;; Two or more envelopes are combined by addition of y values 
+;; across shared breakpoint positions.
+
 (xy-plot
  (gen-loop 10
-         (envelope-increase env
-                            ;; (0 0  1 2  3 1  4 3  6 0)
-                            (list 0 (rndn 1 0 2.0)
-                                  ;; random additions to the
-                                  ;; y-values between 0 and 2
-                                  1 (rndn 1 0 2.0)
-                                  3 (rndn 1 0 2.0)
-                                  4 (rndn 1 0 2.0)
-                                  6 (rndn 1 0 2.0)))
-         :seed 258) ;; fix the output
+           ;; (0 0  1 2  3 1  4 3  6 0)
+           (envelope-increase env
+                              ;; creating a random env from fixed 
+                              ;; x-values and random additions to 
+                              ;; the y-values between 0 and 2
+                              (list 0 (rndn 1 0 2.0)
+                                    1 (rndn 1 0 2.0)
+                                    3 (rndn 1 0 2.0)
+                                    4 (rndn 1 0 2.0)
+                                    6 (rndn 1 0 2.0)))
+           :seed 258) ;; fix the output
  :join-points t)
 
 ;;; ---------------------------------------------------------
@@ -155,16 +159,20 @@ toward or away from certain values across a defined time span.
 
   (list-plot
    ;; brownian motion between -1 and 1 (default)
+   ;; with high amp to reach these limits
    (setf data (gen-brownian-motion data-len :amp 20 :seed 123))
    :join-points t)
   
+  ;; envelope for lower limit
   (setf l-limit 
         (envelope-samples 
          '(0 0 1 -1 2 -1 3 -2 4 3 5 -1 6 0) data-len))
-
+  
+;; envelope for upper limit
   (setf u-limit 
         (envelope-samples '(0 1 1 4 2 2 3 4 6 4) data-len))
 
+  ;; make tendency between the two limits
   (setf gen-tend
         (gen-envelope-tendency data l-limit u-limit))
 
@@ -173,8 +181,10 @@ toward or away from certain values across a defined time span.
   ;; the tendency list (gen-tend)
   (setf x-values
         (vector-range 
+         ;; limits have x-values between 0 and 6
          0 6 ; new range
-         (gen-integer 
+         (gen-integer
+          ;; tendency has 50 values
           0 (1- (length gen-tend))) ; old range
          ))
   

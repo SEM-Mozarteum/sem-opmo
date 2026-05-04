@@ -10,3 +10,21 @@
 ;;; ---------------------------------------------------------
 
 ;; see documentation
+
+(normal-distribution)
+
+(uniform-distribution)
+
+(gaussian-distribution)
+
+(beta-distribution)
+
+(poisson-distribution)
+
+(cauchy-distribution)
+
+(chi-square-distribution)
+
+(gamma-distribution)
+
+
