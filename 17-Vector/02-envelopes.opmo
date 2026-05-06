@@ -31,6 +31,8 @@ toward or away from certain values across a defined time span.
  (setf env '(0 0  1 2  3 1  4 3  6 0))
  :join-points t :style :axis)
 
+;;; ---------------------------------------------------------
+
 ;;; envelope-interp
 
 ;; get y-value at specific point (x-value)
@@ -40,6 +42,8 @@ toward or away from certain values across a defined time span.
 (xy-plot 
  (list env (list 2.5 y-val))
  :join-points t :style :axis)
+
+;;; ---------------------------------------------------------
 
 ;;; envelope-samples
 
@@ -53,6 +57,8 @@ toward or away from certain values across a defined time span.
 (xy-plot (list env env-samp)
  :join-points t :point-radius 2 :style :axis)
 
+;;; ---------------------------------------------------------
+
 ;;; window-envelope
 
 ;; get a specific part of an envelope
@@ -61,10 +67,14 @@ toward or away from certain values across a defined time span.
        (window-envelope 2 4.3 env-samp))
  :join-points t :point-radius 2 :style :axis)
 
+;;; ---------------------------------------------------------
+
 ;;; envelope-length
 
 ;; see the length of the envelope (20)
 (envelope-length env-samp)
+
+;;; ---------------------------------------------------------
 
 ;;; envelope-reverse
 
@@ -76,7 +86,10 @@ toward or away from certain values across a defined time span.
 (xy-plot (list env-samp env-samp-rev)
  :join-points t :point-radius 2)
 
+;;; ---------------------------------------------------------
+
 ;;; envelope-x / envelope-y
+
 ;; get the x-values
 (setf env-x (envelope-x env-samp))
   
@@ -85,6 +98,8 @@ toward or away from certain values across a defined time span.
  (setf env-y (envelope-y env-samp))
  :join-points t :point-radius 2)
 
+;;; ---------------------------------------------------------
+
 ;;; make-xy
 
 ;; make envelope from individual x- and y-lists
@@ -92,6 +107,8 @@ toward or away from certain values across a defined time span.
  (setf pitch-env 
        (make-xy env-x env-y))
  :join-points t)
+
+;;; ---------------------------------------------------------
 
 ;;; max-envelope / min-envelope
 
@@ -106,6 +123,8 @@ toward or away from certain values across a defined time span.
  (integer-to-pitch (gen-integer 0 24)) ; 2 chromatic octaves 
  (envelope-y pitch-env))
 
+;;; ---------------------------------------------------------
+
 ;;; normalize-envelope
 
 ;; normalize pitch-env between 0 and 1
@@ -119,6 +138,8 @@ toward or away from certain values across a defined time span.
 (vector-to-velocity 0.1 0.9 (envelope-y dyn-env))
 :join-points t :style :axis :zero-based t)
 
+;;; ---------------------------------------------------------
+
 ;;; envelope-exp
 
 ;; change the linear envelope exponentially curved
@@ -127,6 +148,8 @@ toward or away from certain values across a defined time span.
        (envelope-exp env-samp 0.5 20) ; concave
        (envelope-exp env-samp 2.0 20)) ; convex
          :point-radius 2 :join-points t)
+
+;;; ---------------------------------------------------------
 
 ;;; envelope-increase
 ;;; (also envelope-decrease, envelope-divide, envelope-multiply)
@@ -151,7 +174,36 @@ toward or away from certain values across a defined time span.
 
 ;;; ---------------------------------------------------------
 
-;;; brownian motion inside a tendency with two envelopes
+;;; Tendency with envelopes (see chapter Vector/Envelopes)
+
+(xy-plot (envelope-samples 
+               '(0 0 1 -1 2 1 3 -2 4 3 5 -1 6 0) 50)
+         :join-points t  :point-radius 2)
+
+;; the lower limit of the tendency
+;; creates a new envelope with 50 values, return y-values
+(setf lowlim 
+      (list-plot
+       (envelope-y (envelope-samples 
+                    '(0 0 1 -1 2 1 3 -2 4 3 5 -1 6 0) 50))
+       :join-points t  :point-radius 2))
+
+;; the upper limit of the tendency
+(setf uplim (envelope-y (envelope-samples 
+               '(0 1 1 4 2 2 3 4 6 4) 50)))
+
+;; random between upper and lower limits
+(list-plot 
+ (list lowlim uplim
+       (loop for i in uplim
+             with seed = (init-seed 123)
+             for j in lowlim
+             collect (rndn j i)))
+ :join-points t)
+
+;;; ---------------------------------------------------------
+
+;;; Brownian motion inside a tendency with two envelopes
 ;;; as lower and upper limit
 
 (progn

@@ -8,8 +8,11 @@
 ;;; EXERCISE
 
 #|
-Use different generators to create 50 events for pitches, 
-lengths and dynamics.
+Use different generators to create 50 events for
+- pitches in arc shape
+- lengths from long to short to long
+- dynamics as crescendo, slowly start and end
+
 Combine them in [make-omn].
 |#
 

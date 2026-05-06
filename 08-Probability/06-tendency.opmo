@@ -132,7 +132,7 @@ with the equation (+/- value (* value (/ variance 2)))
 
 ;;; ---------------------------------------------------------
 
-;;; Tendency with envelopes
+;;; Tendency with envelopes (see chapter Vector/Envelopes)
 
 (xy-plot (envelope-samples 
                '(0 0 1 -1 2 1 3 -2 4 3 5 -1 6 0) 50)
@@ -142,9 +142,9 @@ with the equation (+/- value (* value (/ variance 2)))
 ;; creates a new envelope with 50 values, return y-values
 (setf lowlim 
       (list-plot
- (envelope-y (envelope-samples 
-               '(0 0 1 -1 2 1 3 -2 4 3 5 -1 6 0) 50))
-         :join-points t  :point-radius 2))
+       (envelope-y (envelope-samples 
+                    '(0 0 1 -1 2 1 3 -2 4 3 5 -1 6 0) 50))
+       :join-points t  :point-radius 2))
 
 ;; the upper limit of the tendency
 (setf uplim (envelope-y (envelope-samples 
@@ -161,7 +161,7 @@ with the equation (+/- value (* value (/ variance 2)))
 
 ;;; ---------------------------------------------------------
 
-;;; gen-envelope-tendency
+;;; gen-envelope-tendency (see chapter Vector/Envelopes)
 
 #|
 This function takes a list of data and adjusts the values 
