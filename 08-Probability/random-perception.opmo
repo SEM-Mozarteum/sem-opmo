@@ -61,7 +61,6 @@ musical processes and their perceptual qualities.
 (flatten (cons 'e chr-dev5))
 
 
-
 ;;; 5.
 
 ;; in quarter tempo and with higher deviations
@@ -72,14 +71,25 @@ musical processes and their perceptual qualities.
                 (midi-to-pitch
                  (gen-deviation
                   (gen-integer 40 100)
-                  -15 15))))
+                  -15 15)) :seed 123))
 
-;;; 6.
+(flatten (cons 'e chr-dev15))
+
+(flatten (cons 'q chr-dev15))
+
+;;; 6a.
 
 ;; higher speed (4 times faster), same pitches
 ;; -> tendency becomes audible again 
 ;; -> speed compensates for the effects of chance.
 (flatten (cons 't chr-dev15))
+
+;;; 6b.
+
+;; The more voices having the same direction the tendency is
+;; increasingly perceptible
+(loop for i in chr-dev15
+      collect (cons 's i))
 
 ;;; 7.
 
@@ -105,10 +115,21 @@ musical processes and their perceptual qualities.
                         50 400 :seed 123)))
 
 ;; increasingly dissolve the direction tendency
- (ps 'gm
-     :treble (list (make-omn
-                    :pitch (flatten chr-dev15)
-                    :length length-dev2
-                    :velocity '(p)))
-     :time-signature '(4 4) 
-     :tempo 60)
+(ps 'gm
+    :treble (list (make-omn
+                   :pitch (flatten chr-dev15)
+                   :length length-dev2
+                   :velocity '(p)))
+    :time-signature '(4 4) 
+    :tempo 60)
+
+
+;; higher tempo let the direction become 
+;; more perceptible once again
+(ps 'gm
+    :treble (list (make-omn
+                   :pitch (flatten chr-dev15)
+                   :length length-dev2
+                   :velocity '(p)))
+    :time-signature '(4 4) 
+    :tempo 480)

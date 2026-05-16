@@ -134,13 +134,13 @@ various types of arc shapes
 ;; amplitude modulated half sine
 (list-plot
 (half-sine 240 1 ; carrier
-          :am (gen-sine 240 2 0.5)) ; modulator
+          :am (gen-sine 240 2 0.2)) ; modulator
 :join-points t)
 
 ;; modulated half sine with different amplitudes of
 ;; the modulator
 (list-plot
- (loop for i from 0.3 by 0.1
+ (loop for i from 0.3 by 0.3
        repeat 5
        collect
          (half-sine 120 1 ; carrier
@@ -209,7 +209,7 @@ various types of arc shapes
 
 ;;; gen-triangle / half-triangle
 
-(list-plot (gen-triangle 32 1 0.5) :join-points t)
+(list-plot (gen-triangle 120 1 0.5) :join-points t)
 
 (list-plot (setf htrng (half-triangle 32 1)) :join-points t)
 
@@ -240,8 +240,6 @@ various types of arc shapes
 
 (list-plot
 (gen-loop 5
-          (gen-deviation htrng -0.2 0.2)
+          (gen-deviation hpls -0.2 0.2)
           :seed 123)
 :join-points t)
-
-
