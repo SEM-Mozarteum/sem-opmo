@@ -1,0 +1,108 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; Copyright © 2015–2026, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+Make a short sketch of minimum 5 measures for 2 cellos:
+
+First cello with random harmonics (between the 3rd and 
+9th overtone) on the C string (c2).
+
+Second cello random harmonics (between the 2nd and 
+8th overtone) on the G string (g1).
+
+Use any durations and dynamics.
+|#
+
+;;; ---------------------------------------------------------
+
+(progn
+(init-seed 123)
+
+(setf pitches-vc1
+(gen-loop 10
+(rnd-order
+(hertz-to-pitch
+(harmonics 'c1 9 :start 3))))
+
+(setf pitches-vc2
+(rnd-order
+(hertz-to-pitch
+(harmonics 'g1 8 :start 2)) :seed 234))
+
+(setf durations-vc1
+(gen-loop 7
+(rnd-pick (gen-length (gen-integer 2 8) 4)) :seed 456))
+
+(setf durations-vc2
+(gen-loop 7
+(rnd-pick (gen-length (gen-integer 2 8) 4)) :seed 789))
+
+(setf dynamics-vc1
+(gen-loop 7
+(rnd-pick '(pp p mp mf f ff)) :seed 456))
+
+(setf dynamics-vc2
+(gen-loop 7
+(rnd-pick '(pp p mp mf f ff)) :seed 234))
+
+(setf vc1
+      (make-omn
+       :pitch pitches-vc1
+       :length durations-vc1
+       :velocity dynamics-vc1))
+
+(setf vc2
+      (gen-loop 10
+      (make-omn
+       :pitch pitches-vc2
+       :length (gen-loop 7
+(rnd-pick (gen-length (gen-integer 2 8) 4)))
+       :velocity (gen-loop 7
+(rnd-pick '(pp p mp mf f ff))))
+      :seed 123))
+
+;; Score
+
+(def-score duet ; name of the score
+    (:title "Duet"
+     :composer "Class"
+     :key-signature 'chromatic
+     :time-signature '(4 4)
+     :tempo 50
+     :layout (list
+              (violoncello-layout 
+               'cello1 :name "Violoncello 1" :abb "Vc. 1")
+              (violoncello-layout 
+               'cello2 :name "Violoncello 2" :abb "Vc. 2")))
+          
+  (cello1 ; name of the system
+   :omn vc1
+   :channel 1
+   :sound 'gm ; midi system
+   :program 'cello) ; instrument
+  
+  (cello2
+   :omn vc2
+   :channel 2
+   :sound 'gm
+   :program 'cello)
+  ) 
+
+;; display the notation
+(display-musicxml 'duet)
+
+;; play the score in the midi player
+;; (display-midi 'duet)
+
+) ; end of progn
+
+
+
+
+

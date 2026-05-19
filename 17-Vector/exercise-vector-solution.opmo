@@ -1,0 +1,67 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; Copyright © 2015–2026, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+- Create a vector with 50 events in a modulated arc shape
+- Put this construction in a loop to make 4 different versions
+- map this vector to pitches, lengths and dynamics
+- Combine them in [make-omn].
+|#
+
+;;; ---------------------------------------------------------
+
+;; modulated half sine with different amplitudes of
+;; the modulator
+(list-plot
+ (setf 5shapes1
+       (loop for i from 0.2 by 0.5
+             repeat 4
+             collect
+               (half-sine 50 1 ; carrier
+                          :am (gen-sine 120 2 i)))) ; modulator
+ :join-points t)
+
+;; another possibility
+(list-plot
+ (setf 5shapes2
+       (gen-loop 5
+                 (gen-deviation
+                  (half-sine 50 1) -0.5 0.5)
+                 :seed 123))              
+ :join-points t)
+
+(setf instruments
+      (list 'flute 'clarinet 'violin 'cello))
+
+;; generate pitches for 4 instruments
+(setf pitches
+(loop for x in 5shapes1
+        for i in instruments
+      collect
+      (vector-to-pitch i x)))
+
+(setf lengths
+(loop with seed = (init-seed 123)
+      for x in 5shapes1
+      collect
+      (vector-to-length '1/8 (rndn 1 2) (rndn 3 4) x)))
+
+(setf dynamics
+(loop for x in 5shapes2
+      collect
+      (vector-to-velocity 'pp 'f x)))
+
+;; view with cmd-2
+(make-omn
+ :pitch pitches
+ :length lengths
+ :velocity dynamics)
+
+
+

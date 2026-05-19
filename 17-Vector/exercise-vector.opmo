@@ -8,7 +8,10 @@
 ;;; EXERCISE
 
 #|
-
+- Create a vector with 50 events in a modulated arc shape
+- Put this construction in a loop to make 4 different versions
+- map this vector to pitches, lengths and dynamics
+- Combine them in [make-omn].
 |#
 
 ;;; ---------------------------------------------------------
