@@ -23,17 +23,10 @@
        (loop for i from 0.2 by 0.5
              repeat 4
              collect
+               (gen-deviation
                (half-sine 50 1 ; carrier
-                          :am (gen-sine 120 2 i)))) ; modulator
- :join-points t)
-
-;; another possibility
-(list-plot
- (setf 5shapes2
-       (gen-loop 5
-                 (gen-deviation
-                  (half-sine 50 1) -0.5 0.5)
-                 :seed 123))              
+                          :am (gen-sine 120 2 i)) ; modulator
+ 0.5 1)))
  :join-points t)
 
 (setf instruments
@@ -52,16 +45,85 @@
       collect
       (vector-to-length '1/8 (rndn 1 2) (rndn 3 4) x)))
 
+;; vectors for the dynamics
+(list-plot
+ (setf 5shapes2
+       (gen-loop 5
+                 (gen-deviation
+                  (half-sine 50 1) -0.5 0.5)
+                 :seed 123))              
+ :join-points t)
+
 (setf dynamics
+(velocity-to-dynamic
 (loop for x in 5shapes2
       collect
-      (vector-to-velocity 'pp 'f x)))
+      (vector-to-velocity 'pp 'f x))))
 
 ;; view with cmd-2
+(assign-variable 'voice
 (make-omn
  :pitch pitches
  :length lengths
- :velocity dynamics)
+ :velocity dynamics))
 
+(def-score vector-sketch
+    (:title "Title"
+     :composer "Composer"
+     :copyright "Copyright ©"
+     :key-signature 'chromatic
+     :time-signature '(4 4)
+     :tempo 90
+     :flexible-clef t ; change clef if reasonable
+     :layout (list
+               (flute-layout 'flute
+                             :name "Flute" :abbr "Fl")
+               (clarinet-layout 'clarinet
+                                :name "Clarinet" :abbr "Cl")
+               (violin-layout 'violin
+                              :name "Violin" :abbr "Vn")
+               (violoncello-layout 'violoncello
+                                   :name "Violoncello" :abbr "Vc")))
+  
+  (flute
+   :omn voice1
+   :channel 1
+   :sound 'gm
+   :program 'flute
+   :volume 95
+   :pan 70
+   :controllers (91 '(52))
+   )
+  
+  (clarinet
+   :omn voice2
+   :channel 3
+   :sound 'gm
+   :program 'clarinet
+   :volume 95
+   :pan 60
+   :controllers (91 '(57))
+   )
 
+  (violin
+   :omn voice3
+   :channel 14
+   :sound 'gm
+   :program 'violin
+   :volume 100
+   :pan 16
+   :controllers (91 '(48))
+   )
 
+  (violoncello
+   :omn voice4
+   :channel 15
+   :sound 'gm
+   :program 'cello
+   :volume 90
+   :pan 95
+   :controllers (91 '(60))
+   )
+)
+
+(display-musicxml 'vector-sketch)

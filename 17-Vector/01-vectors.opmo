@@ -41,6 +41,8 @@ related to a series of items.
 
 (vector-map map new-data)
 
+(hertz-to-pitch (harmonics 'c2 24))
+
 ;; If the vector is smaller than the sequence length 
 ;; the result is a selection of 10
 (hertz-to-pitch 
@@ -48,7 +50,7 @@ related to a series of items.
   ;; 24 harmonics
   (harmonics 'c2 24)
   ;; 10 unique random numbers between 0 and 9
-              (rnd-order (gen-integer 0 9) :seed 123)))  
+               (gen-integer 0 9)))
 
 ;; This map of notes goes up and down
 ;; When the data is a triangle the output of notes is going
@@ -66,15 +68,17 @@ related to a series of items.
 
 ;; 10 random numbers are mapped to different lengths
 (vector-map '(1/16 1/8 1/4) 
-            (gen-white-noise 12 :seed 123))
+            (list-plot
+            (gen-white-noise 12 :seed 123)
+            :join-points t))
 ;; => (1/16 1/4 1/8 1/16 1/4 1/8 1/16 1/8 1/16 1/4 1/16 1/16)
 
-;; The same with lengths and dynamics
 (vector-map '(q e s - -e -q) (gen-white-noise 12 :seed 98))
 ;; => (e s - -q q -e -e s -e e - -e)
 
-(vector-map '(mp mf ppp mf) (gen-white-noise 10 :seed 79))
-;; => (mf mf mp mp mf ppp mf mf mp mf)
+;; The same dynamics
+(vector-map '(ppp mp mf f) (gen-white-noise 10 :seed 79))
+;; => (f f ppp ppp mp mf mp f ppp f)
 
 ;; Another source is mapped to pitches
 (vector-map '(c4 d4 e4 f4 g4 a4 b4)
@@ -184,53 +188,65 @@ related to a series of items.
 
 #|
 The function VECTOR-SCALE will scale a vector array or list 
-or values between two upper and lower limits. The output is 
+or values between an upper and lower limit. The output is 
 itself a vector array or list comprising of integer values.
 |#
 
-;; 12 integers between -5 and 12
-(setf num (rndn 12 -5 12 :seed 123))
+;; 12 integers between -5 and 12 as pitches
+;; smoothed 2 times
+
+(setf num (rndn 12 -12 12 :seed 123))
 ;; scaled between -0.5 and 3.5
-(setf scaled (vector-scale -0.5 3.5 num))
+(setf scaled (vector-scale -6 6 num))
+(setf scaled-more (vector-scale -3 3 num))
 
-(list-plot 
- (list num scaled)
- :zero-based t :point-radius 2 :join-points t)
+ (setf smooth-pitches
+ (integer-to-pitch
+  (list-plot
+ (list num scaled scaled-more)
+ :zero-based t :point-radius 2 :join-points t)))
 
-;; A half-sine, 180 degrees out of phase 
-;; = second half of the wave
-(list-plot
- (setf mod-partials
-                     (half-sine 59 1 :phase 180))
- :zero-based t :join-points t)
-
-(list-plot
- (loop with seed = (init-seed 123)
-       for i in durlens
-       collect
-         (vector-scale 2.5 0.5
-                       (gen-tendency 
-                        i mod-partials :variance 0.2)))
- :zero-based t :join-points t)
+(make-omn
+ :pitch smooth-pitches
+ :length '(1/8)
+ :span :pitch)
 
 ;; Different scale factors in 5 voices
 
 (pitch-plot
-;; 24 random integers rounded to different max values
-(setf pitches-round
-      (loop repeat 5
-            for i downfrom 10 by 2
-              collect
-              (integer-to-pitch
-               (vector-scale 0 i 
-                             (gen-noise 24 :seed 123)))))
-:join-points t)
+ ;; 24 random integers rounded to different max values
+ (setf pitches-round
+       (loop repeat 5
+             for i downfrom 10 by 2
+             collect
+               (integer-to-pitch
+                (vector-scale 0 i 
+                              (gen-noise 24 :seed 123)))))
+ :join-points t)
 
 ;; play with cmd-2
 (make-omn
  :pitch pitches-round
  :length '(1/8)
  :span :pitch)
+
+;;; EXAMPLE NOT FINISHED
+
+;; A half-sine, 180 degrees out of phase 
+;; = second half of the wave
+(list-plot
+ (setf dynamics
+                     (half-sine 59 1 :phase 180))
+ :zero-based t :join-points t)
+
+(list-plot
+ (loop with seed = (init-seed 123)
+       repeat 5
+       collect
+         (vector-scale 0.2 0.8
+                       (gen-tendency 
+                        50 dynamics :variance 0.3)))
+ :zero-based t :join-points t)
 
 ;;; ---------------------------------------------------------
 

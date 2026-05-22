@@ -1,0 +1,48 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; Copyright © 2015–2026, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+Use different generators to create 50 events for
+- pitches in arc shape
+- lengths from long to short to long
+- dynamics as crescendo, slowly start and end
+
+Combine them in [make-omn].
+|#
+
+;;; ---------------------------------------------------------
+
+;; pitches in arc shape
+(setf pitches 
+      (midi-to-pitch 
+       (list-plot
+        (vector-range (half-sine 50 1) 60 90)
+        :join-points t)))
+
+;; lengths from long to short to long
+(setf lengths
+      (quantize
+       (list-plot
+        (x+b (half-sine 50 1 :phase 180) 1.2)
+        :join-points t)
+       '(1 2 4) :type :ratio))
+
+;; dynamics as crescendo, slowly start and end     
+(setf dynamics
+      (velocity-to-dynamic
+      (list-plot
+       (scale-numbers '(0.2 0.8)
+      ;;(x+b (a*x 0.7 
+      (gen-sigmoid 50))
+      :join-points t)
+
+(make-omn
+ :pitch pitches
+ :length lengths
+ :velocity dynamics)

@@ -243,3 +243,11 @@ various types of arc shapes
           (gen-deviation hpls -0.2 0.2)
           :seed 123)
 :join-points t)
+
+;;; ---------------------------------------------------------
+
+;;; gen-pulse / half-pulse
+
+(list-plot
+(gen-sigmoid 50 :curve 10 :center 0.3)
+:join-points t)
