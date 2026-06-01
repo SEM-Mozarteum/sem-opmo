@@ -8,19 +8,6 @@
 ;;; György Ligeti, Atmosphères (1961)
 ;;; Generalized Structure of the Trill Construction
 
-;; rhythmic acceleration
-(loop for i from 1 to 14
-      collect
-        (loop repeat i         
-              collect (/ (/ 1 i) 4)))
-
-;; stretched accereration with rounded transition
-(loop for i in
-        (gen-transition 1 14 20 1 :rounded t)
-      collect
-        (loop repeat i         
-              collect (/ (/ 1 i) 4)))
-
 ;; 7 voices all starting from 1/4 and ending on 1/32 upto 1/56
 ;; view with cmd-2
 (setf diff-end 
@@ -44,9 +31,10 @@
                       (loop repeat i         
                             collect (/ (/ 1 i) 4)))))
 
-;; 8 voices all starting from 1/4 and ending on 1/32 upto 1/56
+;; 14 voices all starting from 1/4 and ending on 1/32 upto 1/56
 ;; and additional transition with different curves
 ;; view with cmd-2
+;; Durations in Ligeti Atmpospheres
 (setf diff-curve-end
       (loop for curve from 0.6 to 1.4 by 0.06
               for divisor from 14 to 17 by 0.2
@@ -57,21 +45,27 @@
                       (loop repeat i         
                             collect (/ (/ 1 i) 4)))))
 
+;;; Trill construction
+
 ;; trill construction with modulo
-(loop for i from 0 to 11
+(loop for i from 0 to 9
       collect (mod i 4))
-;; (0 1 2 3 0 1 2 3 0 1 2 3)
+;; 0 1 2 3 4 5 6 7 8 9
+;; 0 1 2 3 0 1 2 3 0 1
+;; 0 1 2 3 0 1 2 3 0 1
 
-(loop for i from 0 to 11 by 2
+(loop for i from 0 to 9 by 2
       collect (mod i 4))
-;; (0 2 0 2 0 2)
+;; 0 1 2 3 4 5 6 7 8 9
+;; 0 1 2 3 0 1 2 3 0 1
+;; 0   2   0   2   0
 
-(loop for i from 0 by 2
+(loop for i from 0 by 3
       ;; non terminating counter
       repeat 12
       ;; terminating loop after 12 repeats
-      collect (mod i 4))
-;; (0 2 0 2 0 2 0 2 0 2 0 2)
+      collect (mod i 6))
+;; (0 3 0 3 0 3 0 3 0 3 0 3)
 
 ;; applying this to the trill construction
 (integer-to-pitch ; convert integers to pitch

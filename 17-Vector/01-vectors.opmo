@@ -102,18 +102,18 @@ related to a series of items.
 ;; pitch range.
 
 ;; make 16 pitches between g4 and c5
+;; (Variable is used below.)
 (setf pitches
-      (gen-loop 5 
-                (vector-to-pitch 
-                 '(g4 c5)         
-                 (gen-white-noise 16))))
+      (gen-loop 5 (vector-to-pitch 
+                   '(g4 c5)         
+                   (gen-white-noise 16))))
 
 ;; Map brownian motion between a lower and an upper limit
 ;; and convert to pitch
 (setf brown-pitches 
-      (gen-loop 16 
+      (gen-loop 5 
                 (vector-to-pitch 
-                 '(a1 a2) 
+                 '(a2 a3) 
                  (gen-brownian-motion 50))
                 :seed 123))
 
@@ -122,17 +122,6 @@ related to a series of items.
  :pitch brown-pitches
  :length '(1/16)
  :span :pitch)
-
-#!
-;; Here are the mechanics of this mapping that demonstrate 
-;; how the conversion from vectors to pitches is made:
-(setf mel-data1
-      (vector-scale -12 12 (gen-white-noise 12 :seed 89)))
-;; => (-10 12 4 -8 -4 4 12 -12 9 7 -2 7)
-
-(integer-to-pitch mel-data1)
-;; => (d3 c5 e4 e3 gs3 e4 c5 c3 a4 g4 bb3 g4)
-!#
 
 ;; sine shape with AM and FM together
 (list-plot
@@ -146,35 +135,48 @@ related to a series of items.
 
 ;; use the shape for movement in pitches
 ;; listen to it with cmd-1
-(cons 't (vector-to-pitch '(c1 c5) shape))
-;; (vector-to-pitch is explained in the vector chapter)
+(make-omn
+ :length '(1/32)
+ :pitch (vector-to-pitch '(c1 c5) shape)
+ :span :pitch)
 
 ;;; ---------------------------------------------------------
 
 ;;; vector-to-length
 
-;; map vectors between low (-2 * 1/16) and high (4 * 1/16)
+;; map vectors between low (-2 * 1/16) = 1/8 rest 
+;; and high (4 * 1/16) = 1/4 notes
 ;; play with cmd-2
+;; (Variable is used below.)
 (setf lengths
        (gen-loop 5
-                 (vector-to-length '1/16 -2 4 (gen-white-noise 16))
+                 (vector-to-length '1/16 1 4 (gen-white-noise 16))
+                 :seed 123))
+
+(setf lengths2
+       (gen-loop 5
+                 (vector-to-length '1/16 -2 6 (gen-white-noise 16))
                  :seed 123))
 
 ;;; ---------------------------------------------------------
 
 ;;; vector-to-velocity
 
+;; (Variable is used below.)
 (setf velocities 
       (gen-loop 5
+                (velocity-to-dynamic
       (vector-to-velocity 0.2 0.45 
-                          (gen-white-noise 16)) 
+                          (gen-white-noise 16))) 
       :seed 123))
 
 ;; Mapping brownian result to velocity symbols
 ;; Show result in a velocity chart
-(velocity-list-plot
- (vector-to-velocity 'ppp 'mf (gen-brownian-motion 50 :seed 123))
- :point-radius 1.5 :join-points t)
+(velocity-to-dynamic
+ (velocity-list-plot
+  (vector-to-velocity 'ppp 'mf 
+                      (gen-brownian-motion 50 :seed 123))
+  :point-radius 1.5 :join-points t))
 
 ;; Combine the parameter
 (make-omn
@@ -196,9 +198,8 @@ itself a vector array or list comprising of integer values.
 ;; smoothed 2 times
 
 (setf num (rndn 12 -12 12 :seed 123))
-;; scaled between -0.5 and 3.5
 (setf scaled (vector-scale -6 6 num))
-(setf scaled-more (vector-scale -3 3 num))
+(setf scaled-more (vector-scale -3.0 3.0 num))
 
  (setf smooth-pitches
  (integer-to-pitch
@@ -208,8 +209,21 @@ itself a vector array or list comprising of integer values.
 
 (make-omn
  :pitch smooth-pitches
- :length '(1/8)
+ :length '(1/4)
  :span :pitch)
+
+#!
+;; Here are the mechanics of this mapping that demonstrate 
+;; how the conversion from vectors to pitches is made:
+(setf mel-data1
+      (vector-scale -12 12 (gen-white-noise 12 :seed 89)))
+;; => (-10 12 4 -8 -4 4 12 -12 9 7 -2 7)
+
+(integer-to-pitch mel-data1)
+;; => (d3 c5 e4 e3 gs3 e4 c5 c3 a4 g4 bb3 g4)
+!#
+
+;;; ---------------------------------------------------------
 
 ;; Different scale factors in 5 voices
 
@@ -227,28 +241,43 @@ itself a vector array or list comprising of integer values.
 ;; play with cmd-2
 (make-omn
  :pitch pitches-round
- :length '(1/8)
+ :length '(1/2)
  :span :pitch)
 
-;;; EXAMPLE NOT FINISHED
+;;; ---------------------------------------------------------
 
-;; A half-sine, 180 degrees out of phase 
-;; = second half of the wave
+;; A half-sine
 (list-plot
- (setf dynamics
-                     (half-sine 59 1 :phase 180))
+ (setf pitch-sine
+       (half-sine 50 1))
  :zero-based t :join-points t)
 
 (list-plot
- (loop with seed = (init-seed 123)
-       repeat 5
-       collect
-         (vector-scale 0.2 0.8
-                       (gen-tendency 
-                        50 dynamics :variance 0.3)))
+ (setf half-tend
+       (gen-tendency 
+        50 pitch-sine :variance 0.5))
  :zero-based t :join-points t)
+
+;; Half sine as tendency, scaled for MIDI
+(list-plot
+ (setf half-sine-pitches
+       (loop with seed = (init-seed 123)
+             repeat 5
+             collect
+               (vector-scale 40 70
+                             (gen-tendency 
+                              50 pitch-sine :variance 0.5))))
+ :zero-based t :join-points t)
+
+;; play with cmd-2
+(make-omn
+ :pitch (midi-to-pitch half-sine-pitches)
+ :length '(1/16)
+ :span :pitch)
 
 ;;; ---------------------------------------------------------
+
+;;; 3.6.2026 FROM HERE
 
 ;;; vector-smooth
 
@@ -259,19 +288,30 @@ values. This is typically used to avoid abrupt jumps and achieve
 a more “fluid” progression.
 |#
 
+(progn ; start progn
 (setf vector (gen-white-noise 100 :seed 345))
 
 ;; compare the output with the smoothed ones:
 (list-plot 
+ (setf smoothed
  (list vector
        (vector-smooth 0.3 vector)
-       (vector-smooth 0.05 vector))
- :point-radius 2
- :join-points t)
+       (vector-smooth 0.05 vector)))
+ :point-radius 2 :join-points t)
 
-;;; Combination of vector functions
+(make-omn
+ :length '(1/16)
+ ;; range between e2 and c4)
+ :pitch (midi-to-pitch (vector-scale 40 60 smoothed))
+ :span :pitch)
 
-(progn
+;;; ---------------------------------------------------------
+
+;;; Combination of different vector functions
+
+(progn 
+(setf voices 10)
+
 ;; number of events
 (setf events 50)
 
@@ -288,7 +328,7 @@ a more “fluid” progression.
  (setf pitches       
        (loop with seed = (init-seed 123)
              for x from 1
-             repeat 10
+             repeat voices
              collect
                (vector-to-pitch '(c3 c5)
                (vector-smooth 0.6
@@ -296,7 +336,7 @@ a more “fluid” progression.
                                events tend-list :variance 0.6)))))
 :zero-based t :join-points t :style :fill)
 
-;; An example using a sigmoid function for dynamic development
+;; using a sigmoid function for dynamic development
 (list-plot
  (setf sigmoid
  (gen-sigmoid events))
@@ -305,37 +345,35 @@ a more “fluid” progression.
 (velocity-plot
  (setf velocities
        (loop with seed = (init-seed 123)
-             repeat 10 ; 5 voices    
+             repeat voices
              collect
                ;; convert to dynamic symbols
                (velocity-to-dynamic
                 ;; scale each list between 0.2 and 1
                 (vector-scale 
                  0.2 1
-                 ;; since gen-tendency produces values >1
-                 ;; each envelope has to be normalized
-                 (normalize
                   ;; smooth the tendency
                   (vector-smooth 0.8
                                  (gen-tendency 
                                   ;; tendency with variance
-                                  20 sigmoid :variance 0.5)))))))
+                                  events sigmoid :variance 0.5))))))
  :zero-based t :join-points t :style :fill)
 
 (setf lengths
-       (gen-loop 10
-                 (vector-to-length '1/4 1 4 (gen-white-noise events))
-                 :seed 123))
+      (gen-loop voices
+                (vector-to-length 
+                 '1/4 1 4 
+                 (gen-white-noise events))
+                :seed 123))
 
-;; combine all parameters
-;; view and play with cmd-2
+;; combine all parameters, view and play with cmd-2
 (assign-variable 'voice
-(make-omn
- :pitch pitches
- :length lengths
- :velocity velocities))
+                 (make-omn
+                  :pitch pitches
+                  :length lengths
+                  :velocity velocities))
 
-;; previes score
+;; preview score
 (ps 'gm
     :vc (list voice1)
     :vc (list voice2)
@@ -349,5 +387,86 @@ a more “fluid” progression.
     :vc (list voice10)
     :time-signature '(4 4)
     :tempo 50)
-
 ) ; end of progn
+
+;;; ---------------------------------------------------------
+
+;;; Example with automatic variable assignment
+
+(progn
+  ;; number of instruments
+  (setf instruments 5)
+
+  ;; number of events
+  (setf events 30)
+
+  ;; random parameter for any given events for each of the instruments
+  (setf parameter
+        (matrix-transpose 
+         ;; collecting all individual parameters in a separate list of lists
+         (gen-loop 
+          instruments
+          (list
+           (vector-to-length '1/16 1 4 (gen-noise events))
+           (vector-to-pitch '(g3 g5) (gen-noise events) :quantize 1/2)
+           (vector-to-velocity 'pp 'f (gen-noise events)))
+          :seed 123)))
+
+  ;; make omn notation for all instruments in one
+  ;; preview with cmd-2
+  (setf material
+        (make-omn
+         :length (1~ parameter) ; 1~ = shortcut for (nth 0 list)
+         :pitch (2~ parameter)
+         :velocity (3~ parameter)))
+  ;; create automatically as many variables as existing voices 
+  ;; with the name e.g. 'mat1' - 'mat(n)' from material
+  (setf voices
+        (assign-variable 'mat material))
+
+  ;; assign all the veriables to a score
+  (def-score vector-score
+      (:key-signature 'atonal
+       :time-signature '(4 4)
+       :tempo 60
+       :layout (list
+                (bracket-group
+                 ;; group of instruments surrounded by one
+                 ;; bracket with common continuous bar line
+                 (violin-layout 'violin1
+                                :name "Violin 1" :abbr "Vn 1")
+                 (violin-layout 'violin2
+                                :name "Violin 2" :abbr "Vn 2")
+                 (violin-layout 'violin3
+                                :name "Violin 3" :abbr "Vn 3")
+                 (violin-layout 'violin4
+                                :name "Violin 4" :abbr "Vn 4")
+                 (violin-layout 'violin5
+                                :name "Violin 5" :abbr "Vn 5"))))
+               
+    (violin1
+     :omn mat1
+     :sound 'gm
+     :program 'violin)
+  
+    (violin2
+     :omn mat2
+     :sound 'gm
+     :program 'violin)
+  
+    (violin3
+     :omn mat3
+     :sound 'gm
+     :program 'violin)
+  
+    (violin4
+     :omn mat4
+     :sound 'gm
+     :program 'violin)
+  
+    (violin5
+     :omn mat5
+     :sound 'gm
+     :program 'violin))
+  ) ; end of progn
+

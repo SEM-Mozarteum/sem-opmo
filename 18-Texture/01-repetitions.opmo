@@ -5,50 +5,228 @@
 ;;; Copyright © 2015–2026, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
-;;; MICROPOLYPHONY
+;;; REPETITIONS
 
 ;;; ---------------------------------------------------------
 
+;;; spectral repetitions
+
+;; rhythmic acceleration = spectral repetitions 
+;; view with cmd-1 and cmd-2
+(loop for i from 1 to 14
+      collect
+        (loop repeat i         
+              collect (/ (/ 1 i) 4)))
+
+;; stretched accereration with rounded transition
+;; view with cmd-1 and cmd-2
+(loop for i in
+        (gen-transition 1 14 20 1 :rounded t)
+      collect
+        (loop repeat i         
+              collect (/ (/ 1 i) 4)))
+
+;; 7 voices all starting from 1/4 and ending on 1/32 upto 1/56
 ;; view with cmd-2
-(micropolyphony 
-4 ; 4 voices 
-8 ; 8 events for every voice 
-1/4 ; 1/4 minimum length
-3 ; 3 maximum length
-:seed 123
-)
+(setf diff-end 
+      (loop for divisor from 8 to 14
+            collect
+              (loop for i in
+                      (gen-transition 1 divisor 20 1 :rounded t)
+                    append
+                      (loop repeat i         
+                            collect (/ (/ 1 i) 4)))))
 
-(setf inst (micropolyphony 4 8 1/4 3))
+(setf pitches
+      (loop for i in diff-end
+            for j in (midi-to-pitch 
+                      (loop for m from 50 to 62 by 2 collect m))
+            collect (gen-repeat (length i) j)))
 
-(ps 'gm
-    :fl (list (1~ inst))
-    :ob (list (2~ inst))
-    :cl (list (3~ inst))
-    :hn (list (pitch-transpose -12 (4~ inst)))
-    :time-signature '(4 4)
-    :tempo 54
-    :start 1 :end 8)
+(make-omn
+ :length diff-end
+ :pitch (reverse pitches)
+ :velocity '(p))
 
+;;; ---------------------------------------------------------
 
-(micropolyphony
- 8 20 1/4 3
- :intervals '(-2 -1 1 2 -.5 .5 1.5 -1.5 -.25 .25 1.25 -1.25)
- :quantize '(1 2 4 5)
- :start '(0 .5 1 1.5 -.5 -1 -1.5 2)
- :index 'v)
+;;; magic square
+;;; NOT FINISHED
 
-(def-score micro-2
-           (:key-signature 'chromatic
-            :time-signature '(4 4) :tempo 54
-            :layout (choir-satb-layout
-                     (list 'sop1 'sop2) (list 'alto1 'alto2)
-                     (list 'tenor1 'tenor2) (list 'bass1 'bass2)))
-  (sop1 :omn (ambitus 'soprano v1)
-        :channel 1 :sound 'gm :program 'Choir-Aahs)
-  (sop2 :omn (ambitus 'soprano v1) :channel 2)
-  (alto1 :omn (ambitus 'alto v3) :channel 3)
-  (alto2 :omn (ambitus 'alto v3) :channel 4)
-  (tenor1 :omn (ambitus 'tenor v5) :channel 5)
-  (tenor2 :omn (ambitus 'tenor v5) :channel 6)
-  (bass1 :omn (ambitus 'bass v7) :channel 7)
-  (bass2 :omn (ambitus 'bass v8) :channel 8))
+(setf magic9
+(magic-square 9)) 
+
+;;; ---------------------------------------------------------
+
+;;; random-sum-to-size
+
+(progn
+(setf events 60)
+
+(setf lengths
+(loop with seed = (init-seed 17)
+      for i from 6 to 12
+        collect 
+        (loop for x in (rnd-sum-to-size events i (gen-integer 2 10))
+                collect (/ x 4))))
+
+(setf pitches (integer-to-pitch 
+               (loop for i in (gen-integer (1- (length lengths)))
+               collect (gen-repeat events i))))
+ 
+;; cmd-2 to view
+(assign-variable 'mat      
+(make-omn
+ :length lengths
+ :pitch (reverse pitches)
+ :velocity '(pp)
+ :articulation '(marc)))
+
+(def-score vector-score
+      (:key-signature 'atonal
+       :time-signature '(4 4)
+       :tempo 60
+       :layout (list
+                (bracket-group
+                 ;; group of instruments surrounded by one
+                 ;; bracket with common continuous bar line
+                 (violin-layout 'violin1
+                                :name "Violin 1" :abbr "Vn 1")
+                 (violin-layout 'violin2
+                                :name "Violin 2" :abbr "Vn 2")
+                 (violin-layout 'violin3
+                                :name "Violin 3" :abbr "Vn 3")
+                 (violin-layout 'violin4
+                                :name "Violin 4" :abbr "Vn 4")
+                 (violin-layout 'violin5
+                                :name "Violin 5" :abbr "Vn 5")
+                 (violin-layout 'violin6
+                                :name "Violin 6" :abbr "Vn 6")
+                 (violin-layout 'violin7
+                                :name "Violin 7" :abbr "Vn 7"))))
+               
+    (violin1
+     :omn mat1
+     :sound 'gm
+     :program 'violin)
+  
+    (violin2
+     :omn mat2
+     :sound 'gm
+     :program 'violin)
+  
+    (violin3
+     :omn mat3
+     :sound 'gm
+     :program 'violin)
+  
+    (violin4
+     :omn mat4
+     :sound 'gm
+     :program 'violin)
+  
+    (violin5
+     :omn mat5
+     :sound 'gm
+     :program 'violin)
+
+    (violin6
+     :omn mat6
+     :sound 'gm
+     :program 'violin)
+
+    (violin7
+     :omn mat7
+     :sound 'gm
+     :program 'violin))
+
+(defparameter *default-notation-editor* "Sibelius.app")
+
+(musicxml-to-editor)
+) ; end of progn
+
+;;; ---------------------------------------------------------
+
+;;; cartesian
+
+(progn
+;; all combinations of all combinations of two lists
+(setf lengths
+      (cartesian
+       (cartesian '((q h h.) (q h h.)))))
+
+(assign-variable 'mat
+   (make-omn
+    :length (mcflatten (gen-divide 64 lengths))
+    :pitch '(c4 d4 e4 f4 g4 a4 b4)
+    :velocity '(p)
+    :span :length))
+
+(def-score cartesian-score
+      (:key-signature 'atonal
+       :time-signature '(4 4)
+       :tempo 50
+       :layout (list
+                (bracket-group
+                 ;; group of instruments surrounded by one
+                 ;; bracket with common continuous bar line
+                 (violin-layout 'violin1
+                                :name "Violin 1" :abbr "Vn 1")
+                 (violin-layout 'violin2
+                                :name "Violin 2" :abbr "Vn 2")
+                 (violin-layout 'violin3
+                                :name "Violin 3" :abbr "Vn 3")
+                 (violin-layout 'violin4
+                                :name "Violin 4" :abbr "Vn 4")
+                 (violin-layout 'violin5
+                                :name "Violin 5" :abbr "Vn 5")
+                 (violin-layout 'violin6
+                                :name "Violin 6" :abbr "Vn 6")
+                 (violin-layout 'violin7
+                                :name "Violin 7" :abbr "Vn 7")
+                 (violin-layout 'violin8
+                                :name "Violin 8" :abbr "Vn 8"))))
+               
+    (violin1
+     :omn mat1
+     :sound 'gm
+     :program 'violin)
+  
+    (violin2
+     :omn mat2
+     :sound 'gm
+     :program 'violin)
+  
+    (violin3
+     :omn mat3
+     :sound 'gm
+     :program 'violin)
+  
+    (violin4
+     :omn mat4
+     :sound 'gm
+     :program 'violin)
+  
+    (violin5
+     :omn mat5
+     :sound 'gm
+     :program 'violin)
+
+    (violin6
+     :omn mat6
+     :sound 'gm
+     :program 'violin)
+
+    (violin7
+     :omn mat7
+     :sound 'gm
+     :program 'violin)
+    (violin8
+     :omn mat8
+     :sound 'gm
+     :program 'violin))
+
+(defparameter *default-notation-editor* "Sibelius.app")
+
+(musicxml-to-editor)
+) ; end of progn

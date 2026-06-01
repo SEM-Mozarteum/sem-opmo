@@ -19,14 +19,14 @@
 ;; modulated half sine with different amplitudes of
 ;; the modulator
 (list-plot
- (setf 5shapes1
+ (setf 4shapes1
        (loop for i from 0.2 by 0.5
              repeat 4
              collect
                (gen-deviation
-               (half-sine 50 1 ; carrier
-                          :am (gen-sine 120 2 i)) ; modulator
- 0.5 1)))
+                (half-sine 50 1 ; carrier
+                           :am (gen-sine 120 2 i)) ; modulator
+                0.5 1)))
  :join-points t)
 
 (setf instruments
@@ -34,20 +34,20 @@
 
 ;; generate pitches for 4 instruments
 (setf pitches
-(loop for x in 5shapes1
+(loop for x in 4shapes1
         for i in instruments
       collect
       (vector-to-pitch i x)))
 
 (setf lengths
 (loop with seed = (init-seed 123)
-      for x in 5shapes1
+      for x in 4shapes1
       collect
       (vector-to-length '1/8 (rndn 1 2) (rndn 3 4) x)))
 
 ;; vectors for the dynamics
 (list-plot
- (setf 5shapes2
+ (setf 4shapes2
        (gen-loop 5
                  (gen-deviation
                   (half-sine 50 1) -0.5 0.5)
@@ -56,16 +56,16 @@
 
 (setf dynamics
 (velocity-to-dynamic
-(loop for x in 5shapes2
+(loop for x in 4shapes2
       collect
       (vector-to-velocity 'pp 'f x))))
 
 ;; view with cmd-2
 (assign-variable 'voice
-(make-omn
- :pitch pitches
- :length lengths
- :velocity dynamics))
+                 (make-omn
+                  :pitch pitches
+                  :length lengths
+                  :velocity dynamics))
 
 (def-score vector-sketch
     (:title "Title"

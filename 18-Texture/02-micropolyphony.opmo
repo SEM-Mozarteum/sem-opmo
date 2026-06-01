@@ -11,14 +11,13 @@
 ;;; ---------------------------------------------------------
 
 ;; view with cmd-2
+(setf inst
 (micropolyphony 
 4   ; 4 voices
 8   ; 8 events for every voice 
 1/4 ; 1/4 minimum length
 3   ; 3 maximum length
-)
-
-(setf inst (micropolyphony 4 8 1/4 3))
+))
 
 (ps 'gm
     :fl (list (1~ inst)) ; first element in list

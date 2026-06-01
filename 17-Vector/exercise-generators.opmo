@@ -12,35 +12,41 @@ Use different generators to create 50 events for
 - pitches in arc shape
 - lengths from long to short to long
 - dynamics as crescendo, slowly start and end
-
-Combine them in [make-omn].
+- Combine them in [make-omn].
 |#
 
 ;;; ---------------------------------------------------------
 
-;; modulated half sine with different amplitudes of
-;; the modulator
+(setf events 50)
 
-(setf pitches 
-      (midi-to-pitch 
-       (list-plot
-        (x+b (a*x 30 (half-sine 50 1)) 60)
-        :join-points t)))
+(setf pitches
+(vector-to-pitch '(c3 c6)
+(list-plot
+(half-sine events 1)
+:join-points t)))
+
+#|
+(hertz-to-pitch
+(loop for i in 
+(vector-scale 1 12
+(half-sine events 1))
+      collect (* i 50)))
+|#
 
 (setf lengths
-      (quantize
-       (list-plot
-        (x+b (half-sine 50 1 :phase 180) 1.2)
-        :join-points t)
-       '(1 2 4) :type :ratio))
-        
+(quantize
+(vector-scale 0.25 1
+(half-sine events 1 :phase 180))
+'(1 2 3 4)))
+
 (setf dynamics
-      (velocity-to-dynamic
-      (list-plot
-      (x+b (a*x 0.7 (gen-sigmoid 50)) 0.2)
-      :join-points t)))
+(velocity-to-dynamic
+(vector-scale 0.1 0.8
+(gen-sigmoid events))))
 
 (make-omn
- :pitch pitches
  :length lengths
+ :pitch pitches
  :velocity dynamics)
+
+
