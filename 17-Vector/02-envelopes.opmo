@@ -137,8 +137,10 @@ from certain values across a defined time span.
 ;;; normalize-envelope
 
 ;; normalize pitch-env between 0 and 1
-(xy-plot 
- (setf dyn-env (normalize-envelope pitch-env))
+;; compare it with pitch env
+(xy-plot
+ (list pitch-env
+ (setf dyn-env (normalize-envelope pitch-env)))
  :join-points t)
 
 ;; map the normalized envelope between 0.1 and 0.9 and
@@ -183,7 +185,7 @@ from certain values across a defined time span.
            :seed 258)) ;; fix the output
  :join-points t)
 
-;; Take 160 samples from each envelope
+;; Take 160 samples (10 maeasures of 1/16) from each envelope
 (list-plot
 (setf inc-env-samples
       (loop for i in inc-envs
@@ -207,7 +209,7 @@ from certain values across a defined time span.
 ;;; Random limits with envelopes (see chapter Vector/Envelopes)
 
 ;; the lower limit of the tendency
-;; creates a new envelope with 50 values, return y-values
+;; envelope with 50 values, return y-values
 (setf lowlim 
       (list-plot
        (envelope-y (envelope-samples 
@@ -237,7 +239,8 @@ from certain values across a defined time span.
 ;;; Brownian motion inside a tendency with two envelopes
 ;;; as lower and upper limit
 
-(progn
+(progn ; evaluate with cmd-1
+
   (setf data-len 50) ; number of events
 
   (list-plot
@@ -280,4 +283,10 @@ from certain values across a defined time span.
   (xy-plot
    (list xy-data l-limit u-limit)
    :point-radius 2 :join-points t)
+
+   (make-omn
+    :length '(1/16)
+    :pitch (vector-to-pitch '(c4 c6) gen-tend)
+    :velocity '(mp)
+    :span :pitch)
 ) ; end of progn
