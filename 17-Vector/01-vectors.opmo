@@ -277,7 +277,7 @@ itself a vector array or list comprising of integer values.
 
 ;;; ---------------------------------------------------------
 
-;;; 3.6.2026 FROM HERE
+;;; 11.6.2026 FROM HERE
 
 ;;; vector-smooth
 
@@ -289,7 +289,9 @@ a more “fluid” progression.
 |#
 
 (progn ; start progn
+(list-plot 
 (setf vector (gen-white-noise 100 :seed 345))
+ :point-radius 2 :join-points t)
 
 ;; compare the output with the smoothed ones:
 (list-plot 
@@ -298,6 +300,8 @@ a more “fluid” progression.
        (vector-smooth 0.3 vector)
        (vector-smooth 0.05 vector)))
  :point-radius 2 :join-points t)
+;; higher smooth vectors tend to look more and more
+;; like a brownian motion.
 
 (make-omn
  :length '(1/16)
@@ -310,84 +314,88 @@ a more “fluid” progression.
 ;;; Combination of different vector functions
 
 (progn 
-(setf voices 10)
 
-;; number of events
-(setf events 50)
+  ;; set voices and events as variables
+  ;; gives the possibility to scale the output easily
 
-;; a list of tendencies
-(list-plot
- (setf tend-list 
-       '(0.1 0.1 0.4 0.2 0.6 0.5 0.5 0.9 0.7 0.7 1 0.9 1.2 
-             0.9 0.9 0.5 0.5 0.6 0.2 0.2 0.1 0.1 0.1))
- :zero-based t :join-points t)
+  (setf voices 10)
 
-;; create 10 smoothed tendencies from the tendency list
-;; and convert them to pitches
-(pitch-plot
- (setf pitches       
-       (loop with seed = (init-seed 123)
-             for x from 1
-             repeat voices
-             collect
-               (vector-to-pitch '(c3 c5)
-               (vector-smooth 0.6
-                              (gen-tendency 
-                               events tend-list :variance 0.6)))))
-:zero-based t :join-points t :style :fill)
+  ;; number of events
+  (setf events 50)
 
-;; using a sigmoid function for dynamic development
-(list-plot
- (setf sigmoid
- (gen-sigmoid events))
- :join-points t)
+  ;; a list of tendencies
+  (list-plot
+   (setf tend-list 
+         '(0.1 0.1 0.4 0.2 0.6 0.5 0.5 0.9 0.7 0.7 1 0.9 1.2 
+               0.9 0.9 0.5 0.5 0.6 0.2 0.2 0.1 0.1 0.1))
+   :zero-based t :join-points t)
 
-(velocity-plot
- (setf velocities
-       (loop with seed = (init-seed 123)
-             repeat voices
-             collect
-               ;; convert to dynamic symbols
-               (velocity-to-dynamic
-                ;; scale each list between 0.2 and 1
-                (vector-scale 
-                 0.2 1
-                  ;; smooth the tendency
-                  (vector-smooth 0.8
-                                 (gen-tendency 
-                                  ;; tendency with variance
-                                  events sigmoid :variance 0.5))))))
- :zero-based t :join-points t :style :fill)
+  ;; create 10 smoothed tendencies from the tendency list
+  ;; and convert them to pitches
+  (pitch-plot
+   (setf pitches       
+         (loop with seed = (init-seed 123)
+               for x from 1
+               repeat voices
+               collect
+                 (vector-to-pitch '(c3 c5)
+                                  (vector-smooth 0.6
+                                                 (gen-tendency 
+                                                  events tend-list :variance 0.6)))))
+   :zero-based t :join-points t :style :fill)
 
-(setf lengths
-      (gen-loop voices
-                (vector-to-length 
-                 '1/4 1 4 
-                 (gen-white-noise events))
-                :seed 123))
+  ;; using a sigmoid function for dynamic development
+  (list-plot
+   (setf sigmoid
+         (gen-sigmoid events))
+   :join-points t)
 
-;; combine all parameters, view and play with cmd-2
-(assign-variable 'voice
-                 (make-omn
-                  :pitch pitches
-                  :length lengths
-                  :velocity velocities))
+  (velocity-plot
+   (setf velocities
+         (loop with seed = (init-seed 123)
+               repeat voices
+               collect
+                 ;; convert to dynamic symbols
+                 (velocity-to-dynamic
+                  ;; scale each list between 0.2 and 1
+                  (vector-scale 
+                   0.2 1
+                   ;; smooth the tendency
+                   (vector-smooth 0.8
+                                  (gen-tendency 
+                                   ;; tendency with variance
+                                   events sigmoid :variance 0.5))))))
+   :zero-based t :join-points t :style :fill)
 
-;; preview score
-(ps 'gm
-    :vc (list voice1)
-    :vc (list voice2)
-    :vc (list voice3)
-    :vc (list voice4)
-    :vc (list voice5)
-    :vc (list voice6)
-    :vc (list voice7)
-    :vc (list voice8)
-    :vc (list voice9)
-    :vc (list voice10)
-    :time-signature '(4 4)
-    :tempo 50)
-) ; end of progn
+  (setf lengths
+        (gen-loop voices
+                  (vector-to-length 
+                   '1/4 1 4 
+                   (gen-white-noise events))
+                  :seed 123))
+
+  ;; combine all parameters, view and play with cmd-2
+  (assign-variable 'voice
+                   (make-omn
+                    :pitch pitches
+                    :length lengths
+                    :velocity velocities))
+
+  ;; preview score
+  (ps 'gm
+      :vc (list voice1)
+      :vc (list voice2)
+      :vc (list voice3)
+      :vc (list voice4)
+      :vc (list voice5)
+      :vc (list voice6)
+      :vc (list voice7)
+      :vc (list voice8)
+      :vc (list voice9)
+      :vc (list voice10)
+      :time-signature '(4 4)
+      :tempo 50)
+  ) ; end of progn
 
 ;;; ---------------------------------------------------------
 
@@ -400,15 +408,20 @@ a more “fluid” progression.
   ;; number of events
   (setf events 30)
 
-  ;; random parameter for any given events for each of the instruments
+  ;; random parameter for any number of events 
+  ;; for each of the instruments
   (setf parameter
         (matrix-transpose 
-         ;; collecting all individual parameters in a separate list of lists
+         ;; collecting all individual parameters 
+         ;; in a separate list of lists
          (gen-loop 
-          instruments
+          ;; repeat process depending on the
+          ;; number of instruments
+          instruments 
           (list
            (vector-to-length '1/16 1 4 (gen-noise events))
-           (vector-to-pitch '(g3 g5) (gen-noise events) :quantize 1/2)
+           (vector-to-pitch '(g3 g5) (gen-noise events) 
+                            :quantize 1/2)
            (vector-to-velocity 'pp 'f (gen-noise events)))
           :seed 123)))
 
@@ -419,6 +432,7 @@ a more “fluid” progression.
          :length (1~ parameter) ; 1~ = shortcut for (nth 0 list)
          :pitch (2~ parameter)
          :velocity (3~ parameter)))
+
   ;; create automatically as many variables as existing voices 
   ;; with the name e.g. 'mat1' - 'mat(n)' from material
   (setf voices

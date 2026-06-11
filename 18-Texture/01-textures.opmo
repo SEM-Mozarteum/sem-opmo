@@ -5,7 +5,7 @@
 ;;; Copyright © 2015–2026, Achim Bornhoeft
 ;;; ---------------------------------------------------------
 
-;;; REPETITIONS
+;;; TEXTURES
 
 ;;; ---------------------------------------------------------
 
@@ -50,15 +50,58 @@
 
 ;;; ---------------------------------------------------------
 
-;;; magic square
-;;; NOT FINISHED
+;;; length and pitch construction with a magic square
 
-(setf magic9
-(magic-square 9)) 
+(list-plot
+(setf magic5
+(magic-square 5 :seed 123))
+:join-points t)
+
+(setf fundamental (pitch-to-hertz 'c2))
+
+;; calculating harmonics from fundamental
+;; using the magic square values as indexes
+(setf pitches
+      (loop for i in magic5
+            collect
+            (loop for j in i
+                  collect
+                  (hertz-to-pitch
+                   (* fundamental j)
+                   :quantize 1/2))))
+
+;; lowest id = longest duration (25/16)
+;; highest id = shortest duration (1/16)
+(setf lengths
+      (loop with flma = (flatten magic5)
+            ;; sum of minimum and maximum value in magic square
+            with ma = (+ (find-max flma) 
+                         (find-min flma))
+            for i in magic5
+            collect
+              (loop for j in i
+                    collect
+                      (* (- ma j) 1/16))))
+
+#!
+;; helper function
+(defun mirror (list)
+  "mirror values around the middle of a list
+  (mirror '(3 2 6 5 7 1 4))  ; => (5 6 2 3 1 7 4))"
+  (let ((s (+ (reduce #'min list) (reduce #'max list))))
+    (mapcar (lambda (x) (- s x)) list)))
+!#
+
+;; view with cmd-2
+(make-omn
+ :length lengths
+ :pitch pitches
+ :velocity '(p))
 
 ;;; ---------------------------------------------------------
 
-;;; random-sum-to-size
+;;; field of random durations with the same sum
+;;; using random-sum-to-size
 
 (progn
 (setf events 60)
@@ -147,7 +190,7 @@
 
 ;;; ---------------------------------------------------------
 
-;;; cartesian
+;;; cartesian function for lengths creation
 
 (progn
 ;; all combinations of all combinations of two lists

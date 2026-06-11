@@ -13,13 +13,13 @@ and y (value) coordinates, connected by segments of varying
 shapes:
 
 Linear — straight lines between points, producing even, 
-predictable transitions
+(predictable) transitions
 
 Exponential — curved segments that accelerate or decelerate 
-rapidly
+more rapidly
 
 Logarithmic — curved segments that change quickly at first, 
-              then level off
+then level off
 
 Sinusoidal — smooth, wave-like transitions between points
 
@@ -163,7 +163,7 @@ from certain values across a defined time span.
 ;;; ---------------------------------------------------------
 
 ;;; envelope-increase
-;;; (also envelope-decrease, envelope-divide, envelope-multiply)
+;;; (envelope-decrease, envelope-divide, envelope-multiply)
 
 ;; Two or more envelopes are combined by addition of y values 
 ;; across shared breakpoint positions.

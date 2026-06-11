@@ -42,7 +42,101 @@ I call it micropolyphony (such a beautiful word!)."
       bass3 NIL
       bass4 NIL)
 
-(setf quarters '(1 2 3 4 5)) 
+;;; ---------------------------------------------------------
+
+;;; Lengths
+
+;;; s. Howie Kenty, Patterns and Structure 
+;;; in György Ligeti's LUX AETERNA, page 9
+
+;; lengths in quintuplets
+(progn
+  (setf lengths
+        (flatten
+         (loop with seed = (init-seed 123)
+               ;; random number of quarters
+               with quarterlist = (rnd-sum-to-size 
+                                   96 28 
+                                   '(2 3 4 5 6 7 8))
+               ;; tuplet denominator for 1/4
+               with division = 5
+               ;; tuplet denominator per 4/4 measure
+               with tup = (* division 4)
+               for quarters in quarterlist
+               ;; random number (numerator for rest)
+               for rand = (rndn 1 1 (1- division))
+               ;; rest (part of a tuplet)
+               for rest = (/ rand tup)
+               ;; overall duration - rest
+               for dur = (- (/ (* division quarters) tup) rest)
+               collect (list (* -1 rest) dur))))
+
+  (quantize
+   (omn-to-time-signature
+    (make-omn :length lengths
+              :pitch '(c4))
+    '(4 4))
+   '(1 2 4 5))
+  ) ; end of progn
+
+;; Length in quintuplets 
+;; Opusmodus solution by Janusz)
+(progn
+  (init-seed 123)
+  (setf quarterlist
+        (rnd-sum-to-size 96 28 '(2 3 4 5 6 7 8)))
+  (setf division 5)
+  (setf tup (* division 4))
+  (setf quarters quarterlist)
+  (setf lengths 
+        (gen-loop
+         28
+         (progn
+           (setf rand (rndn 1 1 (1- division)))
+           (setf rest (/ rand tup))
+           (setf qs (car (setf quarters 
+                               (gen-rotate 1 quarters))))
+           (setf dur (- (/ (* division qs) tup) rest))
+           (list (* -1 rest) dur))))
+
+  (quantize
+   (omn-to-time-signature
+    (make-omn :length lengths
+              :pitch '(c4))
+    '(4 4))
+   '(1 2 4 5))
+  ) ; end of progn
+
+;; tuplets for all voices
+(setf all-divisions '(3 5 4 3 5 4 3 5))
+
+(setf lengths
+      (loop with seed = (init-seed 123)
+            for division in all-divisions
+            collect
+              (flatten
+               (loop    
+                  with tup = (* division 4)
+                  ;; random lengths
+                  with qlist = (rnd-sum-to-size 
+                                96 28 
+                                '(2 3 4 5 6 7 8))
+                  ;; tuplets in measure (4/4)
+                  for quarters in qlist
+                  ;; random number
+                  for rand = (rndn 1 1 (1- division))
+                  ;; rest (part of a tuplet)
+                  for rest = (/ rand tup)
+                  ;; overall duration - rest
+                  for dur = (- (/ (* division quarters) tup) rest)
+                  for len = (list (* -1 rest) dur)
+                  collect (quantize
+                           (omn-to-time-signature
+                            (make-omn 
+                             :length len
+                             :pitch '(c4))
+                            '(4 4))
+                           '(2 3 4 5))))))
 
 (def-score lux-aeterna
     (:title "Lux Aeterna"
