@@ -8,9 +8,6 @@
 ;;; Steve Reich, Piano Phase (1967)
 ;;; Section 1 to 15
 
-
-
-
 ;; list of pitches
 (setf pitches '(e4 fs4 b4 cs5 d5 fs4 e4 cs5 b4 fs4 d5 cs5))
 

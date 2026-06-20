@@ -9,6 +9,31 @@
 
 ;;; ---------------------------------------------------------
 
+;;; loading audio files
+
+#|
+1. Any file can be loaded using its full path.
+
+"/Users/bornhoeft/Documents/code/github/sem-opmo/Sounds/1-4.wav")
+
+2. Opusmodus uses “~/Opusmodus/Media/Audio/” as its default 
+directory for storing and accessing audio files. 
+Files located there can be loaded directly using only their filename.
+
+"1-4.wav"
+
+3. If the audio file is located in a folder within the 
+~/Documents/Opusmodus/Workspace folder, it can be loaded 
+using a relative path.
+|#
+
+(setf one2four
+(workspace-file "Sounds/1-4.wav"))
+
+;;; ---------------------------------------------------------
+
+;;; spectral analysis
+
 #|
 The function returns a list of frames, where each frame 
 contains the detected partials for that time slice.
@@ -22,14 +47,33 @@ as flattened points of time, frequency and  amplitude
 
 ((time1 freq1 amp1 time1 freq2 amp2 time1 freq3 amp3 ...)
  (time2 freq1 amp1 time2 freq2 amp2 time2 freq3 amp3 ...)
-
-Opusmodus uses "~/Opusmodus/Media/Audio/" as its default 
-directory for storing and accessing audio files. 
-If the audio file is not located there, 
-the complete file path must be provided.
 |#
 
-(setf frames (spectral-analysis "1-4.wav"))
+(setf all-frames
+      (spectral-analysis one2four))
+
+;; An audio segment with start and end time in seconds.
+;; Data reduction by specifying the lowest 
+;; and highest frequencies to be analyzed per frame.
+(spectral-analysis one2four 
+                   :min-freq 100.0
+                   :max-freq 2000.0
+                   :start 1.5 
+                   :end 2.5)
+
+;;; ---------------------------------------------------------
+
+;;; create-library & retrieve from library
+
+;; Since the creation of the analysis data takes some time
+;; it is advisable to create a library from it.
+(create-library 'spectral '1to4 'frame all-frames :file "spectral")
+
+;; Retrieve the data from a library
+(setf partial-frames (library 'spectral '1to4 nil :collect :all))
+;; (length partial-frames) => 356 = Frame Count
+
+;;; ---------------------------------------------------------
 
 #|
 WAV File: Samples: 338826, SR: 48000, Channels: 2, Bit Depth: 16
@@ -39,23 +83,92 @@ Computed Duration: 3.4532, Segment Duration: 3.5294376
 Frame Count: 356
 |#
 
+(defun duration->tempo (ratio ms &optional (beat 1/4))
 
-(create-library '1-4 'partials 'p spectral :file "cello-sa")
+  "Tempo in BPM for a note of value RATIO 
+   (a fraction of a whole note, e.g. 1/16) 
+   that lasts MS milliseconds. 
+   BEAT is the note value counted
+   as one beat (default 1/4, the usual MM convention).
 
-(setf voice (library 'adrien-frames 'frames nil :collect :all))
+   (duration->tempo 1/4 1000) ; => 60
+   (duration->tempo 1/16 125) ; => 120
+   (duration->tempo 1/32 62.5) ; => 120.0"
 
-(setf 1to4 (make-omn
-             :pitch frames
-             :length '(1/128)
+  (/ (* 60000 ratio) (* ms beat)))
+
+;; duration of one frame in milliseconds
+;; soundfile duration (msecs) / frame count
+(setf frame-msecs (/ (* 3.5294376 1000.0) 356)) ; 9.91415 msecs
+
+(setf tempo
+       (duration->tempo 1/128 frame-msecs))
+;; => MM 189
+
+;;; ---------------------------------------------------------
+
+;;; spectral
+;;; OUTPUT NOT "SPEAKING" LIKE IN SPEAKING PIANO
+
+;; returns frequency, amplitude, pitch, or chord material
+;; from spectral frames for further musical use.
+;; by default chords are returned
+(progn
+  (setf chords 
+        (spectral partial-frames
+                  ;; ignore freq below amplitude threshold
+                  :min-amp 0.02
+                  ;; ignore freq below frequency threshold
+                  :max-amp 0.6))
+  ;; (length chords) => selecting 104 frames
+
+  ;; duration per frame
+  (setf length-ratio 1/128)
+
+  ;; make omn from chords
+  (setf 1-4 (make-omn 
+             :pitch chords 
+             :length (list length-ratio) 
              :span :pitch))
+  ;; (length 1-4) => 104 frames as omn
 
-(ps 'gm
-    :pg (list 1to4)
-    :tempo 160
-    :time-signature '(1 8))
+  (setf tempo
+        (duration->tempo 
+         length-ratio
+         ;; sound duration in milliseconds / # of chords
+         (/ (* 3.5294376 1000.0) 
+            (length chords))))
+  ;; frame duration (msecs) * # of frame) / 1000
+  ;; (/ (* 33.936898 104) 1000) => sound duration 3.5294373
 
-(spectral-to-omn frames
-                 :min-frame-size 3
+  ;; preview the voice as a score
+  (ps 'gm
+      :pg (list 1-4)
+      :tempo tempo
+      :time-signature '(1 8))
+  ) ; end of progn
+
+;;; ---------------------------------------------------------
+
+;;; spectral-to-omn
+
+(spectral-to-omn partial-frames
+                 :crf 3
                  :min-amp 0.02
-                 :base-length 's
-                 :legato t)
+                 :max-amp 0.6
+                 :base-length 'u
+                 :ambitus 'piano)
+
+;;; ---------------------------------------------------------
+
+;;; spectral-quantize
+
+(spectral-quantize partial-frames
+                   :consecutive-unique nil
+                   :min-amp 0.02
+                   :max-amp 0.6)
+                
+;;; ---------------------------------------------------------
+
+
+

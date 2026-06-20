@@ -335,13 +335,14 @@ a more “fluid” progression.
   (pitch-plot
    (setf pitches       
          (loop with seed = (init-seed 123)
-               for x from 1
                repeat voices
                collect
-                 (vector-to-pitch '(c3 c5)
-                                  (vector-smooth 0.6
-                                                 (gen-tendency 
-                                                  events tend-list :variance 0.6)))))
+                 (vector-to-pitch 
+                  '(c3 c5)
+                  (vector-smooth 
+                   0.6
+                   (gen-tendency 
+                    events tend-list :variance 0.6)))))
    :zero-based t :join-points t :style :fill)
 
   ;; using a sigmoid function for dynamic development
@@ -420,10 +421,10 @@ a more “fluid” progression.
           instruments 
           (list
            (vector-to-length '1/16 1 4 (gen-noise events))
-           (vector-to-pitch '(g3 g5) (gen-noise events) 
-                            :quantize 1/2)
+           (vector-to-pitch 
+            '(g3 g5) (gen-noise events) :quantize 1/2)
            (vector-to-velocity 'pp 'f (gen-noise events)))
-          :seed 123)))
+          :seed 123))
 
   ;; make omn notation for all instruments in one
   ;; preview with cmd-2

@@ -42,6 +42,8 @@ from certain values across a defined time span.
 
 ;;; envelope-interp
 
+;;; GET X-VALUES FROM Y?
+
 ;; get y-value at specific point (x-value)
 (setf y-val (envelope-interp 2.5 env))
 
@@ -55,9 +57,11 @@ from certain values across a defined time span.
 ;;; envelope-samples
 
 ;; 20 samples from this envelope
+
+;;; MULTIPLES FROM 6 + 1 (WITH ENV)
 (xy-plot
  (setf env-samp
-       (envelope-samples env 20))
+       (envelope-samples env 31))
  :join-points t :point-radius 2 :style :axis)
 
 ;; view both envelopes
@@ -90,8 +94,16 @@ from certain values across a defined time span.
       (envelope-reverse env-samp))
 
 ;; compare original and reverse envelope
-(xy-plot (list env-samp env-samp-rev)
+
+(xy-plot 
+(setf rev-envs (list env-samp env-samp-rev))
  :join-points t :point-radius 2)
+
+;;; convert to Y-values
+(make-omn
+ :length '(1/8)
+ :pitch (vector-to-pitch '(c4 c6) rev-envs)
+ :span :pitch)
 
 ;;; ---------------------------------------------------------
 
@@ -120,7 +132,7 @@ from certain values across a defined time span.
 (vector-to-pitch 
  '(g3 g5)
  (envelope-y
-  (envelope-samples pitch-env 24)))
+  (envelope-samples pitch-env 40)))
 
 ;;; ---------------------------------------------------------
 
@@ -155,10 +167,18 @@ from certain values across a defined time span.
 
 ;; change the linear envelope exponentially curved
 (xy-plot
+(setf exp-envs
  (list env-samp ; linear
        (envelope-exp env-samp 0.5 20) ; concave
-       (envelope-exp env-samp 2.0 20)) ; convex
+       (envelope-exp env-samp 2.0 20))) ; convex
          :point-radius 2 :join-points t)
+
+;;; convert to Y-values
+(make-omn
+:length '(1/8)
+:pitch (vector-to-pitch '(c4 c6)
+                 (envelope-y exp-envs))
+:span :pitch)
 
 ;;; ---------------------------------------------------------
 
@@ -171,9 +191,8 @@ from certain values across a defined time span.
 (xy-plot
 (setf inc-envs
  (gen-loop 10
-           ;; (0 0  1 2  3 1  4 3  6 0)
            (envelope-increase 
-            env
+            env ; (0 0  1 2  3 1  4 3  6 0)
             ;; creating a random env from fixed 
             ;; x-values and random additions to 
             ;; the y-values between 0 and 2
@@ -227,7 +246,7 @@ from certain values across a defined time span.
 ;; random between upper and lower limits
 (list-plot 
  (list lowlim uplim
-       (loop  with seed = (init-seed 123)
+       (loop  with seed = (init-seed 345)
               for i in uplim ; upper limit
               for j in lowlim ; lower limit
               ;; random number between upper and lower limit
@@ -286,7 +305,7 @@ from certain values across a defined time span.
 
    (make-omn
     :length '(1/16)
-    :pitch (vector-to-pitch '(c4 c6) gen-tend)
+    :pitch (vector-to-pitch '(c3 c4) gen-tend)
     :velocity '(mp)
     :span :pitch)
 ) ; end of progn

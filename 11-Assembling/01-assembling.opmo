@@ -134,18 +134,21 @@
 ;;  extract specific bars and beats from a omn-form sequence. 
 
 ;; a diatonic scale
-(setf omn
+(setf mat1
       '((q c3 q d3 q e3 q f3) 
         (q c4 q d4 q e4 q f4)
         (q c5 q d5 q e5 q f5)
         (q c6 q d6 q e6 q f6)))
 
+;; see the span of each measure
+(get-span mat1)
+
 ;; select from 1. measure, 3. quarter 
 ;; to 2. measure, 1. quarter
-(setf select (select-measure '((1 3) (2 1)) omn))
+(setf select (select-measure '((1 3) (2 1)) mat1))
 
 ;; view with cmd-2
-(list omn (append '(-q -q) select))
+(list mat1 (append '(-q -q) select))
 
 ;; vn1 voice of Schubert D 810, 2. part
 (setf vn1-mat '((h g4 pp q q) 
@@ -153,12 +156,9 @@
                 (h a4 q g4 fs4) 
                 (h g4 q q)))
 
-;; the material is divided in quarter notes 
-;; and rendered to 4/4 time-signature
 ;; select material from 2. measure, 3. quarter 
 ;; to 3. measure, 4. quarter
-(setf sel1 (select-measure '((2 3) (3 4)) vn1-mat
-:ratio 1/4 :time-signature '(4 4)))
+(setf sel1 (select-measure '((2 3) (3 4)) vn1-mat))
 
 ;; display with cmd-2
 (list vn1-mat (append '(-w -h) sel1))
@@ -168,6 +168,8 @@
 ;; to 3. measure, 7. eight
 (setf sel2 (select-measure '((2 6) (3 7)) vn1-mat
 :ratio 1/8 :time-signature '(4 4)))
+
+((e a4 pp q bb4) (h a4 q g4 fs4))
 
 ;; display with cmd-2
 (list vn1-mat (append '(-w -h -e) sel2))
@@ -185,7 +187,7 @@
       collect (select-measure '(((3 3) (4 2)) 
                                 ((3 2) (4 1)) 
                                 ((6 3) (7 4)) 
-                                ((3 4) (5 1))) i 
+                                ((3 4) (5 1))) i))
                               :ratio 1/4 
                               :time-signature '(4 4)))
 
@@ -214,15 +216,13 @@
 ;; (new time-signature is 3/4)
 ;; view with cmd-2
 (setf score
-(loop for mat in material
+(loop for mat in vn1-mat
       collect
-        (length-legato
         (loop for i in windows
               collect (select-measure 
                        (list i)
-                       mat     
-                       :ratio 1/4 
-                       :time-signature '(4 4)))))
+                       mat    
+                       :time-signature '(3 4)))))
 
 ;;; ---------------------------------------------------------
 
@@ -237,4 +237,23 @@
 (omn :pitch seq-1)
 (omn :length seq-2)
 (omn :velocity mat-select2)
+
+
+(setf vn1-mat '((h g4 pp q q) 
+                (h g4 q a4 bb4) 
+                (h a4 q g4 fs4) 
+                (h g4 q q)))
+
+(select-measure '((2 6) (3 7)) vn1-mat :ratio 1/8)
+;; the output is this:
+;; ((e a4 mf) (e bb4 mf) (e bb4 mf) (e a4 mf) (e a4 mf) (e a4 mf) (e a4 mf) (e g4 mf) (e g4 mf) (e fs4 mf))
+;; this should only be an optional output (but flattend)
+
+;; output should be this:
+;; selection grid is 1/8 so the selection numbers count in 1/8
+;; everything inside the selection is not touched.
+(setf sel2 '((e a4 pp q bb4) (h a4 q g4 e fs4)))
+
+;; see compared to the material (cmd-2
+(list vn1-mat (append '(-w -h -e) sel2))
 
