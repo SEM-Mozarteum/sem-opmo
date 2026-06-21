@@ -55,9 +55,9 @@
 ;;; length and pitch construction with a magic square
 
 (list-plot
-(setf magic5
-(magic-square 5 :seed 123))
-:join-points t)
+ (setf magic5
+       (magic-square 5 :seed 123))
+ :join-points t)
 
 (setf fundamental (pitch-to-hertz 'c2))
 
@@ -83,16 +83,11 @@
             collect
               (loop for j in i
                     collect
+                      ;; highest id:
+                      ;; (* (- (+ 25 1) 25) 1/16) = 1/16
+                      ;; lowest id:
+                      ;; (* (- (+ 25 1) 1) 1/16) = 25/16
                       (* (- ma j) 1/16))))
-
-#!
-;; helper function
-(defun mirror (list)
-  "mirror values around the middle of a list
-  (mirror '(3 2 6 5 7 1 4))  ; => (5 6 2 3 1 7 4))"
-  (let ((s (+ (reduce #'min list) (reduce #'max list))))
-    (mapcar (lambda (x) (- s x)) list)))
-!#
 
 ;; view with cmd-2
 (make-omn
@@ -100,24 +95,69 @@
  :pitch pitches
  :velocity '(p))
 
+#|
+Each voice of the original is repeated 10 times and
+ordered randomly => 10 voices with all of the material
+in a different order = 10 times the first material in
+ different order then 2nd, 3rd, etc.
+|#
+
+;; view with cmd-2
+(loop with seed = (init-seed 123)
+      repeat 10
+      collect
+        (loop 
+           for i in material
+           collect
+             (rnd-order i))) 
+
+#|
+Each voice of the original is repeated 10 times,
+ordered randomly and concatenated => 5 voices
+with 10 times the latin square randomly ordered.
+|#
+
+;; view with cmd-2
+(matrix-transpose
+ (loop with seed = (init-seed 123)
+       repeat 10
+       collect
+         (loop  
+            for i in material
+            collect
+              (rnd-order i))))
+
 ;;; ---------------------------------------------------------
 
-;;; field of random durations with the same sum
-;;; using random-sum-to-size
+;; field of random durations with the same sum
+;; using random-sum-to-size
 
 (progn
 (setf events 60)
 
+;; lengths adding up to the same overall duration of 60
+;; 1. voice = 6 lengths, 2 voice = 7, etc.
 (setf lengths
-(loop with seed = (init-seed 17)
-      for i from 6 to 12
-        collect 
-        (loop for x in (rnd-sum-to-size events i (gen-integer 2 10))
-                collect (/ x 4))))
+      (loop with seed = (init-seed 17)
+            ;; number of durations
+            for i from 6 to 12
+            collect 
+              (loop for x in 
+                      ;; integers between 2 and 10
+                      (rnd-sum-to-size
+                       ;; add up randomly to 60 events
+                       events i 
+                       (gen-integer 2 10))
+                    ;; converted to quarters
+                    collect (/ x 4))))
 
-(setf pitches (integer-to-pitch 
-               (loop for i in (gen-integer (1- (length lengths)))
-               collect (gen-repeat events i))))
+(setf pitches 
+      ;; convert integer to pitches
+      (integer-to-pitch 
+       (loop for i in lengths
+             ;; integers from 0 to 6 (c4 to fs4)
+             for k from 0
+             collect (gen-repeat (length i) k))))
  
 ;; cmd-2 to view
 (assign-variable 'mat      
@@ -127,7 +167,7 @@
  :velocity '(pp)
  :articulation '(marc)))
 
-(def-score vector-score
+(def-score cluster-score
       (:key-signature 'atonal
        :time-signature '(4 4)
        :tempo 60
@@ -195,22 +235,29 @@
 ;;; cartesian function for lengths creation
 
 (progn
-;; all combinations of all combinations of two lists
-(setf lengths
-      (cartesian
-       (cartesian '((q h h.) (q h h.)))))
+  ;; all combinations of all combinations of two lists
+  (setf lengths
+        (cartesian
+         (cartesian '((q h h.) (q h h.)))))
 
-(assign-variable 'mat
-   (make-omn
-    :length (mcflatten (gen-divide 64 lengths))
-    :pitch '(c4 d4 e4 f4 g4 a4 b4)
-    :velocity '(p)
-    :span :length))
+  ;; 8 voices
+  ;; (/ (length lengths) 64)
 
-(def-score cartesian-score
+  ;; parameter creation all in one
+  (assign-variable 'mat
+                   (make-omn
+                    :length (mcflatten (gen-divide 64 lengths))
+                    :pitch '(c4 d4 e4 f4 g4 a4 b4)
+                    :velocity '(p)
+                    :span :length))
+
+  (def-score cartesian-score
       (:key-signature 'atonal
        :time-signature '(4 4)
        :tempo 50
+       ;; cut score after 264 measures 
+       ;; since voices have different lengths
+       :end 264 
        :layout (list
                 (bracket-group
                  ;; group of instruments surrounded by one
@@ -271,7 +318,7 @@
      :sound 'gm
      :program 'violin))
 
-(defparameter *default-notation-editor* "Sibelius.app")
+  (defparameter *default-notation-editor* "Sibelius.app")
 
-(musicxml-to-editor)
-) ; end of progn
+  (musicxml-to-editor)
+  ) ; end of progn

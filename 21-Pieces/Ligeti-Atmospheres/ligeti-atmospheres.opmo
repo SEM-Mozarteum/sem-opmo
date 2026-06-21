@@ -31,10 +31,10 @@
                       (loop repeat i         
                             collect (/ (/ 1 i) 4)))))
 
-;; 14 voices all starting from 1/4 and ending on 1/32 upto 1/56
-;; and additional transition with different curves
-;; view with cmd-2
 ;; Durations in Ligeti Atmpospheres
+;; 14 voices all starting from 1/4 and ending on 1/32 (8) 
+;; upto 1/56 (14) and additional transition with different curves
+;; view with cmd-2
 (setf diff-curve-end
       (loop for curve from 0.6 to 1.4 by 0.06
               for divisor from 14 to 17 by 0.2

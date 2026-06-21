@@ -10,6 +10,7 @@
 
 ;;; ---------------------------------------------------------
 
+;; if not :start then start is 0 (c4)
 ;; view with cmd-2
 (setf inst
 (micropolyphony 
@@ -17,37 +18,58 @@
 8   ; 8 events for every voice 
 1/4 ; 1/4 minimum length
 3   ; 3 maximum length
-))
+:seed 345))
 
 (ps 'gm
     :fl (list (1~ inst)) ; first element in list
     ;; same as (nth 0 inst)
     :ob (list (2~ inst)) ; second element in list
     :cl (list (3~ inst)) ; third element in list
-    :hn (list (pitch-transpose -12 (4~ inst)))
+    :hn (list (4~ inst))
     :time-signature '(4 4)
     :tempo 54
     :start 1 :end 8)
 
-(micropolyphony
- 8 20 1/4 3
- :intervals '(-2 -1 1 2 -.5 .5 1.5 -1.5 -.25 .25 1.25 -1.25)
- :quantize '(1 2 4 5)
- :start '(0 .5 1 1.5 -.5 -1 -1.5 2)
- :index 'v)
+;;; example for quartertone choir
 
-(def-score micro-2
-           (:key-signature 'chromatic
-            :time-signature '(4 4) :tempo 54
-            :layout (choir-satb-layout
-                     (list 'sop1 'sop2) (list 'alto1 'alto2)
-                     (list 'tenor1 'tenor2) (list 'bass1 'bass2)))
-  (sop1 :omn (ambitus 'soprano v1)
-        :channel 1 :sound 'gm :program 'Choir-Aahs)
-  (sop2 :omn (ambitus 'soprano v1) :channel 2)
-  (alto1 :omn (ambitus 'alto v3) :channel 3)
-  (alto2 :omn (ambitus 'alto v3) :channel 4)
-  (tenor1 :omn (ambitus 'tenor v5) :channel 5)
-  (tenor2 :omn (ambitus 'tenor v5) :channel 6)
-  (bass1 :omn (ambitus 'bass v7) :channel 7)
-  (bass2 :omn (ambitus 'bass v8) :channel 8))
+(progn
+  (setf voices
+        (micropolyphony
+         8   ; 8 voices
+         20  ; 20 events for every voice 
+         1/4 ; 1/4 minimum length
+         3   ; 3 maximum length
+         ;; list of intervals to use
+         :intervals '(-2 -1 1 2 -.5 .5)
+         ;; tuplets
+         :quantize '(1 2 4 5)
+         ;; start integers
+         :start '(1 2 .5 0 0 -.5 -1 -2)
+         ;; similar to assign-value
+         :seed 123))
+
+  (assign-variable 'v
+                   (loop for i in voices
+                         collect
+                           (omn-to-time-signature i '(4 4))))
+
+  (def-score micro-choir
+      (:key-signature 'chromatic
+       :time-signature '(4 4) 
+       :tempo 40
+       :layout (choir-satb-layout
+                (list 'sop1 'sop2) 
+                (list 'alto1 'alto2)
+                (list 'tenor1 'tenor2) 
+                (list 'bass1 'bass2)))
+
+    (sop1 :omn v1
+          :channel 1 :sound 'gm :program 'Choir-Aahs)
+    (sop2 :omn v2 :channel 2)
+    (alto1 :omn v3 :channel 3)
+    (alto2 :omn v4 :channel 4)
+    (tenor1 :omn v5 :channel 5)
+    (tenor2 :omn v6 :channel 6)
+    (bass1 :omn v7 :channel 7)
+    (bass2 :omn v8 :channel 8))
+  ) ; end of progn

@@ -7,10 +7,10 @@
 )
 
 ("workspace-view/current"
- "18-Texture/01-textures.opmo"
+ "21-Pieces/Ligeti-Atmospheres/ligeti-atmospheres.opmo"
 )
 
 ("workspace-view/navigator-display-states"
- ((:USER-LIBRARIES (#P"/Users/bornhoeft/Documents/Opusmodus/User Source/Libraries/Def-Library/") #P"/Users/bornhoeft/Documents/Opusmodus/User Source/Libraries/Def-Library/spectral.opmo" 0) (:USER-MEDIA (#P"/Users/bornhoeft/Documents/Opusmodus/Media/Audio/") #P"/Users/bornhoeft/Documents/Opusmodus/Media/Audio/1-4.wav" 0) (:USER-DOCUMENTS NIL NIL 0) (:USER-SCORES (#P"/Users/bornhoeft/Documents/Opusmodus/Scores/Spectral/") #P"/Users/bornhoeft/Documents/Opusmodus/Scores/Spectral/Frames.opmo" 0) (:USER-WORKSPACE (#P"/Users/bornhoeft/Documents/code/github/sem-opmo/Tests/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/Audio/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/19-Resynthesis/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/18-Texture/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/10-Import-Export/") #P"/Users/bornhoeft/Documents/code/github/sem-opmo/18-Texture/01-textures.opmo" 0))
+ ((:USER-LIBRARIES (#P"/Users/bornhoeft/Documents/Opusmodus/User Source/Libraries/Def-Library/") #P"/Users/bornhoeft/Documents/Opusmodus/User Source/Libraries/Def-Library/spectral.opmo" 0) (:USER-MEDIA (#P"/Users/bornhoeft/Documents/Opusmodus/Media/Audio/") #P"/Users/bornhoeft/Documents/Opusmodus/Media/Audio/1-4.wav" 0) (:USER-DOCUMENTS NIL NIL 0) (:USER-SCORES (#P"/Users/bornhoeft/Documents/Opusmodus/Scores/Spectral/") #P"/Users/bornhoeft/Documents/Opusmodus/Scores/Spectral/Frames.opmo" 0) (:USER-WORKSPACE (#P"/Users/bornhoeft/Documents/code/github/sem-opmo/Tests/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/Audio/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/21-Pieces/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/19-Resynthesis/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/18-Texture/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/10-Import-Export/") NIL 0))
 )
 
