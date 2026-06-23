@@ -46,7 +46,7 @@
          ;; start integers
          :start '(1 2 .5 0 0 -.5 -1 -2)
          ;; similar to assign-value
-         :seed 123))
+         :seed 234))
 
   (assign-variable 'v
                    (loop for i in voices

@@ -10,54 +10,78 @@
 
 ;; 7 voices all starting from 1/4 and ending on 1/32 upto 1/56
 ;; view with cmd-2
-(setf diff-end 
-      (loop for divisor from 8 to 14
-            collect
-              (loop for i in
-                      (gen-transition 1 divisor 20 1 :rounded t)
-                    append
-                      (loop repeat i         
-                            collect (/ (/ 1 i) 4)))))
+(length-plot
+ (setf diff-end 
+       (loop for divisor from 8 to 14
+             collect
+               (loop for i in
+                       (gen-transition 1 divisor 20 1 :rounded t)
+                     append
+                       (loop repeat i         
+                             collect (/ (/ 1 i) 4)))))
+ :join-points t :point-radius 1.5)
 
 ;; 8 voices all starting from 1/4 and ending on 1/56
 ;; transition with different curves
+
+
 ;; view with cmd-2
-(setf diff-curve
-      (loop for curve from 0.6 to 1.4 by 0.1
-            collect
-              (loop for i in
-                      (gen-transition 1 14 20 curve :rounded t)
-                    append
-                      (loop repeat i         
-                            collect (/ (/ 1 i) 4)))))
+(length-plot
+ (setf diff-curve
+       (loop for curve from 0.6 to 1.4 by 0.1
+             collect
+               (loop for i in
+                       (gen-transition 1 14 20 curve :rounded t)
+                     append
+                       (loop repeat i         
+                             collect (/ (/ 1 i) 4)))))
+ :join-points t :point-radius 1.5)
 
 ;; Durations in Ligeti Atmpospheres
 ;; 14 voices all starting from 1/4 and ending on 1/32 (8) 
 ;; upto 1/56 (14) and additional transition with different curves
 ;; view with cmd-2
+(length-plot
 (setf diff-curve-end
-      (loop for curve from 0.6 to 1.4 by 0.06
-              for divisor from 14 to 17 by 0.2
+      (loop for curve from 0.7 to 1.5 by 0.06
+              for divisor from 17 downto 14 by 0.2
             collect
               (loop for i in
                       (gen-transition 1 divisor 20 curve :rounded t)
                     append
                       (loop repeat i         
                             collect (/ (/ 1 i) 4)))))
+ :join-points t :point-radius 1.5)
 
 ;;; Trill construction
 
-;; trill construction with modulo
+#|
+Trill construction with modulo.
+
+Modulo returns the rest of an integer dividion.
+(mod 7 3) = 1 because 2 * 3 rest 1
+(mod 10 5) = 0 because 2 * 5 rest 0
+
+Loop construction:
+(mod 0 4) = 1 because 1 * 4 rest 0
+(mod 1 4) = 1 because 1 * 4 rest 1
+(mod 2 4) = 1 because 1 * 4 rest 2
+(mod 3 4) = 3 because 1 * 4 rest 3
+(mod 4 4) = 0 because 1 * 4 rest 0
+(mod 5 4) = 1 because 1 * 4 rest 1
+|#
+
 (loop for i from 0 to 9
+        ;; mod running upto n-1
+        ;; mod = rest of integer division
       collect (mod i 4))
 ;; 0 1 2 3 4 5 6 7 8 9
-;; 0 1 2 3 0 1 2 3 0 1
 ;; 0 1 2 3 0 1 2 3 0 1
 
 (loop for i from 0 to 9 by 2
       collect (mod i 4))
 ;; 0 1 2 3 4 5 6 7 8 9
-;; 0 1 2 3 0 1 2 3 0 1
+;; 0   2   4   6   8 
 ;; 0   2   0   2   0
 
 (loop for i from 0 by 3
@@ -83,23 +107,25 @@
        for i from 0 by factor ; counting in steps of 3
        collect (+ transposition (mod i (* factor 2)))))
 
-;; applying to the durations (diff-end)
+;; applying to the durations (diff-curve-end)
 (setf trills1
-(loop for i in diff-end 
-      ;; loop in durations list (7 voices, see above)
-      for trans from 0 by 2 
+;; loop in durations list (14 voices, see above)
+(loop for i in diff-curve-end 
       ;; transposition increasing by 2 (major second)
-      collect
+      for trans from 0 by 2 
+            collect
+        ;; loop over all lengths of one voice
         (loop for j in i
-                ;; loop in each voice
+              ;; counting from 0 (in steps of 1)  
               for i from 0
-                ;; counting from 0 (in steps of 1)
+               ;; make the module trill construction
+               ;; with integers and convert to pitch
               collect (integer-to-pitch
                        (+ trans (mod i 2))))))
 
 ;; view with cmd-2
 (make-omn
- :length diff-end
+ :length diff-curve-end
  :pitch (reverse trills1))
 
 ;; major second trills transposed by minor second
@@ -119,14 +145,15 @@
 
 ;; view with cmd-2
 (make-omn
- :length diff-end
+ :length diff-curve
  :pitch (reverse trills2))
 
 ;; major second trills transposed by minor second
 ;; => overlapping trills
 (setf trills3
       (loop for i in diff-curve-end 
-            ;; loop in different durations list (8 voices, see above)
+            ;; loop in different durations list 
+            ;; (8 voices, see above)
             for trans in (gen-integer 10 23)
             collect
               (loop with factor = 3 

@@ -17,22 +17,30 @@ A two point data: frequency and amplitude
 and a three point data: time, frequency and amplitude.
 |#
 
-;;; VERY IMPORTANT: 
-;;; German systems export these files with commas instead 
-;;; of decimal points. You have to change your region to 
-;;; English (GB or US) in order to get the right format.
+;;; VERY IMPORTANT: German systems export these files with commas instead of 
+;;; decimal points. You have to change your region to English (GB or US) in
+;;; order to get the right format.
 
-tr-novib-pp-g4-partials.txt
-tr-novib-pp-g4-frames.txt
+(setf workspace (workspace-file))
+
+(setf path 
+      "19-Resynthesis/02-Spear/Data/tr-novib-pp-g4-frames.txt")
+
+(setf spear-path (workspace-file path))
 
 ;; To import the SPEAR frames data: frequency and amplitude:
 ;; (NOTE: analysis and converted file name without extension.)
-(spear-data-to-library :data "tr-novib-pp-g4-frames.txt" 
-                       :name        "tr-novib-pp-g4-frames") ;<- converted file name
+(spear-data-to-library :data spear-path
+                       :name "tr-novib-pp-g4-frames"
+                       :section 'trumpet
+                       :index 'par)
+                       
+
+(create-library 'spectral '1to4 'frame all-frames :file "spectral")
 
 ;; To import the SPEAR partials data: time, frequency and amplitude:
 (import-spectral-spear :partials "tr-novib-pp-g4-partials"
-                       :name "tr-novib-pp-g4-partials")
+                                 "tr-novib-pp-g4-partials")
 
 ;; We can add a note (annotation) to the file by using the keyword :note:
 (import-spectral-spear :frames "tr-novib-pp-g4-frames"

@@ -25,23 +25,6 @@ I call it micropolyphony (such a beautiful word!)."
 (Ligeti, quoted in Bernard 1994, 238).
 |#
 
-(setf soprano1 NIL
-      soprano2 NIL
-      soprano3 NIL
-      soprano4 NIL
-      alto1 NIL
-      alto2 NIL
-      alto3 NIL
-      alto4 NIL
-      tenor1 NIL
-      tenor2 NIL
-      tenor3 NIL
-      tenor4 NIL
-      bass1 NIL
-      bass2 NIL
-      bass3 NIL
-      bass4 NIL)
-
 ;;; ---------------------------------------------------------
 
 ;;; Lengths
@@ -49,38 +32,177 @@ I call it micropolyphony (such a beautiful word!)."
 ;;; s. Howie Kenty, Patterns and Structure 
 ;;; in György Ligeti's LUX AETERNA, page 9
 
-;; lengths in quintuplets
-(progn
-  (setf lengths
-        (flatten
-         (loop with seed = (init-seed 123)
-               ;; random number of quarters
-               with quarterlist = (rnd-sum-to-size 
-                                   96 28 
-                                   '(2 3 4 5 6 7 8))
-               ;; tuplet denominator for 1/4
-               with division = 5
-               ;; tuplet denominator per 4/4 measure
-               with tup = (* division 4)
-               for quarters in quarterlist
-               ;; random number (numerator for rest)
-               for rand = (rndn 1 1 (1- division))
-               ;; rest (part of a tuplet)
-               for rest = (/ rand tup)
-               ;; overall duration - rest
-               for dur = (- (/ (* division quarters) tup) rest)
-               collect (list (* -1 rest) dur))))
+;; Tuplets for all 8 voices
+(setf all-divisions '(3 5 4 3 5 4 3 5))
 
-  (quantize
-   (omn-to-time-signature
-    (make-omn :length lengths
-              :pitch '(c4))
-    '(4 4))
-   '(1 2 4 5))
-  ) ; end of progn
+;; 30 random lengths for each voice with the sum of 96
+;; 24 measures of 4/4 = 96 quarters 
+(setf quarterlist
+      (loop with seed = (init-seed 31166)
+            repeat 8
+              collect
+              (rnd-sum-to-size 
+                              96 30 
+                              '(2 3 4 5 6 7 8))))
+;; Tests for the same number of notes and quarters:
+(loop for i in quarterlist collect (length i))
+(loop for i in quarterlist collect (sum i))
 
-;; Length in quintuplets 
-;; Opusmodus solution by Janusz)
+(setf lengths
+      ;; loop in lists of quarters
+      (loop for qlist in quarterlist
+            ;; for each voice one tuplet type
+            for division in all-divisions
+            collect (loop with tup = (* division 4)
+                          ;; tuplets in measure (4/4)
+                          for quarters in qlist
+                          ;; random number
+                          for rand = (rndn 1 1 (1- division))
+                          ;; rest (part of a tuplet)
+                          for rest = (/ rand tup)
+                          ;; overall duration - rest
+                          for dur = (- (/ (* division quarters) tup) rest)
+                          for len = (list (* -1 rest) dur)
+                          ;; use append to create one list instead of
+                          ;; several with different time-signatures
+                          ;; coming from the different quarters
+                          append len)))
+
+;;; s. Howie Kenty, Patterns and Structure 
+;;; in György Ligeti's LUX AETERNA, page 8
+
+;; 30 pitches for the first 24 measures
+(setf melody
+      '(f4 f4 f4 e4 f4 g4 fs4 g4 f4 eb4 
+           ab4 db4 eb4 f4 gb4 bb4 a4 bb4 c5 bb4 
+           ab4 f4 g4 eb4 fb4 eb4 gb4 f4 bb4 g4))
+
+;; Combine length and pitches to omn voices
+(setf voices
+      (make-omn :length lengths
+                :pitch (list melody)
+                :velocity '(pp)))
+
+;; To get the right notation first convert to the
+;; wanted time-signature (4 4) and then quantize
+;; the voices to the given tuplets
+(setf quant-voices
+(loop for i in voices
+      collect
+        (quantize
+         (omn-to-time-signature
+          i
+          '(4 4))
+         '(2 3 4 5))))
+
+;; Assign the voices to variables
+(assign-variable 'voice quant-voices)
+                
+(def-score lux-aeterna
+    (:title "Lux Aeterna"
+     :composer "György Ligeti"
+     :copyright "Copyright © 1966"
+     :key-signature 'chromatic
+     :time-signature '((1 1 1 1) 4)
+     :tempo 50
+     :layout (bracket-group
+              (soprano-voice1-layout 'soprano1)
+              (soprano-voice2-layout 'soprano2)
+              (soprano-voice3-layout 'soprano3)
+              (soprano-voice4-layout 'soprano4)
+              (alto-voice1-layout 'alto1)
+              (alto-voice2-layout 'alto2)
+              (alto-voice3-layout 'alto3)
+              (alto-voice4-layout 'alto4)))
+  
+  (soprano1
+   :omn voice1
+   :channel 1
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 16
+   :controllers (91 '(48))
+   )
+  
+  (soprano2
+   :omn voice2
+   :channel 2
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 16
+   :controllers (91 '(48))
+   )
+
+  (soprano3
+   :omn voice3
+   :channel 9
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 16
+   :controllers (91 '(48))
+   )
+  
+  (soprano4
+   :omn voice4
+   :channel 10
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 16
+   :controllers (91 '(48))
+   )
+  
+  (alto1
+   :omn voice5
+   :channel 3
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 41
+   :controllers (91 '(48))
+   )
+  
+  (alto2
+   :omn voice6
+   :channel 4
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 41
+   :controllers (91 '(48))
+   )
+
+  (alto3
+   :omn voice7
+   :channel 11
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 41
+   :controllers (91 '(48))
+   )
+  
+  (alto4
+   :omn voice8
+   :channel 12
+   :sound 'gm
+   :program 'choir-aahs
+   :volume 100
+   :pan 41
+   :controllers (91 '(48))
+   ))
+
+(display-musicxml 'lux-aeterna)
+
+;;; ---------------------------------------------------------
+
+#|
+Length in quintuplets 
+Opusmodus solution without loop by Janusz Podrazik)
+
 (progn
   (init-seed 123)
   (setf quarterlist
@@ -106,221 +228,4 @@ I call it micropolyphony (such a beautiful word!)."
     '(4 4))
    '(1 2 4 5))
   ) ; end of progn
-
-;; tuplets for all voices
-(setf all-divisions '(3 5 4 3 5 4 3 5))
-
-(setf lengths
-      (loop with seed = (init-seed 123)
-            for division in all-divisions
-            collect
-              (flatten
-               (loop    
-                  with tup = (* division 4)
-                  ;; random lengths
-                  with qlist = (rnd-sum-to-size 
-                                96 28 
-                                '(2 3 4 5 6 7 8))
-                  ;; tuplets in measure (4/4)
-                  for quarters in qlist
-                  ;; random number
-                  for rand = (rndn 1 1 (1- division))
-                  ;; rest (part of a tuplet)
-                  for rest = (/ rand tup)
-                  ;; overall duration - rest
-                  for dur = (- (/ (* division quarters) tup) rest)
-                  for len = (list (* -1 rest) dur)
-                  collect (quantize
-                           (omn-to-time-signature
-                            (make-omn 
-                             :length len
-                             :pitch '(c4))
-                            '(4 4))
-                           '(2 3 4 5))))))
-
-(def-score lux-aeterna
-    (:title "Lux Aeterna"
-     :composer "György Ligeti"
-     :copyright "Copyright © 1966"
-     :key-signature 'chromatic
-     :time-signature '((1 1 1 1) 4)
-     :tempo 100
-     :layout (bracket-group
-              (soprano-voice1-layout 'soprano1)
-              (soprano-voice2-layout 'soprano2)
-              (soprano-voice3-layout 'soprano3)
-              (soprano-voice4-layout 'soprano4)
-              (alto-voice1-layout 'alto1)
-              (alto-voice2-layout 'alto2)
-              (alto-voice3-layout 'alto3)
-              (alto-voice4-layout 'alto4)
-              (tenor-voice1-layout 'tenor1)
-              (tenor-voice2-layout 'tenor2)
-              (tenor-voice3-layout 'tenor3)
-              (tenor-voice4-layout 'tenor4)
-              (bass-voice1-layout 'bass1)
-              (bass-voice2-layout 'bass2)
-              (bass-voice3-layout 'bass3)
-              (bass-voice4-layout 'bass4)))
-  
-  (soprano1
-   :omn soprano1
-   :channel 1
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 16
-   :controllers (91 '(48))
-   )
-  
-  (soprano2
-   :omn soprano2
-   :channel 2
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 16
-   :controllers (91 '(48))
-   )
-
-(soprano3
-   :omn soprano3
-   :channel 9
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 16
-   :controllers (91 '(48))
-   )
-  
-  (soprano4
-   :omn soprano4
-   :channel 10
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 16
-   :controllers (91 '(48))
-   )
-  
-  (alto1
-   :omn alto1
-   :channel 3
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 41
-   :controllers (91 '(48))
-   )
-  
-  (alto2
-   :omn alto2
-   :channel 4
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 41
-   :controllers (91 '(48))
-   )
-
-  (alto3
-   :omn alto3
-   :channel 11
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 41
-   :controllers (91 '(48))
-   )
-  
-  (alto4
-   :omn alto4
-   :channel 12
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 41
-   :controllers (91 '(48))
-   )
-  
-  (tenor1
-   :omn tenor1
-   :channel 5
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 86
-   :controllers (91 '(48))
-   )
-  
-  (tenor2
-   :omn tenor2
-   :channel 6
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 86
-   :controllers (91 '(48))
-   )
-
-(tenor3
-   :omn tenor3
-   :channel 13
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 86
-   :controllers (91 '(48))
-   )
-  
-  (tenor4
-   :omn tenor4
-   :channel 14
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 86
-   :controllers (91 '(48))
-   )
-  
-  (bass1
-   :omn bass1
-   :channel 7
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 111
-   :controllers (91 '(48))
-   )
-  
-  (bass2
-   :omn bass2
-   :channel 7
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 111
-   :controllers (91 '(48))
-   )
-  (bass3
-   :omn bass3
-   :channel 15
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 111
-   :controllers (91 '(48))
-   )
-  
-  (bass4
-   :omn bass4
-   :channel 16
-   :sound 'gm
-   :program 'choir-aahs
-   :volume 100
-   :pan 111
-   :controllers (91 '(48))
-   )
-  )
-
-(display-musicxml 'lux-aeterna)
+|#

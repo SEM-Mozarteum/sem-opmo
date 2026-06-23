@@ -9,7 +9,7 @@
 
 ;;; ---------------------------------------------------------
 
-;;; spectral repetitions
+;;; Spectral Repetitions
 
 ;; rhythmic acceleration = spectral repetitions 
 ;; view with cmd-1 and cmd-2
@@ -18,7 +18,7 @@
         (loop repeat i         
               collect (/ (/ 1 i) 4)))
 
-;; stretched accereration with rounded transition
+;; Stretched accereration with rounded transition
 ;; view with cmd-1 and cmd-2
 (loop for i in
         (gen-transition 1 14 20 1 :rounded t)
@@ -28,40 +28,78 @@
 
 ;; 7 voices all starting from 1/4 and ending on 1/32 upto 1/56
 ;; view with cmd-2
-(setf diff-end 
-      (loop for divisor from 8 to 14
-            collect
-              (loop for i in
-                      (gen-transition 1 divisor 20 1 :rounded t)
-                    append
-                      (loop repeat i         
-                            collect (/ (/ 1 i) 4)))))
+(length-plot
+ (setf diff-end 
+       (loop for divisor from 8 to 14
+             collect
+               (loop for i in
+                       (gen-transition 1 divisor 20 1 :rounded t)
+                     append
+                       (loop repeat i         
+                             collect (/ (/ 1 i) 4)))))
+ :join-points t :point-radius 1.5)
 
-(setf pitches
+;; For each voice one pitch creating a chromatic cluster
+(setf pitches1
       (loop for i in diff-end
             for j in (midi-to-pitch 
                       (loop for m from 50 to 62 by 1 collect m))
             collect (gen-repeat (length i) j)))
 
-(make-omn
- :length diff-end
- :pitch (reverse pitches)
- :velocity '(p))
+;; Make voices and reverse their order
+(nreverse
+ (make-omn
+  :length diff-end
+  :pitch pitches1
+  :velocity '(p)))
+
+;; 8 voices all starting from 1/4 and ending on 1/56
+;; Transition with different curves
+;; View with cmd-2
+(length-plot
+ (setf diff-curve
+       (loop for curve from 0.6 to 1.4 by 0.1
+             collect
+               (loop for i in
+                       (gen-transition 1 14 20 curve :rounded t)
+                     append
+                       (loop repeat i         
+                             collect (/ (/ 1 i) 4)))))
+ :join-points t :point-radius 1.5)
+
+;; For each voice one pitch creating a chromatic cluster
+(setf pitches2
+      (loop for i in diff-curve
+            for j in (midi-to-pitch 
+                      (loop for m from 50 to 62 by 1 collect m))
+            collect (gen-repeat (length i) j)))
+
+;; Make voices and reverse their order
+(nreverse
+ (make-omn
+  :length diff-curve
+  :pitch pitches2
+  :velocity '(p)))
 
 ;;; ---------------------------------------------------------
 
 ;;; 25.6.2026
 
-;;; length and pitch construction with a magic square
+;;; Length and pitch construction with a magic square
 
+;; Numbers from 1 to 25 distributed in 5 lists 
+;; with the same sum of 65
 (list-plot
  (setf magic5
        (magic-square 5 :seed 123))
  :join-points t)
 
+(find-sum magic5) ; => (65 65 65 65 65)
+
+;; Set the fundamental
 (setf fundamental (pitch-to-hertz 'c2))
 
-;; calculating harmonics from fundamental
+;; Calculating harmonics from fundamental
 ;; using the magic square values as indexes
 (setf pitches
       (loop for i in magic5
@@ -129,45 +167,45 @@ with 10 times the latin square randomly ordered.
 
 ;;; ---------------------------------------------------------
 
-;; field of random durations with the same sum
-;; using random-sum-to-size
+;;; Field of random durations with the same sum
+;;; using random-sum-to-size
 
 (progn
-(setf events 60)
+  (setf events 60)
 
-;; lengths adding up to the same overall duration of 60
-;; 1. voice = 6 lengths, 2 voice = 7, etc.
-(setf lengths
-      (loop with seed = (init-seed 17)
-            ;; number of durations
-            for i from 6 to 12
-            collect 
-              (loop for x in 
-                      ;; integers between 2 and 10
-                      (rnd-sum-to-size
-                       ;; add up randomly to 60 events
-                       events i 
-                       (gen-integer 2 10))
-                    ;; converted to quarters
-                    collect (/ x 4))))
+  ;; lengths adding up to the same overall duration of 60
+  ;; 1. voice = 6 lengths, 2 voice = 7, etc.
+  (setf lengths
+        (loop with seed = (init-seed 17)
+              ;; number of durations
+              for i from 6 to 12
+              collect 
+                (loop for x in 
+                        ;; integers between 2 and 10
+                        (rnd-sum-to-size
+                         ;; add up randomly to 60 events
+                         events i 
+                         (gen-integer 2 10))
+                      ;; converted to quarters
+                      collect (/ x 4))))
 
-(setf pitches 
-      ;; convert integer to pitches
-      (integer-to-pitch 
-       (loop for i in lengths
-             ;; integers from 0 to 6 (c4 to fs4)
-             for k from 0
-             collect (gen-repeat (length i) k))))
+  (setf pitches 
+        ;; convert integer to pitches
+        (integer-to-pitch 
+         (loop for i in lengths
+               ;; integers from 0 to 6 (c4 to fs4)
+               for k from 0
+               collect (gen-repeat (length i) k))))
  
-;; cmd-2 to view
-(assign-variable 'mat      
-(make-omn
- :length lengths
- :pitch (reverse pitches)
- :velocity '(pp)
- :articulation '(marc)))
+  ;; cmd-2 to view
+  (assign-variable 'mat      
+                   (make-omn
+                    :length lengths
+                    :pitch (reverse pitches)
+                    :velocity '(pp)
+                    :articulation '(marc)))
 
-(def-score cluster-score
+  (def-score cluster-score
       (:key-signature 'atonal
        :time-signature '(4 4)
        :tempo 60
@@ -225,14 +263,15 @@ with 10 times the latin square randomly ordered.
      :sound 'gm
      :program 'violin))
 
-(defparameter *default-notation-editor* "Sibelius.app")
+  (defparameter *default-notation-editor* "Sibelius.app")
 
-(musicxml-to-editor)
-) ; end of progn
+  (musicxml-to-editor)
+
+  ) ; end of progn
 
 ;;; ---------------------------------------------------------
 
-;;; cartesian function for lengths creation
+;;; Cartesian function for lengths creation
 
 (progn
   ;; all combinations of all combinations of two lists
