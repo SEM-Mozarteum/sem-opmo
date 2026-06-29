@@ -1,0 +1,25 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; Copyright © 2015–2026, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+Creating a homophonic score for string quartet.
+
+1. Make 8 chords of 4 pitches with a ringmodulation.
+Using 4 pitches as carriers (pitch-list) and 4 as
+modulators (see the documentation of [ring-modulation].
+
+2. Distribute them from high to low (vn1 to vc) using
+[matrix-transpose] (see documentation for Distribution
+in Chapter Assembling)
+
+3. Make a score with homophonic chords in random lengths
+|#
+
+;;; ---------------------------------------------------------
+

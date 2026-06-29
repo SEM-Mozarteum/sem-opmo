@@ -9,6 +9,42 @@
 
 ;;; ---------------------------------------------------------
 
+;;; matrix-transpose
+
+(setf random-chords
+      ;; make 10 chords
+      (loop repeat 10
+            with seed = (init-seed 123)
+            collect
+              ;; convert integer to pitch
+              (integer-to-pitch
+               ;; sort integers from high to low
+               (sort-desc
+                ;; take 4 unique integers between 0 and 12
+                (rnd-unique 4 (gen-integer 0 12))))))
+
+;; listen to them as chords
+(chordize random-chords)
+
+;; Collect all the highest notes to all the lowest
+;; pitches of the chords into one voice each. 
+(setf pitches
+      (matrix-transpose random-chords))
+
+;; randoms lengths for homophonic chords
+(setf lengths
+      (rnd-sample (length (first pitches))
+                  '(h h. wq w.) :seed 123))
+
+;; View and play with cmd-2
+(make-omn
+ :pitch pitches
+ :length lengths
+ :velocity '(p)
+ :span :pitch)
+
+;;; ---------------------------------------------------------
+
 ;;; distribute-stream
 
 #|

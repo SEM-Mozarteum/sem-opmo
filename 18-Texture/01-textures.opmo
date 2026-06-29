@@ -83,7 +83,12 @@
 
 ;;; ---------------------------------------------------------
 
-;;; 25.6.2026
+(quantize
+(gen-transition 1 1/16 30 1)
+
+(setf pitches '(c3 d4 f3))
+
+;;; ---------------------------------------------------------
 
 ;;; Length and pitch construction with a magic square
 
@@ -102,8 +107,10 @@
 ;; Calculating harmonics from fundamental
 ;; using the magic square values as indexes
 (setf pitches
+      ;; loop in list of lists
       (loop for i in magic5
             collect
+              ;; loop in each list
             (loop for j in i
                   collect
                   (hertz-to-pitch
@@ -115,8 +122,8 @@
 (setf lengths
       (loop with flma = (flatten magic5)
             ;; sum of minimum and maximum value in magic square
-            with ma = (+ (find-max flma) 
-                         (find-min flma))
+            with ma = (+ (find-max flma) ; 25 
+                         (find-min flma)) ; 1
             for i in magic5
             collect
               (loop for j in i
@@ -128,16 +135,17 @@
                       (* (- ma j) 1/16))))
 
 ;; view with cmd-2
+(setf material
 (make-omn
  :length lengths
  :pitch pitches
- :velocity '(p))
+ :velocity '(p)))
 
 #|
 Each voice of the original is repeated 10 times and
 ordered randomly => 10 voices with all of the material
 in a different order = 10 times the first material in
- different order then 2nd, 3rd, etc.
+different order then 2nd, 3rd, etc.
 |#
 
 ;; view with cmd-2
@@ -293,7 +301,7 @@ with 10 times the latin square randomly ordered.
   (def-score cartesian-score
       (:key-signature 'atonal
        :time-signature '(4 4)
-       :tempo 50
+       :tempo 250
        ;; cut score after 264 measures 
        ;; since voices have different lengths
        :end 264 

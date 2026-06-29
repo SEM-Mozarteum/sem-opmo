@@ -8,7 +8,22 @@
 ;;; EXERCISE
 
 #|
+1. Create a magic square of 7. 
 
+2. For the pitches transpose it 2 octaves down.
+Use [integer-transpose] for it.
+
+3. Make dynamics between ppp and ff for each
+of the liste of the magic square: 
+highest number = lowest dynamic
+lowest number = highest dynamic
+Using [vector-to-velocity] for it.
+
+3. Create 7 random lengths per voice with the same
+overall duration e.g. make random order of a given
+list of lengths.
+
+4. Put everything to a score.
 |#
 
 ;;; ---------------------------------------------------------

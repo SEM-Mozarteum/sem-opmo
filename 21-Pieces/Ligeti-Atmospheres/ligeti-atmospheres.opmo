@@ -8,35 +8,6 @@
 ;;; György Ligeti, Atmosphères (1961)
 ;;; Generalized Structure of the Trill Construction
 
-;; 7 voices all starting from 1/4 and ending on 1/32 upto 1/56
-;; view with cmd-2
-(length-plot
- (setf diff-end 
-       (loop for divisor from 8 to 14
-             collect
-               (loop for i in
-                       (gen-transition 1 divisor 20 1 :rounded t)
-                     append
-                       (loop repeat i         
-                             collect (/ (/ 1 i) 4)))))
- :join-points t :point-radius 1.5)
-
-;; 8 voices all starting from 1/4 and ending on 1/56
-;; transition with different curves
-
-
-;; view with cmd-2
-(length-plot
- (setf diff-curve
-       (loop for curve from 0.6 to 1.4 by 0.1
-             collect
-               (loop for i in
-                       (gen-transition 1 14 20 curve :rounded t)
-                     append
-                       (loop repeat i         
-                             collect (/ (/ 1 i) 4)))))
- :join-points t :point-radius 1.5)
-
 ;; Durations in Ligeti Atmpospheres
 ;; 14 voices all starting from 1/4 and ending on 1/32 (8) 
 ;; upto 1/56 (14) and additional transition with different curves

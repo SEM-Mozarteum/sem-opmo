@@ -1,0 +1,25 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; Copyright © 2015–2026, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+1. Make a complete documentaion of the code for 
+the last exercise (exercise-texture). 
+
+2. Make this a score for 7 different melody instruments.
+Use ambitus-instrument to fit the pitches accordingly.
+
+2. Use assign-variable to create the voices.
+
+3. The score should be in tempo 50 in a 5/4 time-signature.
+
+4. Convert the score into a musicxml file by using "Save As" 
+in the upper left corner in the Notation Viewer.
+|#
+
+;;; ---------------------------------------------------------

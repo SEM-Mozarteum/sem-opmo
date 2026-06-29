@@ -8,16 +8,19 @@
 ;;; EXERCISE
 
 #|
-Make a short sketch of minimum 5 measures for 2 cellos:
+Make a short sketch for 5 different instruments:
 
-First cello with random harmonics (between the 3rd and 
-9th overtone) on the C string (c1).
+1. Create a harmonic scale on c2 upto the 25th overtone.
+Quantize the pitches to quartertones.
 
-Second cello random harmonics (between the 2nd and 
-8th overtone) on the G string (g1).
+2. Use any unique 5 pitches for each of the voices.
 
-Use any durations and dynamics.
+3. Make the 5 durations for each voice having the same
+overall length by using [rnd-sum-to-size]
+
+4. Let all instruments play in p as velocity.
 |#
 
 ;;; ---------------------------------------------------------
 
+(

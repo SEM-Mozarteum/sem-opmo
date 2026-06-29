@@ -52,13 +52,16 @@ Use any durations and dynamics.
   ;; Velocities
 
   (setf velocities1 
+        
         (rnd-order
-         (get-velocity (gen-transition 0.3 0.6 7 1) :type :symbol) 
+         (get-velocity 
+          (gen-transition 0.3 0.6 7 1) :type :symbol) 
          :seed 123))
 
   (setf velocities2 
         (rnd-order
-         (get-velocity (gen-transition 0.3 0.6 7 1) :type :symbol) 
+         (get-velocity 
+          (gen-transition 0.3 0.6 7 1) :type :symbol) 
          :seed 123))
 
   ;; Voices

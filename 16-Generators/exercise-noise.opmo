@@ -1,0 +1,29 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; Copyright © 2015–2026, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; EXERCISE
+
+#|
+Make a short sketch for a high and a low instrument:
+
+1. Create pitches:
+first voice with high-pass filtered noise
+second voice with low-pass filtered noise
+
+2. Use the function [vector-to-pitch] to convert the
+numbers to pitches.
+See documentation of [gen-noise] how to do it.
+
+3. Use the function [vector-to-length] to convert
+the same numbers to lengths.
+See documentation of [gen-noise] how to do it.
+
+4. Make 2 voices from it with [make-omn] with any dynamic
+and preview the score (See Score chapter for it.)
+|#
+
+;;; ---------------------------------------------------------
