@@ -8,7 +8,9 @@
 
 ;;; SHORTCUTS 
 
-;; OMN AUDITION & NOTATION
+;;; ---------------------------------------------------------
+
+;;; OMN AUDITION & NOTATION
 
 #|
 To see and hear the notation in OMN (OpusModus Notation) 
@@ -35,13 +37,15 @@ To stop Audition press cmd esc.
 
 ;; To see and hear the notation of more than one voice
 ;; press 'cmd 2'
-(((q cs4 pp -q t gs4 marc e.. fs4 mf leg e c4 
+'(((q cs4 pp -q t gs4 marc e.. fs4 mf leg e c4 
      -e t b4 leg f4 q.. e4 pp))
   ((-q e d4 leg eb4 h g4 mf leg q. g4 > -e))
   ((s bb3 pp leg a3 h. db3 t gs4 mp fs3 < c5 < 
       b3 q f4 marc e4)))
 
-;; INTEGERS
+;;; ---------------------------------------------------------
+
+;;; INTEGERS
 
 #|
 To see and hear the notation of integers (0 = 60 = c4) 
@@ -53,7 +57,9 @@ press 'cmd 6' (Midi Player)
 	
 '(11 10 14 3 7 6 8 4 5 12 13 9)
 
-;; INTERVALS
+;;; ---------------------------------------------------------
+
+;;; INTERVALS
 
 #|
 To see and hear the notation of intervals (positive = up, 

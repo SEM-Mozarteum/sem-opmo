@@ -83,13 +83,6 @@
 
 ;;; ---------------------------------------------------------
 
-(quantize
-(gen-transition 1 1/16 30 1)
-
-(setf pitches '(c3 d4 f3))
-
-;;; ---------------------------------------------------------
-
 ;;; Length and pitch construction with a magic square
 
 ;; Numbers from 1 to 25 distributed in 5 lists 

@@ -83,7 +83,6 @@ different types.
 ;;; https://en.wikipedia.org/wiki/Twelve-tone_technique
 
 ;;; rnd-row / pitch-invert / reverse
-;;; pitch-list-plot
 
 ;; twelve-tone row as integers
 (setf row-integer (rnd-row :seed 34)) 
@@ -135,7 +134,7 @@ data, s. Graph Tools in the documentation.
 
 ;;; ---------------------------------------------------------
 
-;;; pitch-transpose-n / integer-transpose-rnd / gen-loop
+;;; pitch-transpose-n / integer-transpose-rnd 
 
 ;; pitch-transpose-n will apply a sequence of 
 ;; transpositions on each individual pitch in a list.
@@ -162,8 +161,25 @@ data, s. Graph Tools in the documentation.
 ;; 3. argument: sequence of (8) pitches
 (pitch-transpose-rnd 4 7 (gen-repeat 8 'c4))
 
+;;; ---------------------------------------------------------
+
+;;; Iteration (see Iteration chapter)
+;;; gen-repeat / gen-loop
+
 ;; repeat the result 3 times (same results)
 (gen-repeat 3 (pitch-transpose-rnd 4 7 (gen-repeat 8 'c4)))
 
 ;; repeat the calculation 3 times (different results)
 (gen-loop 3 (pitch-transpose-rnd 4 7 (gen-repeat 8 'c4)))
+
+;;; ---------------------------------------------------------
+
+;;; Classroom Exercise
+
+#|
+- Copy several code lines from above. 
+- Try to combine code.
+- Change the numbers.
+|#
+
+;;; ---------------------------------------------------------

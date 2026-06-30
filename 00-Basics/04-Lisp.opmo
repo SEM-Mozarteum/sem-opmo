@@ -22,6 +22,8 @@ but it can also be used for general software development.
 (See 'Common Lisp' documentation in Navigator.)
 |#
 
+;;; --------------------------------------------------------- 
+
 ;;; COMMENTS
 
 #|
@@ -39,6 +41,8 @@ Comments are not evaluated!
 ; (BROWN) Inline comments
 !#
 
+;;; ---------------------------------------------------------
+
 ;;; PARANTHESES
 
 #|
@@ -54,7 +58,7 @@ see the result in Listener below.
 and show the output of the last expression.)
 |#
 
-;; the first statement is generally a function in LISP
+;; The first statement is generally a function in LISP
 ;; followed by 0 to N arguments
 
 ;; random function without arguments
@@ -74,14 +78,14 @@ and show the output of the last expression.)
 
 ;; all pitches of a flute
 ;; expressions are evaluated from inside to outside
-(integer-to-pitch
- (gen-integer 
+(integer-to-pitch ; convert all integers to pitches
+ (gen-integer ; make integers from 0 to 41
+  ;; second argument = highest note of the flute: 41
   (second 
+   ;;  ambitus of the flute: (0 41) 
    (ambitus-instrument 'flute))))
-;; 1. ambitus of the flute: (0 41) 
-;; 2. second argument = highest note of the flute: 41
-;; 3. (gen-integer 41): make integers from 0 to 41
-;; 4. convert all integers to pitches
+
+;;; ---------------------------------------------------------
 
 ;;; VARIABLES
 
@@ -95,6 +99,8 @@ and show the output of the last expression.)
 ;; here the values stored in the variable "pitches" 
 ;; are converted back to midi notes
 (pitch-to-midi pitches)
+
+;;; ---------------------------------------------------------
 
 ;;; LISTS
 
@@ -117,6 +123,9 @@ and show the output of the last expression.)
 ;; define variables for 2 lists with different content:
 (setf lst1 '(1 2 3 4 5))
 (setf lst2 '(a b c d e))
+
+;; reverse a list
+(reverse lst1)
 
 ;; collect lists into one list
 (list lst1 lst2) ; ((1 2 3 4 5) (a b c d e))
@@ -143,6 +152,8 @@ and show the output of the last expression.)
 (nth 3 lst1) ; 4
 (nth 0 lst2) ; a
 
+;;; ---------------------------------------------------------
+
 ;;; DOCUMENTATION
 
 #|
@@ -160,6 +171,8 @@ Works in Assistant as well!
 
 (midi-to-pitch '(71 70 74 63 67 66))
 
+;;; ---------------------------------------------------------
+
 ;;; AUTOCOMPLETE
 
 #|
@@ -169,4 +182,5 @@ Use the arrow keys to navigate;
 Return inserts the selection.
 |#
 
+;; Put cursor at the end of "rnd" and press Tab:
 ;; (rnd

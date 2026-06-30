@@ -23,7 +23,7 @@ Using [vector-to-velocity] for it.
 overall duration e.g. make random order of a given
 list of lengths.
 
-4. Put everything to a score.
+4. Use preview-score to view and play the score.
 |#
 
 ;;; ---------------------------------------------------------

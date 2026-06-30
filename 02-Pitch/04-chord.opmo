@@ -15,35 +15,42 @@ chords are written as directly consecutive notes:
 
 ;;; ---------------------------------------------------------
 
-;;; chordize / melodize / chordize-list / midi-to-pitch
+;;; chordize / melodize / chordize-list 
 
 (chordize '(c4 e4 g5 d3))
 ;; and vice versa
 (melodize '(c4d4f4)) ; => (c4 d4 f4)
 
-;; chordize-list allows you to chordize melodic lists.
-(chordize-list '((c4 e4) (g4 c5)))
+;; chordize allows you to chordize several melodic lists.
+(chordize '((c4 e4) (g4 c5)))
 
 ;; several chords converted from midi melodies
-(chordize-list 
+(chordize
  (midi-to-pitch '((60 56) (67 62) (62 65 66) (63 60 61))))
 
-;; Divide up a melody into intervals
-(chordize-list (gen-divide 2 '(c4 f4 g4 a4 d4 f3)))
-
-;; If there is a rest this rest is given as the last chord
-(chordize-list (gen-divide 4 '(c4 f4 g4 a4 d4 f3)))
-
-;; Group a melody in different chords
-(chordize-list (gen-divide '(2 1 3) '(c4 f4 g4 a4 d4 f3)))
-
-;; midi-to-pitch interpret sublists automatically as chords
-(midi-to-pitch '((58 62) (59 65 75) (60 67) 61 62)) 
-;; => (bb3d4 b3f4eb5 c4g4 cs4 d4) 
+;; with chordize-list the chords are appended in one list
+(chordize-list
+ (midi-to-pitch '((60 56) (67 62) (62 65 66) (63 60 61))))
 
 ;;; ---------------------------------------------------------
 
-;; extended example
+;;; gen-divide
+
+;; The gen-divide function is used to divide a sequence
+;; into sublists of a given size.
+
+;; Divide up a melody into intervals
+(chordize (gen-divide 2 '(c4 f4 g4 a4 d4 f3 b3 e4)))
+
+;; If there is a rest this rest is given as the last chord
+(chordize (gen-divide 4 '(c4 f4 g4 a4 d4 f3)))
+
+;; Group a melody in different chords
+(chordize (gen-divide '(3 2 3) '(c4 f4 g4 a4 d4 f3 b3 e4)))
+
+;;; ---------------------------------------------------------
+
+;; Extended example
 
 ;; construction of random chords
 (setf chords

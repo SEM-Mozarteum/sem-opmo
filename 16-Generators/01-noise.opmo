@@ -14,10 +14,10 @@ Opus Mode provides various noise generators.
 
 ;;; ---------------------------------------------------------
 
-;;; gen-white-noise
+;;; gen-noise
 
 #|
-The function GEN-WHITE-NOISE generate N samples of white 
+The function gen-noise generate N samples of white 
 noise specified by the keyword :type.
 Types are: :normal :binary :cauchy :chi-square-2 :exponential 
 :extreme :gaussian :logistic :lognormal :triangular 
@@ -26,19 +26,19 @@ Types are: :normal :binary :cauchy :chi-square-2 :exponential
 
 ;; normal
 (vector-to-pitch '(c1 c7)
-(list-plot (gen-white-noise 100)
+(list-plot (gen-noise 100)
            :point-radius 2))
 
 ;; binary
-(list-plot (gen-white-noise 100 :type :binary :seed 123)
+(list-plot (gen-noise 100 :type :binary :seed 123)
            :join-points t :point-radius 1.5 :style :fill)
 
 ;; exponential (more lower then higher values)
-(list-plot (gen-white-noise 100 :type :exponential)
+(list-plot (gen-noise 100 :type :exponential)
            :join-points t :point-radius 1.5 :style :axis)
 
 ;; gaussian (deviation from a mean (0)
-(list-plot (gen-white-noise 100 :type :gaussian :seed 123)
+(list-plot (gen-noise 100 :type :gaussian :seed 123)
            :join-points nil :point-radius 2)
 
 ;; There is another function only for gaussian noise
@@ -47,12 +47,12 @@ Types are: :normal :binary :cauchy :chi-square-2 :exponential
  :join-points nil :point-radius 2 )
 
 ;; high-pass
-(list-plot (gen-white-noise 100 :type :high-pass :seed 123)
-           :join-points t :point-radius 2)
+(list-plot (gen-noise 100 :type :high-pass :seed 123)
+            :point-radius 2.5)
 
 ;; low-pass
-(list-plot (gen-white-noise 100 :type :low-pass)
-           :join-points t :point-radius 2)
+(list-plot (gen-noise 100 :type :low-pass)
+           :point-radius 2.5)
 
 ;;; ---------------------------------------------------------
 

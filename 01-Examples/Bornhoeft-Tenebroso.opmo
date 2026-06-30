@@ -21,17 +21,18 @@ objects stand out brightly against a very dark or black
 background. 
 |#
 
+;; Relative path to musicxml file
+(setf filepath "01-Examples/schubert-D810-2.musicxml")
+;; Combine with workspace path
+(setf path (workspace-file filepath)) 
+
 ;;; Franz Schubert, String Quartet No. 14 in D minor, D. 810
 ;;; Second movement, Andante con moto, "Death and the Maiden"
 ;;; Measures 1 to 32
 
-;; import of the score
+;; Import of the score
 ;; Preview with cmd-2
-(setf 
- material
- (musicxml-to-omn
-  ;; musicxml file is in folder "musicxml"
-  "~/Documents/code/github/sem-opmo/01-Examples/schubert-D810-2.musicxml"))
+(setf material (musicxml-to-omn path))
 
 ;; assing each voice to a variable
 (assign-variable 'voc material)

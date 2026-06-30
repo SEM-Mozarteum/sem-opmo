@@ -153,4 +153,3 @@
   (piano2-3-lh :omn piano2-3-lh :channel 13 :program 0 :pan 96))
 
 (display-musicxml '09-harm-field-1)
-(display-midi '09-harm-field-1)
