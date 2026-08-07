@@ -80,7 +80,109 @@ list of 10 elements: weights: 10% = 1, 30%  = 3, 60% = 6
         append (chordize y)
       else 
         collect y)
-    
+
+;;; ---------------------------------------------------------
+
+;;; Expnentially increasing weights
+
+#|
+There are several ways to visualize different parametrical
+data, s. Graph Tools in the documentation. 
+|#
+
+;; 40 integers from 5 to 95 = changing weights
+(list-plot
+(setf lin-weights (gen-transition 2 95 120 2 :rounded t))
+:join-points t)
+
+;; list of pitches randomly chosen with increasing probability
+(setf pitch-list '(g4 bb4 d5 e5 f5)) 
+
+(setf pitches
+      (loop for i in lin-weights
+            initially (init-seed 123)   
+            append
+              ;; calculating one result each time
+              ;; with a fixed probability of 10 for c4
+              ;; and an increasing probability from 2 to 95
+              ;; for randomly chosen pitches from a list
+              (gen-weight 1 (list 
+                             (list (rnd-pick pitch-list)
+                                              i)
+                             ;; c4 with fixed probability
+                             (list 'c4 10)))))
+
+(make-omn
+ :pitch pitches
+ :length '(1/16)
+ :span :pitch)
+
+;;; ---------------------------------------------------------
+
+;;; Using envelope for changing weights
+;;; (See more about envelopes in the "Vector" chapter.)
+
+;; envelope of probabilities
+(setf weight-env
+      ;; xy-plot draws one or more x-y data series as a graph.
+      ;; needs lists of x/y values
+      ;; (y-values are the probabilities)
+      (xy-plot 
+       ;; a list of x/y values
+       '(0 1 1 2 2 3 3 5 5 10 6 30 7 50 10 80 13 90)
+       :join-points t :point-radius 2))
+
+;; taking 120 equally spaced x/y-values from weight-env
+(setf pitch-prob-env
+      (xy-plot 
+       (envelope-samples weight-env 120)
+       :join-points t :point-radius 2))
+
+;; rounding probabilities (y-values) from envelope
+;; for gen-weight (needs integers)
+(setf pitch-prob
+  (list-plot
+   (loop for i in (envelope-y pitch-prob-env)
+           ;; only the y values are taken
+           collect (round i)) ; round to integer
+   :join-points t :point-radius 2 :style :axis))
+
+;; weighted pitches
+(setf weight-pitch
+      (pitch-list-plot
+       ;; cycle through the pobability list
+       (loop for i in pitch-prob
+             initially (init-seed 123)   
+             append
+               ;; create this form for each evaluation:
+               ;; (gen-weight 1 '((f4 1) (c4 40)))
+               (gen-weight 1 (list 
+                              (list (rnd-pick pitch-list) i)
+                              ;; c4 with fixed probability
+                              (list 'c4 30))
+                           :seed (seed)))
+       :join-points t :point-radius 2 :style :fill))
+
+;; weighted articulations
+(setf weight-articulation
+   (loop for i in pitch-prob
+     initially (rnd-seed 2358)   
+     append
+     (gen-weight 1 (list 
+                    (list 'stacc i) 
+                    (list '- 40))
+                 ; fixed probability ord
+                 :seed (seed))))
+
+;; preview score
+(ps 'gm
+    :multi (make-omn
+            :length '(s)
+            :pitch weight-pitch
+            :articulation weight-articulation
+            :span :pitch)
+    :time-signature '(4 4))
+
 ;;; ---------------------------------------------------------
 
 ;;; length-weight
@@ -108,72 +210,3 @@ values in relation to a sequence lengths.
                :seed 52)
  (list '(q c4 d4 e4 f4 g4 a4 b4)))
 ;; ((-q - e4 f4 - a4 b4) (-q - e4 f4 - - b4)
-
-;;; ---------------------------------------------------------
-
-;;; Using envelope for changing weights
-;;; (See more about envelopes in the "Vector" chapter.)
-
-#|
-There are several ways to visualize different parametrical
-data, s. Graph Tools in the documentation. 
-|#
-
-;; envelope of probabilities
-(setf weight-env
-      (xy-plot 
-       ;; xy-plot draws one or more x-y data series as a graph.
-       ;; needs lists of x/y values
-       ;; y-values are the probabilities
-       '(0 1 1 2 2 3 3 5 5 10 6 30 7 50 10 80 13 90)
-       :join-points t :point-radius 2))
-
-;; taking 32 values from the envelope
-(setf gliss-prob-env
-      (xy-plot 
-       (envelope-samples weight-env 32)
-       :join-points t :point-radius 2))
-
-;; rounding probabilities (y-values) from envelope
-;; for gen-weight (needs integers)
-(setf gliss-prob
-  (list-plot
-   (loop for i in (envelope-y gliss-prob-env)
-           ;; only the y values are taken
-           collect (round i)) ; round to integer
-   :join-points t :point-radius 2 :style :axis))
-
-;; weighted pitches
-(setf weight-pitch
-      (pitch-list-plot
-   (loop for i in gliss-prob
-     initially (rnd-seed 123)   
-     append
-           ;; create this form for each evaluation:
-           ;; (gen-weight 1 '((f4 1) (c4 40)))
-     (gen-weight 1 (list 
-                    (list 'f4 i) 
-                    (list 'c4 40))
-                 ; c4 with fixed probability
-                 :seed (seed)))
-   :join-points t :point-radius 2 :style :fill))
-
-;; weighted articulations
-(setf weight-articulation
-   (loop for i in gliss-prob
-     initially (rnd-seed 2358)   
-     append
-     (gen-weight 1 (list 
-                    (list 'stacc i) 
-                    (list '- 40))
-                 ; fixed probability ord
-                 :seed (seed))))
-
-;; preview score
-(ps 'gm
-    :multi (make-omn
-            :length '(s)
-            :pitch weight-pitch
-            :articulation weight-articulation
-            :span :pitch)
-    :time-signature '(4 4))

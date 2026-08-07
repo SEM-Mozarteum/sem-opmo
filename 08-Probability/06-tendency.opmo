@@ -25,9 +25,6 @@ for increasing or decreasing the size of the fluctuations
  :join-points t  :point-radius 2)
 
 #|
-The variance is an additional value for increasing or 
-decreasing the size of the fluctuations :around :above 
-or :below the tendency values.
 The function rnd-variance controls the variance calculated 
 with the equation (+/- value (* value (/ variance 2)))
 |#
@@ -39,33 +36,36 @@ with the equation (+/- value (* value (/ variance 2)))
                        (apply 'max reslis))))
 ;; creating numbers around 1.5 and 4.5
 
-;; With :variance 0 its the original envelope:
-(setf tend-0 (list-plot
- (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
-               :variance 0)
- :join-points t
- :point-radius 2))
+;; With :variance 0 the tendency folows 
+;; to the original envelope:
+(progn
+  (setf tend-0 (list-plot
+                (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
+                              :variance 0)
+                :join-points t
+                :point-radius 2))
 
-;; With :variance 0.3:
-(setf tend-0.3
-      (list-plot
- (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
-               :variance 0.3)
- :join-points t
- :point-radius 2))
+  ;; With :variance 0.3:
+  (setf tend-0.3
+        (list-plot
+         (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
+                       :variance 0.3)
+         :join-points t
+         :point-radius 2))
 
-;; With :variance 1:
-(setf tend-1
-(list-plot
- (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
-               :variance 1)
- :join-points t
- :point-radius 2))
+  ;; With :variance 1:
+  (setf tend-1
+        (list-plot
+         (gen-tendency 100 '(.1 .4 .1 .6 .45 .16 .75 .8 1 .1) 
+                       :variance 1)
+         :join-points t
+         :point-radius 2))
 
-;; see all three together
-(list-plot (list tend-0 tend-0.3 tend-1)
-            :join-points t
- :point-radius 2)
+  ;; see all three together
+  (list-plot (list tend-0 tend-0.3 tend-1)
+             :join-points t
+             :point-radius 2)
+  ) ; end of progn
 
 ;; With :variance 0.5 above (compared to normal with 
 ;; 0.3 around variance

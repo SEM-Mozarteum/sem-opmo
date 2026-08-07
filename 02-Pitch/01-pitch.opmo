@@ -9,15 +9,27 @@
 
 #|
 There are 4 different description of pitches in OM:
-- note names (pitches)
-- integer
-- midis
-- frequencies
+
+- note names (pitches): 
+- integers (where 0 is c4)
+- midis (with 60 for c4)
+- frequencies (in hertz)
+
 Several functions provide for the conversion between these
 different types.
 |#
 
 ;;; ---------------------------------------------------------
+
+#|
+To see and hear the notation in OMN (OpusModus Notation) 
+place the cursor at the end of a list or select any part 
+(even single notes) and press:
+- 'cmd 1' to see and play in Notation Viewer.
+- 'cmd 3' to play it in the Midi-Player
+
+To stop Audition press cmd esc.
+|#
 
 ;; a list of pitches = a melody
 '(bb3 a3 c4 b3)
@@ -28,12 +40,18 @@ different types.
 (setf bach '(bb3 a3 c4 b3))
 
 ;; When set, the variable can be used in other calculations.
-;; Here the melody is sorted in ascending order
+;; Here the melody is sorted in ascending order.
+;; Press cmd 1 to listen to it.
 (sort-asc bach)
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+; Write down the pitches of a tune you know.
+; Assign any variable to this list of pitches.
+; -----------------------------------------------------------
 
 ;;; gen-repeat
+;;; Iteration (see Iteration chapter)
 
 ;; gen-repeat returns any number of repeats of a 
 ;; list or atom (number, pitch, name, etc.) creating
@@ -44,14 +62,20 @@ different types.
 ;; under Audition - Length)
 
 ;; The complete "bach" note-list is repeated 2 times:
-(gen-repeat 200 bach) 
+(setf bach2 (gen-repeat 2 bach))
 ;; => (bb3 a3 c4 b3 bb3 a3 c4 b3) 
 
-;;; --------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+; Repeat your tune 5 times. Use the variable for it.
+; -----------------------------------------------------------
 
 ;;; gen-integer / midi-to-pitch / integer-to-pitch / 
 
-;; Set the variable "integer-scale" to a list of 
+;; converting pitches to midi
+(pitch-to-midi bach2)
+
+;; Set the variable "midi-scale" to a list of 
 ;; chromatic midi pitches
 (setf midi-scale '(60 61 62 63 64 65 66 67 68 69 70 71))
 
@@ -63,11 +87,15 @@ different types.
 (setf pitch-scale (midi-to-pitch midi-scale))
 ;; => (c4 cs4 d4 eb4 e4 f4 fs4 g4 gs4 a4 bb4 b4)
 
+;;; Random (see. Random chapter)
+
 ;; 8 random pitches between 60 and 72
 ;; (repetitions are possible.)
-(midi-to-pitch (rnd-number 8 60 72 :seed 123))
+(midi-to-pitch (rndn 8 60 72 :seed 123))
 ;; => (e4 b4 fs4 d4 b4 fs4 eb4 fs4)
 ;; the seed argument sets and fixes ONE random choice.
+
+;;; integer-to-pitch
 
 ;; integer converted to pitch notation 0 = c4
 (integer-to-pitch '(0 1 2 3 4 5 6 7 8 9 10 11)) 
@@ -77,7 +105,11 @@ different types.
 (integer-to-pitch '(-5 -4 -3 -2 -1 0 1 2 3 4 5 6)) 
 ;; => (g3 gs3 a3 bb3 b3 c4 cs4 d4 eb4 e4 f4 fs4)
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+; Create 12 random numbers either for Midis or Integers 
+; and convert them to pitches.
+; -----------------------------------------------------------
 
 ;;; DODECAPHONIC FUNCTIONS
 ;;; https://en.wikipedia.org/wiki/Twelve-tone_technique
@@ -102,16 +134,20 @@ data, s. Graph Tools in the documentation.
 ;; reversed row
 (setf retrograde (reverse row))
 
-;; inverted pitches
+;; inverted row
 (setf inversion (pitch-invert row))
 
-;; reversed invertion of pitches
+;; reversed invertion row
 (setf retrograde-inversion (reverse inversion))
 
 ;; all forms together
 (list row retrograde inversion retrograde-inversion)
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+; Look up an all-interval twelve-tone row and create all 
+; forms of it.
+; -----------------------------------------------------------
 
 ;;; pitch-transpose / integer-transpose
 
@@ -132,7 +168,11 @@ data, s. Graph Tools in the documentation.
 (integer-to-pitch
  (integer-transpose 2 '(0 2 4)))
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+; Create a chord with 4 pitches or frequencies and transpose 
+; it a fifth lower, a quartertone and a tritone higher
+; -----------------------------------------------------------
 
 ;;; pitch-transpose-n / integer-transpose-rnd 
 
@@ -161,10 +201,14 @@ data, s. Graph Tools in the documentation.
 ;; 3. argument: sequence of (8) pitches
 (pitch-transpose-rnd 4 7 (gen-repeat 8 'c4))
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+; Make a list of 10 pitches of which 5 pitches are randomly
+; transposed a tritone lower or higher. 
+; -----------------------------------------------------------
 
+;;; gen-loop
 ;;; Iteration (see Iteration chapter)
-;;; gen-repeat / gen-loop
 
 ;; repeat the result 3 times (same results)
 (gen-repeat 3 (pitch-transpose-rnd 4 7 (gen-repeat 8 'c4)))
@@ -172,14 +216,8 @@ data, s. Graph Tools in the documentation.
 ;; repeat the calculation 3 times (different results)
 (gen-loop 3 (pitch-transpose-rnd 4 7 (gen-repeat 8 'c4)))
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+; Repeat the calculation of the above 4 times.
+; -----------------------------------------------------------
 
-;;; Classroom Exercise
-
-#|
-- Copy several code lines from above. 
-- Try to combine code.
-- Change the numbers.
-|#
-
-;;; ---------------------------------------------------------
