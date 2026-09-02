@@ -1,0 +1,46 @@
+;;; ---------------------------------------------------------
+;;; Opusmodus Tutorial
+;;; Studio for Electronic Music (SEM)
+;;; University Mozarteum, Salzburg
+;;; Copyright © 2015–2026, Achim Bornhoeft
+;;; ---------------------------------------------------------
+
+;;; QUANTIZATION
+
+#|
+The Quantization tools convert continuous or irregular 
+numerical material into discrete musical values. They are 
+used in two main areas: rhythmic quantization and microtonal
+pitch quantization.
+|#
+
+;;; ---------------------------------------------------------
+
+#|
+The quantize function analyses duration values and returns 
+the closest notatable rhythmic grouping according to the 
+supplied tuplet divisions. It can process floating-point 
+durations, ratios and OMN sequences.
+|#
+
+;; Floating point numbers between 0.0 and 1.0
+(setf numb (gen-noise 20 :seed 1234))
+
+;; Quantize converts by default to notation
+;; where 1.0 = q, 0.5 = e, etc.
+;; Here quantization to q, e and s
+(setf quant16 (quantize numb '(1 2 4)))
+
+;; Compare with cmd-2
+(list quant16
+      ;; Quantization additionally to triplets
+      (setf quant12 (quantize numb '(1 2 3 4))))
+
+;; Ratios may be used directly as input.
+(setf rnd-ratios 
+      (rnd-sample 10 '(1/8 1/16 1/20 1/24 1/28) :seed 123))
+
+;; Compare with cmd-2
+(list
+ (quantize rnd-ratios '(1 2 3 4 5 7))
+ (quantize rnd-ratios '(1 2 3 4 6)))

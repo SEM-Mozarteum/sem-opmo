@@ -22,11 +22,24 @@ relative distance.
 ;; mapping the intervals starting from 'c4
 (interval-map 'c4 intervals)
 
+; -----------------------------------------------------------
+; Exercise: 
+; Write the all interval row Luigi Nono used in 
+; "Canto sospeso" as intervals starting from a4
+; -----------------------------------------------------------
+
+;; When the interval reaches the ambitus border
+;; the direction changes until the next change in direction
+;; resulting in a palindrome movement
+(interval-map 'c4 '(4 4 4 4 4 4 4) :ambitus '(c4 c5))
+;; => (c4 e4 gs4 c5 gs4 e4 c4 e4)
+
 ;;; ---------------------------------------------------------
 
 ;;; interval-ambitus / interval-scale
 
-;; This interval function provides a way of restricting interval content via an ambitus operation.
+;; This interval function provides a way of restricting 
+;; interval content via an ambitus operation.
 
 (interval-ambitus 14 23) ; => 11
 ;; This function is operation like a pitchclass operation:
@@ -35,19 +48,27 @@ relative distance.
 
 ;; This functions restricts the intervals of the input list
 ;; to a maximum ambitus keeping octave equivalent note names
-(interval-map 'c4
-(interval-ambitus 7 '(-12 3 -17 23))) ; (0 3 -5 -1)
+(setf intervals '(-11 7 -17 23))
 
-;; When the interval reaches the ambitus border
-;; the direction changes until the next change in direction
-;; resulting in a palindrome movement
-(interval-map 'c4 '(4 4 4 4 4 4 4) :ambitus '(c4 c5))
-;; => (c4 e4 gs4 c5 gs4 e4 c4 e4)
+(setf interval7
+      (interval-map 
+       'c4 (interval-ambitus 
+            7 intervals))) ; (1 3 -5 -1)
+
+;; Compare with cmd-2
+(make-omn
+ :pitch (list 
+         interval7
+         (interval-map 
+          'c4 (interval-ambitus 24 intervals)))
+ :length '(q)
+ :span :pitch)
 
 ;; Scaling of intervals
 ;; here by 2 scales the original row from one to two octaves
+(setf 2octaves
 (interval-map 'c4
-(interval-scale 2 intervals))
+(interval-scale 2 intervals)))
 
 ;; Scaled intervals ranged to ambitus (semitones)
 ;; row lies in between - 5 semitones and + 7 semitones
