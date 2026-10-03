@@ -34,7 +34,7 @@ or atom.
 
 ;; gen-repeat-seq generates lists by repeating elements 
 ;; from a given list with randomized repetitions between 
-;; low and high.
+;; low and high, here 2 and 5
 (setf pattern (gen-repeat-seq 24 2 5 '(c4 cs4 d4 eb4 g4 c5)))
 
 ;;; ---------------------------------------------------------

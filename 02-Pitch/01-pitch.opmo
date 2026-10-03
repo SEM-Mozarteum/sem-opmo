@@ -10,10 +10,10 @@
 #|
 There are 4 different description of pitches in OM:
 
-- note names (pitches): 
-- integers (where 0 is c4)
+- note names (pitches, c4 is the "middle" c): 
+- positive and negative integers (where 0 is c4)
 - midis (with 60 for c4)
-- frequencies (in hertz)
+- frequencies (in hertz, 440 hz = a4)
 
 Several functions provide for the conversion between these
 different types.

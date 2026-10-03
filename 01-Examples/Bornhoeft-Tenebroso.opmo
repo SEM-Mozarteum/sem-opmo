@@ -82,7 +82,7 @@ background.
          (voc4 :start 17 :end 32))))
 
 ;; transpose lowest notes within (e1 a1) an octave up
-(setf voc4 (dictum '(:within (e1 a1) 
+(setf voc4 (dictum '(:within (-32 -27) 
                      :do (pitch-transpose 12 x))          
                    voc4))
 

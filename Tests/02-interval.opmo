@@ -26,7 +26,6 @@ relative distance.
 ; Exercise: 
 ; Write the all interval row Luigi Nono used in 
 ; "Canto sospeso" as intervals starting from a4
-; https://en.wikipedia.org/wiki/Il_canto_sospeso
 ; -----------------------------------------------------------
 
 ;; When the interval reaches the ambitus border
@@ -51,8 +50,6 @@ relative distance.
 ;; to a maximum ambitus keeping octave equivalent note names
 (setf intervals '(-11 7 -17 23))
 
-;; Interval-map calculates pitches from intervals starting
-;; from a specific pitch
 (setf interval7
       (interval-map 
        'c4 (interval-ambitus 
@@ -66,11 +63,6 @@ relative distance.
           'c4 (interval-ambitus 24 intervals)))
  :length '(q)
  :span :pitch)
-
-; -----------------------------------------------------------
-; Exercise: 
-
-; -----------------------------------------------------------
 
 ;; Scaling of intervals
 ;; here by 2 scales the original row from one to two octaves
@@ -110,6 +102,39 @@ relative distance.
 (interval-map 'c4
 (interval-randomize 3 '(2 4 -2) :rnd-order t :seed 12))
 ;; ((c5 gs4 fs4 e4) (c4 bb3 gs3) (c4 d4 e4))
+;;; ---------------------------------------------------------
+
+;;; interval-repeat
+
+#|
+This function generates repetitions of a single interval 
+above or below a base (0). It responds to low-change and 
+high-change, and low-repeat and high-repeat arguments.
+|#
+
+(interval-to-pitch
+(interval-repeat 8 1 4 1 1 6))
+
+(interval-to-pitch
+(interval-repeat 8 2 3 2 3 '(6 7) :seed 123))
 
 ;;; ---------------------------------------------------------
 
+;;; Extended example
+
+(cons 't 
+      ;; add "t" (1/32 duration) at the beginning 
+      ;; to set the duration for all notes
+      (flatten
+       ;; remove all the inner lists
+       (gen-loop 4 ; create 4 lists         
+                 (interval-to-pitch 
+                  ;; converting intervals to pitch
+                  (interval-repeat
+                   (rnd-sample 5 
+                               (gen-integer 8 14)) 
+                   2 3 2 3 '(12 8 6 7 3) 
+                   :seed 123)
+                  ;; each of the intervals is repeated 
+                  :start 'g3) 
+                 :seed 123)))

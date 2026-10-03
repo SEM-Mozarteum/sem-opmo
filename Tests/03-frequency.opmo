@@ -16,43 +16,22 @@ of spectral music is calculated in frequencies.
 
 ;;; ---------------------------------------------------------
 
-(setf fund (pitch-to-hertz 'g1))
+;; Conversion from a list of pitches to frequencies in hertz
+(pitch-to-hertz '(c4 cs4 d4 ds4 e4 f4 fs4 g4 gs4 a4 as4))
+;; => (261.62555 277.18265 293.66476 311.12698 329.62756 349.22824 369.99442 391.99542 415.3047 440.0 466.1638)
 
-;; Harmonic row starting from g1 upto the 24th overtone 
-;; in hertz
-(setf harmonics-hz (harmonics fund 24))
+(hertz-to-pitch '(110 220 330 440 550 660 770 880))
 
-;; Convert to pitch in eighth tone notation
-(setf harmonics-pitch (hertz-to-pitch harmonics-hz))
+;; harmonics function
+(harmonics 'a2 8 :type :pitch) ;=> (a2 a3 e4 a4 cs5 e5 g5 a5)
+;; by default pitches are chromatic
 
-;; Harmonic row in pitches (default semitones)
-(setf harmonics-semi (harmonics fund 24 :type :pitch))
+;; quantization in quartertones
+(harmonics 'a2 12 :quantize 1/4 :type :pitch)
 
-;; Harmonic row in quarter tones
-(setf harmonics-quarter (harmonics fund 24 
-                                   :type :pitch 
-                                   :quantize 1/4))
-
-;; Remaining cents from semitones
-(setf remain-cents (hertz-to-midi harmonics-hz
-                       :quantize 1/2 :remain t))
-
-#|
-The function cent-to-attribute converts a list of cent 
-values into cent attributes. Use this function to display 
-the remaining cent values from a list of floating point 
-numbers after a quantisation. 
-|#
-
-;; Converting cents to attributes
-(setf cents (cent-to-attribute remain-cents))
-
-;; Harmonic scale in semitones + cent deviations
-(make-omn
-   :pitch harmonics-semi
-   :length '(q)
-   :articulation cents
-   :span :pitch)
+;; quantization in eigthtones as chord
+(chordize 
+ (harmonics 'a2 12 :quantize 1/8 :type :pitch))
 
 ;;; ---------------------------------------------------------
 
@@ -62,9 +41,8 @@ numbers after a quantisation.
 Microtones are implemented in OM as quarter- and eigthtones
 because of the commonly used signs in computer notation.
 All additional deviations can be displayed in cents as text
-attributes, see above.
+attributes.
 |#
-
 
 ;; a list of 16 random frequencies
 (setf frequencies (rndn 16 200 400 :seed 678))
@@ -75,6 +53,10 @@ attributes, see above.
 ;; to eigth tones (default)
 (hertz-to-pitch frequencies)
 
+;; A list of remaining cents from frequency list
+;; in eigth tones
+(hertz-to-pitch frequencies :remain t)
+
 ;; A set of random pitches quantised to quarter tones
 (setf pitches (hertz-to-pitch frequencies :quantize 1/4))
 
@@ -82,3 +64,29 @@ attributes, see above.
 ;; 3 quarter-tone alteration to 1 quarter-tone alteration.
 ;; You can overwrite a variable (pitches) with the same name!
 (setf pitches (quarter-tone-closest pitches))
+
+;; A list of remaining cents from the quantised list
+(setf cents (hertz-to-pitch frequencies 
+                              :quantize 1/4 :remain t))
+
+;;; cents-to-attribute
+
+#|
+This function converts a list of cent values into cent 
+attributes. Use this function to display the remaining 
+cent values from a list of floating point numbers after 
+a quantisation. 
+|#
+
+(cent-to-attribute cents) 
+;; => (23c -19c -24c 14c 1c 4c 11c 14c -16c 22c 19c -15c -23c -11c -4c)
+
+;; Display the microtones with remaining cents
+
+;; 
+(make-omn
+ :length '(h q)
+ :pitch pitches
+ :articulation (cent-to-attribute cents)
+ :span :pitch)
+

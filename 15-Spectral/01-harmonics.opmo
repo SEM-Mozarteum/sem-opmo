@@ -21,7 +21,7 @@ integer multiple of a fundamental frequency.
       (loop for i from 1 to 17
               collect (* (pitch-to-hertz 'a2) i)))
 
-;; quantize the frequencies from hertz to pitch
+;; quantize the frequencies from hertz to chromatic pitches
 (setf harm-semi
       (hertz-to-pitch harm-hz :quantize 1/2))
 
