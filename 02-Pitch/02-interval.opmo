@@ -19,7 +19,8 @@ relative distance.
 ;; a list of ascending and descending intervals
 (setf intervals '(2 1 2 1 2 1 2 1 -2 -2 -1 -2 -2 -1 -2))
 
-;; mapping the intervals starting from 'c4
+;; Interval-map calculates pitches from intervals starting
+;; from a specific pitch
 (interval-map 'c4 intervals)
 
 ; -----------------------------------------------------------
@@ -41,18 +42,15 @@ relative distance.
 
 ;; This interval function provides a way of restricting 
 ;; interval content via an ambitus operation.
-
 (interval-ambitus 14 23) ; => 11
 ;; This function is operation like a pitchclass operation:
 ;; It reduces the interval to the octave of the interval:
-;; 23 - 12 = 11
+;; 23 - 12 = 11 (is lower than 14)
+
 
 ;; This functions restricts the intervals of the input list
 ;; to a maximum ambitus keeping octave equivalent note names
 (setf intervals '(-11 7 -17 23))
-
-;; Interval-map calculates pitches from intervals starting
-;; from a specific pitch
 (setf interval7
       (interval-map 
        'c4 (interval-ambitus 
@@ -66,11 +64,6 @@ relative distance.
           'c4 (interval-ambitus 24 intervals)))
  :length '(q)
  :span :pitch)
-
-; -----------------------------------------------------------
-; Exercise: 
-
-; -----------------------------------------------------------
 
 ;; Scaling of intervals
 ;; here by 2 scales the original row from one to two octaves
@@ -88,7 +81,12 @@ relative distance.
 (interval-map 'c4
 (interval-scale 2 intervals :ambitus 'bass))
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+; Write a list of any intervals up and down.
+; Convert them to pitches starting with g3.
+; Range the pitches in the ambitus of a violin.
+; -----------------------------------------------------------
 
 ;;; interval-randomize
 

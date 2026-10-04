@@ -3,14 +3,14 @@
 )
 
 ("workspace-view/history"
- (("02-Pitch/01-pitch.opmo" "01-pitch.opmo") ("11-Assembling/01-assembling.opmo" "01-assembling.opmo") ("02-Pitch/02-interval.opmo" "02-interval.opmo") ("02-Pitch/03-frequency.opmo" "03-frequency.opmo") ("02-Pitch/04-chord.opmo" "04-chord.opmo") ("10-Import-Export/Midi/01-import-midi.opmo" "01-import-midi.opmo") ("01-Examples/Bornhoeft-Tenebroso.opmo" "Bornhoeft-Tenebroso.opmo") ("01-Examples/Bornhoeft-Waldstein.opmo" "Bornhoeft-Waldstein.opmo") ("00-Basics/04-Lisp.opmo" "04-Lisp.opmo") ("00-Basics/05-Shortcuts.opmo" "05-Shortcuts.opmo") ("01-Examples/Nono-Diotima.opmo" "Nono-Diotima.opmo") ("01-Examples/Podrazik-Drums.opmo" "Podrazik-Drums.opmo") ("01-Examples/Podrazik-Frames.opmo" "Podrazik-Frames.opmo") ("06-Random/01-random.opmo" "01-random.opmo") ("18-Texture/01-textures.opmo" "01-textures.opmo") ("15-Spectral/01-harmonics.opmo" "01-harmonics.opmo") ("15-Spectral/02-modulation.opmo" "02-modulation.opmo") ("03-Length/01-length.opmo" "01-length.opmo") ("03-Length/02-rest.opmo" "02-rest.opmo") ("05-Iteration/01-iteration.opmo" "01-iteration.opmo"))
+ (("02-Pitch/01-pitch.opmo" "01-pitch.opmo") ("11-Assembling/01-assembling.opmo" "01-assembling.opmo") ("02-Pitch/02-interval.opmo" "02-interval.opmo") ("02-Pitch/03-frequency.opmo" "03-frequency.opmo") ("02-Pitch/04-chord.opmo" "04-chord.opmo") ("10-Import-Export/Midi/01-import-midi.opmo" "01-import-midi.opmo") ("06-Random/01-random.opmo" "01-random.opmo") ("18-Texture/01-textures.opmo" "01-textures.opmo") ("15-Spectral/01-harmonics.opmo" "01-harmonics.opmo") ("15-Spectral/02-modulation.opmo" "02-modulation.opmo") ("03-Length/01-length.opmo" "01-length.opmo") ("03-Length/02-rest.opmo" "02-rest.opmo") ("05-Iteration/01-iteration.opmo" "01-iteration.opmo") ("Exercises/exercise-spectral-solution2.opmo" "exercise-spectral-solution2.opmo") ("01-Basics/04-Lisp.opmo" "04-Lisp.opmo") ("01-Basics/05-Shortcuts.opmo" "05-Shortcuts.opmo"))
 )
 
 ("workspace-view/current"
- "Tests/score-macro.opmo"
+ "02-Pitch/02-interval.opmo"
 )
 
 ("workspace-view/navigator-display-states"
- ((:USER-LIBRARIES NIL NIL NIL) (:USER-MEDIA NIL NIL NIL) (:USER-DOCUMENTS NIL NIL 0) (:USER-SCORES NIL NIL 0) (:USER-WORKSPACE (#P"/Users/bornhoeft/Documents/code/github/sem-opmo/Tests/") #P"/Users/bornhoeft/Documents/code/github/sem-opmo/Tests/score-macro.opmo" 0))
+ ((:USER-LIBRARIES NIL NIL NIL) (:USER-MEDIA NIL NIL NIL) (:USER-DOCUMENTS NIL NIL 0) (:USER-SCORES NIL NIL 0) (:USER-WORKSPACE (#P"/Users/bornhoeft/Documents/code/github/sem-opmo/02-Pitch/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/01-Basics/") #P"/Users/bornhoeft/Documents/code/github/sem-opmo/02-Pitch/02-interval.opmo" 0))
 )
 

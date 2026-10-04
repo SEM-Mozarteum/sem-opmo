@@ -65,7 +65,6 @@ All additional deviations can be displayed in cents as text
 attributes, see above.
 |#
 
-
 ;; a list of 16 random frequencies
 (setf frequencies (rndn 16 200 400 :seed 678))
 ;; The rndn function produces random numbers:
