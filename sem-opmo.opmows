@@ -1,5 +1,5 @@
 ("workspace-view/layout-ratios"
- (1 (OM-CAPI::MAIN 236 NIL 740) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 726 NIL 97))
+ (1 (OM-CAPI::MAIN 236 NIL 757) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 791 NIL 97))
 )
 
 ("workspace-view/history"
@@ -11,6 +11,6 @@
 )
 
 ("workspace-view/navigator-display-states"
- ((:USER-LIBRARIES NIL NIL NIL) (:USER-MEDIA NIL NIL NIL) (:USER-DOCUMENTS NIL NIL 0) (:USER-SCORES NIL NIL 0) (:USER-WORKSPACE (#P"/Users/studio/Documents/GitHub/sem-opmo/01-Basics/") #P"/Users/studio/Documents/GitHub/sem-opmo/01-Basics/00-CAC.pdf" 0))
+ ((:USER-LIBRARIES NIL NIL NIL) (:USER-MEDIA NIL NIL NIL) (:USER-DOCUMENTS NIL NIL 0) (:USER-SCORES NIL NIL 0) (:USER-WORKSPACE NIL NIL 0))
 )
 
