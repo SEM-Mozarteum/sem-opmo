@@ -35,11 +35,9 @@ and ending with !#
 Comments are not evaluated!
 |#
 
-#!
 ;;; (RED) MAIN COMMENTs, HEADERS, CREDITS, etc.
 ;; (ORANGE) Descriptive comments in the code
 ; (BROWN) Inline comments
-!#
 
 ;;; ---------------------------------------------------------
 
@@ -48,18 +46,9 @@ Comments are not evaluated!
 #|
 Every correct LISP expression has the same amount of 
 opening and closing parantheses.
-
-Place the cursor after any of the parantheses to 
-evaluate the containing expression.
-To evaluate an expression press 'cmd + e' and 
-see the result in Listener below.
-
-(Press 'cmd-shift e' to evaluate the whole composer window 
-and show the output of the last expression.)
+The first statement is generally a function in LISP
+followed by 0 to N arguments
 |#
-
-;; The first statement is generally a function in LISP
-;; followed by 0 to N arguments
 
 ;; random function without arguments
 (rndn) ; default result: one float between 0 and 1
@@ -70,6 +59,18 @@ and show the output of the last expression.)
 ;; random function with one argument 
 ;; (= highest random number - 1)
 (random 10) ; random number between 0 and 9
+
+; -----------------------------------------------------------
+; Exercise: 
+; Place the cursor after any of the parantheses to 
+; evaluate the containing expression.
+; To evaluate an expression press 'cmd + e' and 
+; see the result in Listener below.
+; -----------------------------------------------------------
+
+;;; ---------------------------------------------------------
+;;; Continue on 15. October 2026
+;;; ---------------------------------------------------------
 
 ;; OPUSMODUS has (+/- 800) inbuilt functions , 
 ;; many of them directly related to music
@@ -85,7 +86,10 @@ and show the output of the last expression.)
    ;;  ambitus of the flute: (0 41) 
    (ambitus-instrument 'flute))))
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+;  
+; -----------------------------------------------------------
 
 ;;; VARIABLES
 
@@ -100,13 +104,16 @@ and show the output of the last expression.)
 ;; are converted back to midi notes
 (pitch-to-midi pitches)
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+;  
+; -----------------------------------------------------------
 
 ;;; LISTS
 
 ;; numbers from 0 to 7 in a list (= container)
-(list 0 1 2 3 4 5 6 7) ; list function
-;; same as
+(list 0 1 2 3 4 5 6 7) ; list function is evaluated
+;; similar to
 '(0 1 2 3 4 5 6 7) 
 ;; latter is a so called quoted list, means "as it is" 
 ;; otherwise 0 would be the function
@@ -114,7 +121,6 @@ and show the output of the last expression.)
 ;;; ALL musical parameters in Opusmodus are stored in lists.
 
 ;; lists can be infinitely nested
-
 (- (+ 1 2) 3) ; 1 + 2 - 3 = 0
 
 ;;; ALL levels of a score (measure, voice, part, system, 
@@ -126,6 +132,11 @@ and show the output of the last expression.)
 
 ;; reverse a list
 (reverse lst1)
+
+; -----------------------------------------------------------
+; Exercise: 
+;  
+; -----------------------------------------------------------
 
 ;; collect lists into one list
 (list lst1 lst2) ; ((1 2 3 4 5) (a b c d e))
@@ -152,6 +163,11 @@ and show the output of the last expression.)
 (nth 3 lst1) ; 4
 (nth 0 lst2) ; a
 
+; -----------------------------------------------------------
+; Exercise: 
+;  
+; -----------------------------------------------------------
+
 ;;; ---------------------------------------------------------
 
 ;;; DOCUMENTATION
@@ -171,16 +187,30 @@ Works in Assistant as well!
 
 (midi-to-pitch '(71 70 74 63 67 66))
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+; Get the info for the function make-constraints.
+; -----------------------------------------------------------
 
 ;;; AUTOCOMPLETE
 
 #|
 Type an opening parenthesis and the first letter of a 
 symbol, then press Tab to invoke the completion menu. 
-Use the arrow keys to navigate; 
+Use the up and down arrow keys to navigate; 
 Return inserts the selection.
 |#
 
 ;; Put cursor at the end of "rnd" and press Tab:
 ;; (rnd
+
+; -----------------------------------------------------------
+; Exercise: 
+; Insert the function gen-transition this way.
+; -----------------------------------------------------------
+
+; -----------------------------------------------------------
+; Exercise: 
+; Press 'cmd-shift e' to evaluate the whole composer window 
+; and show the output of the last expression.)
+; -----------------------------------------------------------
