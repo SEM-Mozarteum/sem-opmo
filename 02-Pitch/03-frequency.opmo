@@ -54,7 +54,12 @@ numbers after a quantisation.
    :articulation cents
    :span :pitch)
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+; Create a harmonic scale upto the 15th overtone on a1
+; and quantize the pitches to eight tones.
+; Set it to the variable spectrum
+; -----------------------------------------------------------
 
 ;;; MICROTONES
 

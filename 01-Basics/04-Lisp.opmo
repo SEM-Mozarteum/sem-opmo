@@ -88,7 +88,30 @@ followed by 0 to N arguments
 
 ; -----------------------------------------------------------
 ; Exercise: 
-;  
+; Get the ambitus of a violin and convert it to pitches.
+; -----------------------------------------------------------
+
+;;; DOCUMENTATION
+
+#|
+Place the cursor anywhere in a function name and 
+press 'ctrl y' for the direct display of the arguments
+and a short description of the function. 
+(Press esc to close this display)
+
+Press 'cmd-d' for extensive documentation, examples
+and occurrences in other documents. 
+Works in Assistant as well!
+|#
+
+;; Look up this functions with cmd-d
+(rndn)
+
+(midi-to-pitch '(71 70 74 63 67 66))
+
+; -----------------------------------------------------------
+; Exercise: 
+; Get the info for the function make-constraints.
 ; -----------------------------------------------------------
 
 ;;; VARIABLES
@@ -106,7 +129,9 @@ followed by 0 to N arguments
 
 ; -----------------------------------------------------------
 ; Exercise: 
-;  
+; Make 10 random numbers between 0 and 10 and set it to
+; the variable rnd-numbers.
+; Look up the documentation of rndn for it.
 ; -----------------------------------------------------------
 
 ;;; LISTS
@@ -135,7 +160,9 @@ followed by 0 to N arguments
 
 ; -----------------------------------------------------------
 ; Exercise: 
-;  
+; Write an expression with ambitus-instrument where you
+; replace the instrument name (e.g. 'flute) with a list
+; containing 2 pitches (note names e.g. c4, a4, etc.)
 ; -----------------------------------------------------------
 
 ;; collect lists into one list
@@ -161,35 +188,12 @@ followed by 0 to N arguments
 ;; Note that the first item in a list has the position 0. 
 
 (nth 3 lst1) ; 4
-(nth 0 lst2) ; a
+(print (nth 0 lst2)) ; a
 
 ; -----------------------------------------------------------
 ; Exercise: 
-;  
-; -----------------------------------------------------------
-
-;;; ---------------------------------------------------------
-
-;;; DOCUMENTATION
-
-#|
-Place the cursor anywhere in a function name and 
-press 'ctrl y' for the direct display of the arguments
-and a short description of the function. 
-(Press esc to close this display)
-
-Press 'cmd d' for extensive documentation, examples
-and occurrences in other documents. 
-Works in Assistant as well!
-|#
-
-(rndn)
-
-(midi-to-pitch '(71 70 74 63 67 66))
-
-; -----------------------------------------------------------
-; Exercise: 
-; Get the info for the function make-constraints.
+; Call your 10 random numbers (see above) and display it
+; without the first and the last number.
 ; -----------------------------------------------------------
 
 ;;; AUTOCOMPLETE
@@ -213,4 +217,5 @@ Return inserts the selection.
 ; Exercise: 
 ; Press 'cmd-shift e' to evaluate the whole composer window 
 ; and show the output of the last expression.)
+; This should be "a" followed by nil.
 ; -----------------------------------------------------------

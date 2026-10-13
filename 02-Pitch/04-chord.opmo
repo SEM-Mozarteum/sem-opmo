@@ -32,7 +32,11 @@ chords are written as directly consecutive notes:
 (chordize-list
  (midi-to-pitch '((60 56) (67 62) (62 65 66) (63 60 61))))
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+; Call the variable spectrum (see last exercise in 
+; 03-frequency.opmo) and make a chord of it.
+; -----------------------------------------------------------
 
 ;;; gen-divide
 
@@ -48,7 +52,10 @@ chords are written as directly consecutive notes:
 ;; Group a melody in different chords
 (chordize (gen-divide '(3 2 3) '(c4 f4 g4 a4 d4 f3 b3 e4)))
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Make 3 chords with different number of pitches 
+; from spectrum.
+; -----------------------------------------------------------
 
 ;; Extended example
 
