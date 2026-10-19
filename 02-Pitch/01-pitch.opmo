@@ -46,10 +46,18 @@ To stop Audition press cmd esc.
 
 ; -----------------------------------------------------------
 ; Exercise: 
-; Write down the pitches of a tune you know.
-; Assign any variable to this list of pitches.
+; Write down the pitches of the first 4 measures of 
+; Beethoven's "Freude schöner Götterfunken":
+; https://tinyurl.com/Ode-an-die-Freude
+; (Correct the wrong note on the Website ...)
+; Write each measure in parantheses.
+; Assign a variable to this list of pitches.
 ; -----------------------------------------------------------
 
+(setf ode '((e4 e4 f4 g4)(g4 f4 e4 d4)(c4 c4 d4 e4) (e4 d4 d4)))
+
+(setf m23 (rest (butlast ode)))
+(gen-repeat 5 m23)
 ;;; gen-repeat
 ;;; Iteration (see Iteration chapter)
 
@@ -67,7 +75,8 @@ To stop Audition press cmd esc.
 
 ; -----------------------------------------------------------
 ; Exercise: 
-; Repeat your tune 5 times. Use the variable for it.
+; Take the measures 2 and 3 from the Beethoven example and
+; apply a variable to it. Repeat it 3 times.
 ; -----------------------------------------------------------
 
 ;;; gen-integer / midi-to-pitch / integer-to-pitch / 
@@ -145,8 +154,11 @@ data, s. Graph Tools in the documentation.
 
 ; -----------------------------------------------------------
 ; Exercise: 
-; Look up an all-interval twelve-tone row and create all 
-; forms of it.
+; Take the twelve-tone row from Anton Webern
+; Concert for 9 instruments op. 24:
+; https://tinyurl.com/Webern-op24
+; Make all four forms of it.
+; (Compare the forms analytically.)
 ; -----------------------------------------------------------
 
 ;;; pitch-transpose / integer-transpose
@@ -203,8 +215,8 @@ data, s. Graph Tools in the documentation.
 
 ; -----------------------------------------------------------
 ; Exercise: 
-; Make a list of 10 pitches of which 5 pitches are randomly
-; transposed a tritone lower or higher. 
+; Make a list of 10 repetitions of g4 where 5 of them are 
+; randomly transposed a tritone lower or higher. 
 ; -----------------------------------------------------------
 
 ;;; gen-loop

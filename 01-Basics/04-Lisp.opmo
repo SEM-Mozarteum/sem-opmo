@@ -68,14 +68,13 @@ followed by 0 to N arguments
 ; see the result in Listener below.
 ; -----------------------------------------------------------
 
-;;; ---------------------------------------------------------
-;;; Continue on 15. October 2026
-;;; ---------------------------------------------------------
-
 ;; OPUSMODUS has (+/- 800) inbuilt functions , 
 ;; many of them directly related to music
 (ambitus-instrument 'flute) 
 ;; => (0 41) result in integers where 0 is c4
+
+(integer-to-pitch
+ (ambitus-instrument 'flute))
 
 ;; all pitches of a flute
 ;; expressions are evaluated from inside to outside
@@ -111,7 +110,7 @@ Works in Assistant as well!
 
 ; -----------------------------------------------------------
 ; Exercise: 
-; Get the info for the function make-constraints.
+; Get the info for the function gen-transition.
 ; -----------------------------------------------------------
 
 ;;; VARIABLES
@@ -160,9 +159,8 @@ Works in Assistant as well!
 
 ; -----------------------------------------------------------
 ; Exercise: 
-; Write an expression with ambitus-instrument where you
-; replace the instrument name (e.g. 'flute) with a list
-; containing 2 pitches (note names e.g. c4, a4, etc.)
+; Write a list of integers between c3 and c5 
+; and convert them to pitch.
 ; -----------------------------------------------------------
 
 ;; collect lists into one list
@@ -211,8 +209,7 @@ Return inserts the selection.
 ; -----------------------------------------------------------
 ; Exercise: 
 ; Insert the function gen-transition this way.
-; -----------------------------------------------------------
-
+;
 ; -----------------------------------------------------------
 ; Exercise: 
 ; Press 'cmd-shift e' to evaluate the whole composer window 
