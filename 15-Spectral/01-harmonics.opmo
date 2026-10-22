@@ -15,21 +15,68 @@ harmonics, musical tones, or pure tones whose frequency is an
 integer multiple of a fundamental frequency.
 |#
 
-(progn
+(setf fund (pitch-to-hertz 'g1))
+
 ;; 16 pure harmonics on a2
 (setf harm-hz 
-      (loop for i from 1 to 17
-              collect (* (pitch-to-hertz 'a2) i)))
+      (loop for i from 1 to 24
+              collect (* fund i)))
 
-;; quantize the frequencies from hertz to chromatic pitches
-(setf harm-semi
-      (hertz-to-pitch harm-hz :quantize 1/2))
+;; Harmonic row starting from g1 upto the 24th overtone 
+;; in hertz
+(setf harmonics-hz (harmonics fund 24))
 
+;; Convert to pitch in eighth tone notation
+(setf harmonics-pitch (hertz-to-pitch harmonics-hz))
+
+;; Harmonic row in pitches (default semitones)
+(setf harmonics-semi (harmonics fund 24 :type :pitch))
+
+;; Harmonic row in quarter tones
+(setf harmonics-quarter 
+      (harmonics fund 24 :type :pitch :quantize 1/4))
+
+;; start from a specified partial
+(harmonics 'a2 14 :start 3 :type :pitch :quantize 1/4)
+
+;; select partials in a specified pattern
+(harmonics 'a2 14 :type :pitch :quantize 1/4 
+           :partial-nth '(1 2))
+
+;;; ---------------------------------------------------------
+
+;;; Cent deviation
+
+;; Remaining cents from semitones
+(setf remain-cents (hertz-to-midi harmonics-hz
+                       :quantize 1/2 :remain t))
+
+#|
+The function cent-to-attribute converts a list of cent 
+values into cent attributes. Use this function to display 
+the remaining cent values from a list of floating point 
+numbers after a quantisation. 
+|#
+
+;; Converting cents to attributes
+(setf cents (cent-to-attribute remain-cents))
+
+;; Harmonic scale in semitones + cent deviations
+(make-omn
+   :pitch harmonics-semi
+   :length '(q)
+   :articulation cents
+   :span :pitch)
+
+;;; ---------------------------------------------------------
+
+;;; Decimal ratios / ratio-to-cent
+ 
 ;; decimal ratios between pure harmonic row and 
 ;; a quantized version in semitones
 (setf ratio-hz-semi 
       (loop for h in harm-hz
-            for s in (pitch-to-hertz harm-semi)
+            for s in (pitch-to-hertz harmonics-semi)
             collect (/ h s)))
 
 ;; deviation of the harmonic scale from the chromatic notation
@@ -38,25 +85,10 @@ integer multiple of a fundamental frequency.
       
 (make-omn
  :length '(w)
- :pitch harm-semi
+ :pitch harmonics-semi
  ;; make attributes from cent values
  :articulation (cent-to-attribute cent-dev)
  :span :pitch)
-)
-
-;;; ---------------------------------------------------------
-
-;;; harmonics 
-
-;; or use the harmonics function
-(harmonics 'a2 14 :type :pitch :quantize 1/2)
-
-;; start from a specified partial
-(harmonics 'a2 14 :start 3 :type :pitch :quantize 1/4)
-
-;; select partials in a specified pattern
-(harmonics 'a2 14 :type :pitch :quantize 1/4 
-           :partial-nth '(1 2))
 
 ;;; ---------------------------------------------------------
 

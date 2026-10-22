@@ -12,6 +12,7 @@ Frequency is the number of occurrences of a repeating event
 per unit of time. Frequency is measured in hertz (Hz) which 
 is equal to one event per second. The harmonic organisation 
 of spectral music is calculated in frequencies.
+(See chapter "Spectral")
 |#
 
 ;;; ---------------------------------------------------------
@@ -33,33 +34,14 @@ of spectral music is calculated in frequencies.
                                    :type :pitch 
                                    :quantize 1/4))
 
-;; Remaining cents from semitones
-(setf remain-cents (hertz-to-midi harmonics-hz
-                       :quantize 1/2 :remain t))
-
-#|
-The function cent-to-attribute converts a list of cent 
-values into cent attributes. Use this function to display 
-the remaining cent values from a list of floating point 
-numbers after a quantisation. 
-|#
-
-;; Converting cents to attributes
-(setf cents (cent-to-attribute remain-cents))
-
-;; Harmonic scale in semitones + cent deviations
-(make-omn
-   :pitch harmonics-semi
-   :length '(q)
-   :articulation cents
-   :span :pitch)
-
 ; -----------------------------------------------------------
 ; Exercise: 
 ; Create a harmonic scale upto the 15th overtone on a1
 ; and quantize the pitches to eight tones.
 ; Set it to the variable spectrum
 ; -----------------------------------------------------------
+
+(hertz-to-pitch (harmonics 'g1 15))
 
 ;;; MICROTONES
 
@@ -69,6 +51,28 @@ because of the commonly used signs in computer notation.
 All additional deviations can be displayed in cents as text
 attributes, see above.
 |#
+
+#|
+Microtonality — symbols
+
++   +1/4-tone
+-   −1/4-tone
+.   with sharp +1/8-tone
+..  with sharp +3/8-tone
+.   with flat −1/8-tone
+..  with flat −3/8-tone
++.  with (♯/♭) ±1/8-tone
++.. with (♯/♭) ±3/8-tone
+-.  with (♯/♭) ∓1/8-tone
+-.. with (♯/♭) ∓3/8-tone
+|#
+
+;; Quarter tones
+'(q a4 a4+ as4 as4+ b4 b4- bb4 bb4- a4)
+
+;; Eighth tones 
+'(q a4 a4. a4+ a4.. as4 as4. as4+ b4- b4-. 
+b4- b4-.. bb4. bb4- a4. a4)
 
 ;; a list of 16 random frequencies
 (setf frequencies (rndn 16 200 400 :seed 678))
@@ -84,5 +88,16 @@ attributes, see above.
 
 ;; The function quarter-tone-closest convert pitches with 
 ;; 3 quarter-tone alteration to 1 quarter-tone alteration.
-;; You can overwrite a variable (pitches) with the same name!
-(setf pitches (quarter-tone-closest pitches))
+(setf pitches1 (quarter-tone-closest pitches))
+
+;; Compare both notations with cmd-2 (ctrl-2)
+;; This needs at least one duration which is added here
+;; manually at the beginning of the pitches lists.
+(list (cons 'q pitches) (cons 'q pitches1))
+
+; -----------------------------------------------------------
+; Exercise: 
+; Create a list of 24 microtones between 300 and 500 hz 
+; randomly. Quantize the pitches to quarter tones and 
+; apply quarter-tone-closest to it. 
+; -----------------------------------------------------------

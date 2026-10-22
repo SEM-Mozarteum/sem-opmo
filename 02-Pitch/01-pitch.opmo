@@ -54,10 +54,6 @@ To stop Audition press cmd esc.
 ; Assign a variable to this list of pitches.
 ; -----------------------------------------------------------
 
-(setf ode '((e4 e4 f4 g4)(g4 f4 e4 d4)(c4 c4 d4 e4) (e4 d4 d4)))
-
-(setf m23 (rest (butlast ode)))
-(gen-repeat 5 m23)
 ;;; gen-repeat
 ;;; Iteration (see Iteration chapter)
 
@@ -101,6 +97,7 @@ To stop Audition press cmd esc.
 ;; 8 random pitches between 60 and 72
 ;; (repetitions are possible.)
 (midi-to-pitch (rndn 8 60 72 :seed 123))
+
 ;; => (e4 b4 fs4 d4 b4 fs4 eb4 fs4)
 ;; the seed argument sets and fixes ONE random choice.
 
@@ -126,10 +123,10 @@ To stop Audition press cmd esc.
 ;;; rnd-row / pitch-invert / reverse
 
 ;; twelve-tone row as integers
-(setf row-integer (rnd-row :seed 34)) 
+(setf row-integer (rnd-row :seed 123)) 
 ;; => (0 7 3 1 4 11 6 9 8 5 10 2)
 ;; as pitches with the keyword :type and set to :pitch
-(setf row (rnd-row :seed 34 :type :pitch)) 
+(setf row (rnd-row  :seed 34 :type :pitch)) 
 ;; => (c4 g4 eb4 cs4 e4 b4 fs4 a4 gs4 f4 bb4 d4)
 
 #|
