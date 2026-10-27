@@ -1,5 +1,5 @@
 ("workspace-view/layout-ratios"
- (1 (OM-CAPI::MAIN 317 NIL 1016) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 926 NIL 397))
+ (1 (OM-CAPI::MAIN 307 NIL 982) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 622 NIL 266))
 )
 
 ("workspace-view/history"
