@@ -49,19 +49,19 @@ relative distance.
 
 
 ;; This functions restricts the intervals of the input list
-;; to a maximum ambitus keeping octave equivalent note names
-(setf intervals '(-11 7 -17 23))
+;; to a maximum ambitus keeping octave equivalent note names.
+(setf intervals '(-11 8 -17 23))
 (setf interval7
       (interval-map 
        'c4 (interval-ambitus 
-            7 intervals))) ; (1 3 -5 -1)
+            7 intervals)))
 
 ;; Compare with cmd-2
 (make-omn
  :pitch (list 
          interval7
          (interval-map 
-          'c4 (interval-ambitus 24 intervals)))
+          'c4 intervals))
  :length '(q)
  :span :pitch)
 

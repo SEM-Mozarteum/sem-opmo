@@ -23,7 +23,7 @@ of spectral music is calculated in frequencies.
 ;; in hertz
 (setf harmonics-hz (harmonics fund 24))
 
-;; Convert to pitch in eighth tone notation
+;; Convert to pitch in eighth tone notation (default)
 (setf harmonics-pitch (hertz-to-pitch harmonics-hz))
 
 ;; Harmonic row in pitches (default semitones)
@@ -37,11 +37,9 @@ of spectral music is calculated in frequencies.
 ; -----------------------------------------------------------
 ; Exercise: 
 ; Create a harmonic scale upto the 15th overtone on a1
-; and quantize the pitches to eight tones.
+; and quantize the pitches to semitones.
 ; Set it to the variable spectrum
 ; -----------------------------------------------------------
-
-(hertz-to-pitch (harmonics 'g1 15))
 
 ;;; MICROTONES
 

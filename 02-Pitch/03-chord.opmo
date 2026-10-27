@@ -133,14 +133,17 @@ to choose from.
 ;; One pitch is chosen at random
 (dechord mat :pitch '?)
 
-(setf mat2 '((q c4 f4a4d5 e fs5) 
-             (s cs4 d4 ds4fs4 q c4e4gs4)))
+(setf mat2 '((q c3 f3a3d4 e fs2) 
+             (s cs3 d3 ds3fs3 q c3e3gs3)))
 
 ;; The highest notes from chords are chosen. 
 ;; Single pitches are left unchanged
 (dechord mat2 :pitch 'high)
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Transpose mat2 two octaves higher and make it a melody for
+; flute with dechord.
+; -----------------------------------------------------------
 
 ;;; chord-pitch-unique
 
@@ -159,7 +162,10 @@ to choose from.
 (setf chord '(c4d4g4b4))
 
 ;; replaces the interval 11 in the chord with 10
-(chord-interval-replace 11 10 chord)
+(setf chord-replaced (chord-interval-replace 11 10 chord))
+
+;; See the change
+(list chord chord-replaced)
 
 ;; replaces the interval 11 in the chord with 10,
 ;; and 7 with 6
@@ -184,14 +190,16 @@ can be controlled by a variant option.
 ;; chord size, the chord is dissolved completely
 ;; (length (melodize diss-chord)) ; => 7
 (chord-dissolve 7 7 diss-chord)
+;; Here the chord is dissolved 7 times in 7 steps
 
-;; If the number of chords is larger then the dissolve lebels
+;; If the number of chords is larger then the dissolve levels
 ;; or pitch count in the list, a reverse process will start
 (chord-dissolve 13 7 diss-chord)
 
 ;; This process is reflected until the number of
 ;; steps is reached
 (chord-dissolve 13 4 diss-chord)
+;; Here the chord is dissolved 13 times in 4 steps
 
 ;; The chord is dissolved in descending direction
 (chord-dissolve 7 7 diss-chord :variant 'd)
@@ -199,7 +207,10 @@ can be controlled by a variant option.
 ;; The same but in random order
 (chord-dissolve 7 7 diss-chord :variant 'ro)
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Dissolve any chord with 6 pitches randomly 15 times (count)
+; in 5 ascending steps
+; -----------------------------------------------------------
 
 ;;; chord-interval-remove
 
@@ -231,7 +242,9 @@ can be controlled by a variant option.
                :norep t) ; possibly no repeated values
               chord2)) ; chord
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Try to explain, what the three expressions above do.
+; -----------------------------------------------------------
 
 ;;; gen-chord
 
