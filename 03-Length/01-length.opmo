@@ -138,7 +138,8 @@ See "Introduction to OMN The Language" in Assistant (D)
 
 ;; length-adjust fits as many notes as possible in a given
 ;; duration
-(setf mat1 '(s c4 e g4 s eb4 e cs4 s e4 e b4 s fs4 e a4 s gs4 e f4 s bb4 e d4))
+(setf mat1 '(s c4 e g4 s eb4 e cs4 s e4 e b4 
+             s fs4 e a4 s gs4 e f4 s bb4 e d4))
 ;; mat1 has a duration of 9/8
 
 (list
@@ -169,9 +170,6 @@ time signature measures.
 
 ;;; ---------------------------------------------------------
 
-(setf beethoven-ode
-'(q e4 e4 f4 g4 g4 f4 e4 d4 c4 c4 d4 e4 q. e4 e d4 h d4))
-
 ;;; quantum
 
 #|
@@ -179,6 +177,10 @@ The QUANTUM function will increase or decrease length
 values randomly between 0 and a given fraction value 
 using the loop macro (see chapter 05-iteration)
 |#
+
+(setf beethoven-ode
+'(q e4 e4 f4 g4 g4 f4 e4 d4 c4 c4 d4 e4 q. e4 e d4 h d4))
+
 (setf trans
       (loop for j in (gen-transition 0 0.1 8 1) collect 
         (quantum beethoven-ode 

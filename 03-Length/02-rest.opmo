@@ -79,15 +79,16 @@ rests in OM are represented as negativ lengths
 ; -----------------------------------------------------------
 ; Exercise: 
 ; Make a list of 5 diefferent durations and take 12 random
-; samples out of it and set it to a variable. Make 3 versions 
-; with a relastion of notes and rests <, = and >.
+; samples out of it and set it to a variable. 
+; Make 3 versions with a relastion of notes and rests 
+; <, = and >.
 ; -----------------------------------------------------------
 
 ;;; length-staccato
 
 ;; Length-staccato decreases the lengths to a given length 
-;; value, converting the remaining duration of each decreased 
-;; length into rest values.
+;; value, converting the remaining duration of each 
+;; decreased length into rest values.
 
 (setf mat '(q e4 mp h f4 q fs3 -e g4 q gs5))
 
@@ -130,7 +131,8 @@ rests in OM are represented as negativ lengths
       vc '(h q e. s q. e s))  ; 25/16
 
 ;; Voices with different lengths, see with cmd-2
-;; OM adds rests for display but not actually changing the lists
+;; OM adds rests for display but not actually 
+;; changing the lists
 (setf strqt (list v1 v2 va vc))
 
 ;; Align all these lists by adding rests ('r) to the end ('e)
@@ -170,3 +172,17 @@ rests in OM are represented as negativ lengths
        durlst
        (length-diminution 2 durlst)
        (length-diminution 4 durlst)))
+
+; -----------------------------------------------------------
+; Exercise: 
+; Take the rhythms of the Beethoven Ode and make a rhythmic
+; canon with the proportions 1:2:3. List all voices and
+; preview with cmd(ctrl)-2
+; -----------------------------------------------------------
+
+
+
+
+
+
+

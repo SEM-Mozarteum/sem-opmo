@@ -1,5 +1,5 @@
 ("workspace-view/layout-ratios"
- (1 (OM-CAPI::MAIN 240 NIL 946) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 627 NIL 261))
+ (1 (OM-CAPI::MAIN 240 NIL 753) (OM-CAPI::EDITOR-AND-LISTENER-LAYOUT 622 NIL 258))
 )
 
 ("workspace-view/history"
@@ -11,10 +11,10 @@
 )
 
 ("workspace-view/current"
- "02-Pitch/04-frequency.opmo"
+ "03-Length/02-rest.opmo"
 )
 
 ("workspace-view/navigator-display-states"
- ((:USER-LIBRARIES NIL NIL NIL) (:USER-MEDIA NIL NIL NIL) (:USER-DOCUMENTS (#P"/Users/bornhoeft/Documents/code/github/sem-opmo/02-Pitch/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/01-Basics/") #P"/Users/bornhoeft/Documents/code/github/sem-opmo/01-Basics/04-Lisp.opmo" 0) (:USER-SCORES NIL NIL 0) (:USER-WORKSPACE (#P"/Users/bornhoeft/Documents/code/github/sem-opmo/04-Score/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/03-Length/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/02-Pitch/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/01-Basics/") #P"/Users/bornhoeft/Documents/code/github/sem-opmo/02-Pitch/04-frequency.opmo" 0))
+ ((:USER-LIBRARIES NIL NIL NIL) (:USER-MEDIA NIL NIL NIL) (:USER-DOCUMENTS (#P"/Users/bornhoeft/Documents/code/github/sem-opmo/02-Pitch/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/01-Basics/") #P"/Users/bornhoeft/Documents/code/github/sem-opmo/01-Basics/04-Lisp.opmo" 0) (:USER-SCORES NIL NIL 0) (:USER-WORKSPACE (#P"/Users/bornhoeft/Documents/code/github/sem-opmo/03-Length/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/02-Pitch/" #P"/Users/bornhoeft/Documents/code/github/sem-opmo/01-Basics/") #P"/Users/bornhoeft/Documents/code/github/sem-opmo/03-Length/02-rest.opmo" 0))
 )
 
