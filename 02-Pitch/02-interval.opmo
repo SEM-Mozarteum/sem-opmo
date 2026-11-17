@@ -83,9 +83,10 @@ relative distance.
 
 ; -----------------------------------------------------------
 ; Exercise: 
-; Write a list of any intervals up and down.
-; Convert them to pitches starting with g3.
-; Range the pitches in the ambitus of a violin.
+; Write a list of any 8 intervals up and down and convert 
+; them to pitches starting with g3.
+; Scale it by 3 and range the pitches in the ambitus 
+; of a violin.
 ; -----------------------------------------------------------
 
 ;;; interval-randomize

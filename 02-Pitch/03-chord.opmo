@@ -17,9 +17,9 @@ chords are written as directly consecutive notes:
 
 ;;; chordize / melodize / chordize-list 
 
-(chordize '(c4 e4 g5 d3))
+(chordize '(c4 g5 d3 e4))
 ;; and vice versa
-(melodize '(c4d4f4)) ; => (c4 d4 f4)
+(melodize '(d4f4c4)) ; => (c4 d4 f4)
 
 ;; chordize allows you to chordize several melodic lists.
 (chordize '((c4 e4) (g4 c5)))
@@ -34,8 +34,7 @@ chords are written as directly consecutive notes:
 
 ; -----------------------------------------------------------
 ; Exercise: 
-; Call the variable spectrum (see last exercise in 
-; 03-frequency.opmo) and make a chord of it.
+; Call the all interval row of Nono and make a chord of it.
 ; -----------------------------------------------------------
 
 ;;; gen-divide
@@ -54,7 +53,7 @@ chords are written as directly consecutive notes:
 
 ; -----------------------------------------------------------
 ; Make 3 chords with different number of pitches 
-; from spectrum.
+; from Nono's all interval row.
 ; -----------------------------------------------------------
 
 ;; Extended example
@@ -65,14 +64,18 @@ chords are written as directly consecutive notes:
        (chordize ; make chords from it
         (midi-to-pitch ; convert to pitch
          (gen-loop 10 ; make 10 different chords
-                   (rnd-number 
+                   (rnd-unique
                     (rndn 1 2 5) ; notes in chord 
-                    60 69 ; between c4 and ab4
-                    :norep t) ; no repetitions in chord
+                    (gen-integer 60 69)) ; between c4 and a4
                      :seed 123))))) ; fix random
 
+; -----------------------------------------------------------
+; Try to understand, what the expressions above do and how
+; the functions work together.
+; -----------------------------------------------------------
+
 ;; show the number of pitches in chords
-(get-chord-size (flatten chords)) ; => (5 4 4 3 4 3 4 3 3 4)
+(get-chord-size (flatten chords))
 
 ;;; ---------------------------------------------------------
 
@@ -100,13 +103,14 @@ This function works momentarily with chromatic pitches only.
 ;; The function CHORD-INVERSION will generate all the 
 ;; inversions (rotations) of a chord up to and including N. 
 ;; For example, the first inversion of C major will give us:
+
 (chord-inversion 1 'c4e4g4)
 
 ;; the 4th inversion and the root chord
 (chord-inversion 4 'c4e4g4 :root t)
 
 ;; all inversions and the root chord
-(chord-inversion 4 'c4e4g4 :series t :root t)
+(chord-inversion 4 'c4e4g4 :series t)
 
 ;; two chord inversions in parralel
 (chord-inversion '(2 4) '(c4e4g4 g4b4d4) :series t)
@@ -189,7 +193,7 @@ can be controlled by a variant option.
 ;; When the count and the level values are equal to the 
 ;; chord size, the chord is dissolved completely
 ;; (length (melodize diss-chord)) ; => 7
-(chord-dissolve 7 7 diss-chord)
+(chord-dissolve 5 7 diss-chord)
 ;; Here the chord is dissolved 7 times in 7 steps
 
 ;; If the number of chords is larger then the dissolve levels
@@ -202,14 +206,14 @@ can be controlled by a variant option.
 ;; Here the chord is dissolved 13 times in 4 steps
 
 ;; The chord is dissolved in descending direction
-(chord-dissolve 7 7 diss-chord :variant 'd)
+(chord-dissolve 6 7 diss-chord :variant 'd)
 
 ;; The same but in random order
 (chord-dissolve 7 7 diss-chord :variant 'ro)
 
 ; -----------------------------------------------------------
 ; Dissolve any chord with 6 pitches randomly 15 times (count)
-; in 5 ascending steps
+; in 5 levels
 ; -----------------------------------------------------------
 
 ;;; chord-interval-remove
@@ -265,7 +269,7 @@ transpose-high (5) parameters.
 ;; The maximum ambitus is 7, the chord contain between 
 ;; 2 and 3 pitches with no transposition:
 (gen-chord 7 2 3 0 0 '(c4 db4 fs4 g4 c5 f5 gb5 b5)
-           :seed 12)
+           :seed 13)
 ;; The resulting chords have 3 + 3 + 2 pitches = 8 pitches 
 ;; in the input list.
 

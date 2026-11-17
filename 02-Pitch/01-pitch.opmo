@@ -161,8 +161,11 @@ data, s. Graph Tools in the documentation.
 ;;; pitch-transpose / integer-transpose
 
 ;; Pitches are transposed to a given value
-(pitch-transpose 2 '(c4 d4 e4))
+(pitch-transpose 1 '(c4 d4 e4))
 ;; => (d4 e4 gb4)
+
+;; 3 semitones and a quartertone higher.
+(pitch-transpose 3.5 '(c4 d4 e4))
 
 ;; A pitch can also be used as a transposition level
 ;; The pitch indicates the first new position of the list.
@@ -179,8 +182,9 @@ data, s. Graph Tools in the documentation.
 
 ; -----------------------------------------------------------
 ; Exercise: 
-; Create a chord with 4 pitches or frequencies and transpose 
-; it a fifth lower, a quartertone and a tritone higher
+; Create a melody with 4 pitches or frequencies, set it to
+; a variable and transpose it a fifth lower, a quartertone 
+; and a tritone higher
 ; -----------------------------------------------------------
 
 ;;; pitch-transpose-n / integer-transpose-rnd 

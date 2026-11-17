@@ -31,14 +31,14 @@ of spectral music is calculated in frequencies.
 
 ;; Harmonic row in quarter tones
 (setf harmonics-quarter (harmonics fund 24 
-                                   :type :pitch 
+                                   :type :pitch
                                    :quantize 1/4))
 
 ; -----------------------------------------------------------
 ; Exercise: 
 ; Create a harmonic scale upto the 15th overtone on a1
 ; and quantize the pitches to semitones.
-; Set it to the variable spectrum
+; Set it to the variable "spectrum".
 ; -----------------------------------------------------------
 
 ;;; MICROTONES
@@ -92,6 +92,10 @@ b4- b4-.. bb4. bb4- a4. a4)
 ;; This needs at least one duration which is added here
 ;; manually at the beginning of the pitches lists.
 (list (cons 'q pitches) (cons 'q pitches1))
+
+;;; ---------------------------------------------------------
+;;; START HERE ON 19.11.2026
+;;; ---------------------------------------------------------
 
 ; -----------------------------------------------------------
 ; Exercise: 

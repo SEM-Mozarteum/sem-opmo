@@ -58,13 +58,28 @@ OMN is an acronym for OPUSMODUS NOTATION.
 In make-omn the separate parameters of pitch, 
 length, dynamics and articulations are combined
 into individual events.
+
+See "Introduction to OMN The Language" in Assistant (D)
 |#
 
 (make-omn 
  :length lengths
  :pitch pitches)
 
-;; another example
+;; Note: As long as something does noch change in OMN
+;; it can be spanned to another parameter. I this case
+;; the repeated parameter must be a quoted list
+
+(make-omn 
+ :length '(1/16) ; all pitches in 1/16
+ :pitch pitches
+ :span :pitch) ; span to pitches
+
+
+;; The length is the master (default) in make-omn
+;; if you do :span :pitch the the pitch is the MASTER
+
+;; Another example
 (setf pitches1 (integer-to-pitch (rnd-row :seed 134)))
 (setf durations1 (span pitches1 '(1/8 1/16 1/16 1/4)))
 
@@ -72,22 +87,18 @@ into individual events.
             :length durations1
             :pitch pitches1))
 
-#|
-The length is the master (default) in make-omn
-if you do :span :pitch the the pitch is the MASTER
-|#
-
-#|
-There are several ways to visualize different parametrical
-data, s. Graph Tools in the documentation. 
-|#
-
+;; There are several ways to visualize different parametrical
+;; data, s. Graph Tools in the documentation. 
 ;; to plot the material use omn-list-plot
 
 (omn-plot mat1)
 (omn-plot mat1 :join-points t)
 
-;;; ---------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+; Take the Beethoven example from 01-pitch and make the
+; correct durations and use make-omn to merge both parameters
+; -----------------------------------------------------------
 
 ;;; gen-length
 
@@ -103,16 +114,14 @@ data, s. Graph Tools in the documentation.
 
 ;; argument 1: numerator(s)
 ;; argument 2: denominator(s)
-(gen-length '(8 4 2 1) 32) ; => (1/4 1/8 1/16 1/32)
-
-(gen-length '(4) 8)
+(gen-length '(8 4 2 1) 16) ; => (8/16 4/16 2/16 1/16)
 
 ;; all combinations of numerators and denominators
 (gen-length '(1 4 8) '(4 8)) ; => ((1/4 1 2) (1/8 1/2 1))
 
-;; extended example
+;;; Extended example
 
-;; make 24 random lengths
+;; Make 24 random lengths
 (gen-loop 
  4 ; do this 4 times for 4 voices
  (flatten ; remove parentheses
@@ -143,16 +152,20 @@ data, s. Graph Tools in the documentation.
 
 #|
 This function will add a length value to the last 
-length value in the list or add a rest length value at the 
-end of the list to fit the time signature measures.
+length value in the list or add a rest length value 
+at the end of the list to fit the next reasonable 
+time signature measures.
 |#
 
-(setf lengths '(-e c4 q d4 e4 5h f4 5q g4))
-(length-fit lengths)
+(setf lengths '(-1/8 1/4 1/4 2/20 1/20))
+ 
+(setf fit-length (length-fit lengths))
 
 ;; The type :rest will add a rest length value at the end 
-;; of the list to fit the time signature.
-(length-fit lengths :type :rest)
+;; of the list to fit the time signature. View with cmd-2
+(list
+ fit-length
+ (length-fit lengths :type :rest))
 
 ;;; ---------------------------------------------------------
 
@@ -190,5 +203,11 @@ using the loop macro (see chapter 05-iteration)
             for i in trans
             collect (quantize 
                      (fit-to-span span-val i)
-                     '(1 2 3 4 5))))
+                     '(1 2 3 4))))
 ;; (get-span trans-fit) => (5 5 5 5 5 5 5 5) 
+
+;;; omn-to-measure
+
+;; Sublists that match a list of measure 
+;; lengths are created.
+(omn-to-measure trans-fit '(5/4))

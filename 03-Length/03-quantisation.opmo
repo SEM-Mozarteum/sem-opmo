@@ -11,7 +11,8 @@
 The Quantization tools convert continuous or irregular 
 numerical material into discrete musical values. They are 
 used in two main areas: rhythmic quantization and microtonal
-pitch quantization.
+pitch quantization. This functionality is integrated as a
+keyword in many functions directly.
 |#
 
 ;;; ---------------------------------------------------------
@@ -24,7 +25,7 @@ durations, ratios and OMN sequences.
 |#
 
 ;; Floating point numbers between 0.0 and 1.0
-(setf numb (gen-noise 20 :seed 1234))
+(setf numb (gen-noise 20 :seed 123))
 
 ;; Quantize converts by default to notation
 ;; where 1.0 = q, 0.5 = e, etc.

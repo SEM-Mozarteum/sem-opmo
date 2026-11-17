@@ -8,3 +8,14 @@
 ;;; EXERCISE
 
 ;;; ---------------------------------------------------------
+
+#|
+1. Write a melody of 8 pitches.
+2. Create 4 versions of it: 
+  a) original, 
+  b) transposed by 6, 
+  c) transposed by -1 and reversed, 
+  d) transposed 11 and inverted.
+3. Concatenate the four versions
+4. Range them to flute and to doublebass 
+|#

@@ -21,6 +21,8 @@ rests in OM are represented as negativ lengths
 (setf lengths (gen-length '(1 -1 3 -3 1 2 -1) '(8)))
 (setf pitches (midi-to-pitch '(60 65 78 71)))
 
+;; Make-omn combines all musical parameters into one
+;; omn expression, see chater Score
 (setf mat2 (make-omn
             :length lengths
             :pitch pitches))
@@ -40,13 +42,6 @@ rests in OM are represented as negativ lengths
 ;; rests
 (get-count rhythms :length :rest) ; => 1
 
-;;  Calculate the overall duration with "get-span"
-
-(get-span rhythms) ;  => 1/2
-
-;; see 2 voices with cmd-2
-(list rhythms (get-span (list rhythms)))
-
 ;;; ------------------------------------------------------
 
 ;;; length-invert
@@ -54,9 +49,9 @@ rests in OM are represented as negativ lengths
 ;; invert notes and lengths
 (setf rhy '(1/4 -1/8 1/4 -1/8  1/4 -1/8 1/4 -1/8)) 
 
-;; see result with cmd-2 (option-2 on Win)
 (setf rhy-inv (length-invert rhy))
 
+;; see result with cmd-2 (option-2 on Win)
 (list rhy (length-invert rhy))
 
 ;; difference between inverse and reverse rhythm
@@ -66,27 +61,73 @@ rests in OM are represented as negativ lengths
 
 ;;; ------------------------------------------------------
 
+;;; length-weight
+
+;; A list of durations
+(setf len1 '(1/4 1/16 1/8 1/16 1/2 1/8 1/8 1/8 1/8))
+
+;; length-weight returns a weighted distribution of notes
+;; and rests (change randomly the prefix of the rhythms
+;; in the input list)
+;; see distribution with cmd-2 (ctrl-2)
+(gen-loop 100 (length-weight len1))
+
+;; 5 voices three times more notes than rests
+(gen-loop 5 (length-weight len1 :weight '(3 1))
+          :seed 123)
+
+; -----------------------------------------------------------
+; Exercise: 
+; Make a list of 5 diefferent durations and take 12 random
+; samples out of it and set it to a variable. Make 3 versions 
+; with a relastion of notes and rests <, = and >.
+; -----------------------------------------------------------
+
+;;; length-staccato
+
+;; Length-staccato decreases the lengths to a given length 
+;; value, converting the remaining duration of each decreased 
+;; length into rest values.
+
+(setf mat '(q e4 mp h f4 q fs3 -e g4 q gs5))
+
+(setf mat-stacc (length-staccato mat))
+
+(setf mat-stacc-eights 
+      (length-staccato mat
+                       :value 1/8))
+
+;; Compare all 3 versions with cmd(ctrl)-2
+(list mat mat-stacc mat-stacc-eights)
+
+;;; ------------------------------------------------------
+
 ;;; length-legato
 
-;; inverts rests to a length and adds the sum of the rests 
+;; Inverts rests to a length and adds the sum of the rests 
 ;; to the previous length
 (setf rhy2 '(1/4 -1/16 1/16 -1/12 2/12 2/20 -3/20 -1/8))
 
 ;; see difference with cmd-2
 (list rhy2 (length-legato rhy2))
 
-;;; ------------------------------------------------------
+; -----------------------------------------------------------
+; Exercise: 
+; Make a list of 24 lengths and rests with length-weight.
+; Create a staccato and a legato version of it and combine
+; them in a list. Compare both voices with cmd(ctrl)-2
+; -----------------------------------------------------------
 
 ;;; length-align
 
 ;; LENGTH-ALIGN is used to align a series of length lists 
 ;; with one another.
-;; set more than one variable at once with setf
+;; Set more than one variable at once with setf as below:
 
 (setf v1 '(q h e. s q h e. s) ; 8/4
       v2 '(q h e. q h) ; 27/16
       va '(-e -s e s = = -e -s e s = = -e -s e s = =) ; 6/4
-      vc '(h q e. s q. e s)) ; 25/16
+      vc '(h q e. s q. e s))  ; 25/16
 
 ;; Voices with different lengths, see with cmd-2
 ;; OM adds rests for display but not actually changing the lists
@@ -129,22 +170,3 @@ rests in OM are represented as negativ lengths
        durlst
        (length-diminution 2 durlst)
        (length-diminution 4 durlst)))
-
-;;; ------------------------------------------------------
-
-;;; length-weight
-
-;; A list of durations
-(setf len1 '(1/4 1/16 1/8 1/16 1/2 1/8 1/8 1/8 1/8))
-
-;; length-weight returns a weighted distribution of notes
-;; and rests (change randomly the prefix of the rhythms
-;; in the input list)
-;; see distribution with cmd-2 (ctrl-2)
-(gen-loop 500 (length-weight len1))
-
-;; 5 voices three times more notes than rests
-(gen-loop 5 (length-weight len1 :weight '(3 1))
-          :seed 123)
-
-;;; ------------------------------------------------------
